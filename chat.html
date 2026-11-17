@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Чат с Грэем — GREY WORLD</title>
+<title>История — GREY WORLD</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -28,9 +28,36 @@ header {
   font-size: 14px;
 }
 
-h1 {
-  margin: 15px 0 5px;
+.hero-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 15px 0 8px;
+}
+
+.hero-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid #655568;
+}
+
+.hero-placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #39313f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 25px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 25px;
+  overflow-wrap: anywhere;
 }
 
 .status {
@@ -46,24 +73,21 @@ h1 {
   flex-wrap: wrap;
 }
 
-.actions a {
+.actions a,
+.actions button {
   display: inline-block;
   background: #39313f;
   color: white;
   text-decoration: none;
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 14px;
-}
-
-button {
-  background: #76243f;
-  color: white;
   border: 0;
   border-radius: 12px;
   padding: 12px;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
+}
+
+.actions button {
+  background: #76243f;
 }
 
 button:disabled {
@@ -72,7 +96,7 @@ button:disabled {
 }
 
 .chat {
-  height: calc(100dvh - 270px);
+  height: calc(100dvh - 290px);
   min-height: 180px;
   overflow-y: auto;
   padding: 20px 15px;
@@ -144,21 +168,19 @@ textarea:disabled {
     ← К персонажам
   </a>
 
-  <h1>Грэй</h1>
+  <div class="hero-info" id="heroInfo">
+    <div class="hero-placeholder">✦</div>
+    <h1 id="heroName">Грэй</h1>
+  </div>
 
   <div class="status" id="storyTitle">
     GREY WORLD · Демонстрационный чат
   </div>
 
   <div class="actions">
-    <button
-      type="button"
-      id="newStoryButton"
-      onclick="startNewStory()"
-    >
+    <button type="button" id="newStoryButton">
       + Новая история
     </button>
-
     <a href="stories.html">Мои истории</a>
   </div>
 </header>
@@ -179,7 +201,6 @@ textarea:disabled {
     placeholder="Напиши сообщение..."
     required
   ></textarea>
-
   <button type="submit" id="sendButton">➤</button>
 </form>
 
@@ -191,19 +212,28 @@ const storyTitle = document.getElementById('storyTitle');
 const archiveNotice = document.getElementById('archiveNotice');
 const sendButton = document.getElementById('sendButton');
 const newStoryButton = document.getElementById('newStoryButton');
+const heroNameElement = document.getElementById('heroName');
+const heroInfo = document.getElementById('heroInfo');
 
 const storiesKey = 'grey-world-stories-v1';
+const heroesKey = 'grey-world-heroes-v1';
 const legacyKey = 'grey-world-chat-v1';
 
-const greeting =
+const greyGreeting =
   'Ну здравствуй. Я Грэй. Надеюсь, ты пришла не ради скучных разговоров?';
 
 function readStories() {
   try {
-    const data = JSON.parse(
-      localStorage.getItem(storiesKey)
-    );
+    const data = JSON.parse(localStorage.getItem(storiesKey));
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    return [];
+  }
+}
 
+function readHeroes() {
+  try {
+    const data = JSON.parse(localStorage.getItem(heroesKey));
     return Array.isArray(data) ? data : [];
   } catch (error) {
     return [];
@@ -212,10 +242,7 @@ function readStories() {
 
 function saveStories(stories) {
   try {
-    localStorage.setItem(
-      storiesKey,
-      JSON.stringify(stories)
-    );
+    localStorage.setItem(storiesKey, JSON.stringify(stories));
     return true;
   } catch (error) {
     alert('Не удалось сохранить историю. Проверь память браузера.');
@@ -246,9 +273,7 @@ function cleanMessages(items) {
 }
 
 function migrateOldChat() {
-  if (localStorage.getItem(storiesKey) !== null) {
-    return;
-  }
+  if (localStorage.getItem(storiesKey) !== null) return;
 
   let oldMessages = [];
 
@@ -263,6 +288,7 @@ function migrateOldChat() {
   const firstStory = {
     id: makeId(),
     title: 'Первый разговор с Грэем',
+    heroId: 'grey',
     messages: oldMessages,
     archived: false,
     createdAt: Date.now(),
@@ -270,23 +296,91 @@ function migrateOldChat() {
   };
 
   saveStories([firstStory]);
+}
 
-  // Старую переписку не удаляем.
+function getHero(heroId) {
+  if (!heroId || heroId === 'grey') {
+    return { id: 'grey', name: 'Грэй', photo: '' };
+  }
+
+  const hero = readHeroes().find(item =>
+    item && item.id === heroId
+  );
+
+  if (!hero) return null;
+
+  return {
+    id: hero.id,
+    name: hero.name || 'Без имени',
+    photo: hero.photo || ''
+  };
+}
+
+function setHeroHeader(hero) {
+  heroNameElement.textContent = hero.name;
+
+  const oldAvatar = heroInfo.querySelector(
+    '.hero-avatar, .hero-placeholder'
+  );
+
+  if (oldAvatar) oldAvatar.remove();
+
+  let avatar;
+
+  if (hero.photo) {
+    avatar = document.createElement('img');
+    avatar.className = 'hero-avatar';
+    avatar.src = hero.photo;
+    avatar.alt = 'Аватар персонажа';
+  } else {
+    avatar = document.createElement('div');
+    avatar.className = 'hero-placeholder';
+    avatar.textContent = '✦';
+  }
+
+  heroInfo.insertBefore(avatar, heroNameElement);
 }
 
 function addMessage(text, role) {
   const bubble = document.createElement('div');
-  bubble.className = 'message ' + role;
+  bubble.className = 'message ' +
+    (role === 'user' ? 'user' : 'grey');
   bubble.textContent = text;
   chat.appendChild(bubble);
   chat.scrollTop = chat.scrollHeight;
 }
 
 function renderStory(story) {
-  chat.textContent = '';
+  chat.replaceChildren();
   storyTitle.textContent = story.title;
 
-  addMessage(greeting, 'grey');
+  const hero = getHero(story.heroId || 'grey');
+
+  if (hero) {
+    setHeroHeader(hero);
+
+    if (hero.id === 'grey') {
+      addMessage(greyGreeting, 'grey');
+    } else {
+      addMessage(
+        'История с персонажем «' + hero.name + '» началась. ' +
+        'Напиши первое сообщение.',
+        'grey'
+      );
+    }
+  } else {
+    setHeroHeader({
+      id: '',
+      name: 'Персонаж удалён',
+      photo: ''
+    });
+
+    addMessage(
+      'Анкета этого персонажа больше не найдена. ' +
+      'Сохранённые сообщения истории доступны.',
+      'grey'
+    );
+  }
 
   cleanMessages(story.messages).forEach(item => {
     addMessage(item.text, item.role);
@@ -296,11 +390,7 @@ function renderStory(story) {
 function updateArchiveMode(story) {
   const isArchived = story.archived === true;
 
-  archiveNotice.classList.toggle(
-    'visible',
-    isArchived
-  );
-
+  archiveNotice.classList.toggle('visible', isArchived);
   input.disabled = isArchived;
   sendButton.disabled = isArchived;
 
@@ -313,65 +403,45 @@ migrateOldChat();
 
 let stories = readStories();
 
-if (stories.length === 0) {
+if (stories.length === 0 &&
+    localStorage.getItem(storiesKey) === null) {
   const firstStory = {
     id: makeId(),
     title: 'Первый разговор с Грэем',
+    heroId: 'grey',
     messages: [],
     archived: false,
     createdAt: Date.now(),
     updatedAt: Date.now()
   };
 
-  if (saveStories([firstStory])) {
-    stories = [firstStory];
-  }
+  if (saveStories([firstStory])) stories = [firstStory];
 }
 
-const params = new URLSearchParams(
-  window.location.search
-);
-
+const params = new URLSearchParams(window.location.search);
 const requestedId = params.get('story');
+const requestedHero = params.get('hero');
+const wantsNew = params.get('new') === '1';
 
-let activeStory = stories.find(
-  story => story && story.id === requestedId
-);
+let activeStory = null;
 
-if (!activeStory) {
-  activeStory = stories.find(
-    story => story && story.archived !== true
-  ) || stories[0];
+function openStory(story) {
+  activeStory = story;
+  renderStory(story);
+  updateArchiveMode(story);
 }
 
-if (activeStory) {
-  renderStory(activeStory);
-  updateArchiveMode(activeStory);
-} else {
-  storyTitle.textContent = 'Ошибка загрузки истории';
-  input.disabled = true;
-  sendButton.disabled = true;
-}
+function startNewStory(heroId) {
+  const hero = getHero(heroId);
 
-function startNewStory() {
-  const title = prompt('Как назовём новую историю?');
-
-  if (title === null) return;
-
-  const name = title.trim();
-
-  if (!name) {
-    alert('Напиши название истории.');
-    return;
-  }
-
-  if (name.length > 100) {
-    alert('Название не должно превышать 100 символов.');
-    return;
+  if (!hero) {
+    alert(
+      'Персонаж не найден. Возможно, его анкета была удалена.'
+    );
+    return false;
   }
 
   const currentStories = readStories();
-
   const activeCount = currentStories.filter(
     story => story && story.archived !== true
   ).length;
@@ -381,12 +451,32 @@ function startNewStory() {
       'В демонстрационной версии доступно ' +
       'не более 5 активных историй.'
     );
-    return;
+    return false;
+  }
+
+  const title = prompt(
+    'Как назовём новую историю с персонажем «' +
+    hero.name + '»?'
+  );
+
+  if (title === null) return false;
+
+  const name = title.trim();
+
+  if (!name) {
+    alert('Напиши название истории.');
+    return false;
+  }
+
+  if (name.length > 100) {
+    alert('Название не должно превышать 100 символов.');
+    return false;
   }
 
   const newStory = {
     id: makeId(),
     title: name,
+    heroId: hero.id,
     messages: [],
     archived: false,
     createdAt: Date.now(),
@@ -396,11 +486,66 @@ function startNewStory() {
   currentStories.push(newStory);
 
   if (saveStories(currentStories)) {
-    location.href =
-      'chat.html?story=' +
-      encodeURIComponent(newStory.id);
+    location.replace(
+      'chat.html?story=' + encodeURIComponent(newStory.id)
+    );
+    return true;
+  }
+
+  return false;
+}
+
+if (wantsNew) {
+  const heroId = requestedHero || 'grey';
+  const created = startNewStory(heroId);
+
+  if (!created) {
+    // При отмене остаёмся на странице, но не создаём историю.
+    // Показываем существующую историю, если она есть.
+    stories = readStories();
   }
 }
+
+if (!wantsNew || !activeStory) {
+  stories = readStories();
+
+  activeStory = stories.find(story =>
+    story && story.id === requestedId
+  );
+
+  if (!activeStory && !wantsNew) {
+    activeStory = stories.find(story =>
+      story && story.archived !== true
+    ) || stories[0];
+  }
+
+  if (activeStory) {
+    openStory(activeStory);
+  } else if (!wantsNew) {
+    storyTitle.textContent = 'История не выбрана';
+    chat.replaceChildren();
+    input.disabled = true;
+    sendButton.disabled = true;
+  } else {
+    const hero = getHero(requestedHero || 'grey');
+
+    if (hero) setHeroHeader(hero);
+
+    storyTitle.textContent =
+      'Новая история не создана';
+
+    input.disabled = true;
+    sendButton.disabled = true;
+  }
+}
+
+newStoryButton.addEventListener('click', () => {
+  const heroId = activeStory
+    ? (activeStory.heroId || 'grey')
+    : (requestedHero || 'grey');
+
+  startNewStory(heroId);
+});
 
 form.addEventListener('submit', function(event) {
   event.preventDefault();
@@ -411,7 +556,6 @@ form.addEventListener('submit', function(event) {
   }
 
   const text = input.value.trim();
-
   if (!text) return;
 
   const currentStories = readStories();
