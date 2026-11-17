@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Резервная копия — GREY WORLD</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#111116;
+  color:#e5e2e8;
+  font:16px Arial,sans-serif
+}
+
+main{
+  max-width:680px;
+  margin:auto;
+  padding:26px 20px 55px
+}
+
+a{
+  color:#d8c5d5;
+  text-decoration:none
+}
+
+h1{
+  font:30px Georgia,serif;
+  margin:35px 0 15px
+}
+
+.card{
+  background:#25222c;
+  border:1px solid #453a4a;
+  border-radius:20px;
+  padding:20px;
+  margin:20px 0
+}
+
+p{
+  color:#bcb3bf;
+  line-height:1.6
+}
+
+button{
+  background:#76243f;
+  color:white;
+  border:0;
+  border-radius:12px;
+  padding:14px 18px;
+  font:inherit;
+  cursor:pointer
+}
+
+input{
+  display:block;
+  width:100%;
+  margin:14px 0;
+  color:#e5e2e8;
+  font:inherit
+}
+
+.note{
+  font-size:13px;
+  color:#d6abbf
+}
+
+.status{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  color:#f1dce4
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<a href="index.html">← На главную</a>
+
+<h1>☾ Резервная копия</h1>
+
+<p>
+  Сохрани анкеты, фотографии персонажей,
+  переписки, настройки и дневники памяти
+  в один файл.
+</p>
+
+<div class="card">
+  <h2>Сохранить копию</h2>
+
+  <p id="count">Проверяем данные...</p>
+
+  <button id="export" type="button">
+    Скачать резервную копию
+  </button>
+
+  <p class="note">
+    Файл содержит личные истории и фотографии.
+    Храни его в безопасном месте, например
+    в личном iCloud Drive.
+    Не публикуй его в GitHub.
+  </p>
+</div>
+
+<div class="card">
+  <h2>Восстановить из копии</h2>
+
+  <p>
+    Выбери ранее сохранённый файл GREY WORLD.
+    Уже существующие герои и истории не будут
+    заменены: добавятся только отсутствующие.
+  </p>
+
+  <input
+    id="file"
+    type="file"
+    accept=".json,application/json"
+  >
+
+  <button id="import" type="button">
+    Проверить и восстановить
+  </button>
+
+  <p class="status" id="result"></p>
+</div>
+
+</main>
+
+<script>
+const STORIES='grey-world-stories-v1';
+const HEROES='grey-world-heroes-v1';
+
+const $=id=>document.getElementById(id);
+
+function read(key){
+  try{
+    const x=JSON.parse(localStorage.getItem(key));
+    return Array.isArray(x)?x:[];
+  }catch{
+    return [];
+  }
+}
+
+function valid(items){
+  return Array.isArray(items)&&items.every(x=>
+    x&&
+    typeof x==='object'&&
+    !Array.isArray(x)&&
+    typeof x.id==='string'&&
+    x.id.length>0
+  );
+}
+
+function showCount(){
+  const s=read(STORIES);
+  const h=read(HEROES);
+
+  $('count').textContent=
+    'Историй: '+s.length+' · Анкет: '+h.length;
+}
+
+function saveFile(){
+  const data={
+    app:'GREY WORLD',
+    version:1,
+    createdAt:new Date().toISOString(),
+    stories:read(STORIES),
+    heroes:read(HEROES)
+  };
+
+  const body=JSON.stringify(data);
+  const blob=new Blob([body],{
+    type:'application/json'
+  });
+
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+
+  link.href=url;
+  link.download=
+    'grey-world-backup-'+
+    new Date().toISOString().slice(0,10)+
+    '.json';
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(()=>{
+    URL.revokeObjectURL(url);
+  },60000);
+
+  $('result').textContent=
+    'Копия подготовлена. Проверь, что файл '+
+    'действительно сохранился в «Файлах» или iCloud Drive.';
+}
+
+async function restore(){
+  const file=$('file').files[0];
+
+  if(!file){
+    alert('Сначала выбери файл резервной копии.');
+    return;
+  }
+
+  if(file.size>20*1024*1024){
+    alert('Файл слишком большой для этой демонстрационной версии.');
+    return;
+  }
+
+  let data;
+
+  try{
+    data=JSON.parse(await file.text());
+  }catch{
+    alert('Не удалось прочитать JSON-файл.');
+    return;
+  }
+
+  if(
+    !data||
+    data.app!=='GREY WORLD'||
+    data.version!==1||
+    !valid(data.stories)||
+    !valid(data.heroes)
+  ){
+    alert('Это не подходящая резервная копия GREY WORLD.');
+    return;
+  }
+
+  const oldStories=read(STORIES);
+  const oldHeroes=read(HEROES);
+
+  const storyIds=new Set(
+    oldStories.map(x=>x&&x.id)
+  );
+
+  const heroIds=new Set(
+    oldHeroes.map(x=>x&&x.id)
+  );
+
+  const addedStories=data.stories.filter(
+    x=>!storyIds.has(x.id)
+  );
+
+  const addedHeroes=data.heroes.filter(
+    x=>!heroIds.has(x.id)
+  );
+
+  if(!addedStories.length&&!addedHeroes.length){
+    $('result').textContent=
+      'Все записи из копии уже есть в браузере. '+
+      'Ничего не изменено.';
+    return;
+  }
+
+  if(!confirm(
+    'Добавить из копии '+
+    addedStories.length+
+    ' историй и '+
+    addedHeroes.length+
+    ' анкет? Существующие записи останутся без изменений.'
+  )){
+    return;
+  }
+
+  try{
+    if(addedHeroes.length){
+      localStorage.setItem(
+        HEROES,
+        JSON.stringify([...oldHeroes,...addedHeroes])
+      );
+    }
+
+    if(addedStories.length){
+      localStorage.setItem(
+        STORIES,
+        JSON.stringify([...oldStories,...addedStories])
+      );
+    }
+
+    $('result').textContent=
+      'Готово! Добавлено историй: '+
+      addedStories.length+
+      '; анкет: '+
+      addedHeroes.length+
+      '.';
+
+    showCount();
+
+  }catch{
+    $('result').textContent=
+      'Не удалось полностью восстановить данные: '+
+      'возможно, закончилось место в памяти браузера. '+
+      'Проверь список историй и анкет. Файл копии сохрани.';
+  }
+}
+
+$('export').addEventListener('click',saveFile);
+$('import').addEventListener('click',restore);
+
+showCount();
+</script>
+
+</body>
+</html>
