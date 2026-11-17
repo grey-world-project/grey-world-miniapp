@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дневник памяти — GREY WORLD</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#111116;
+  color:#e5e2e8;
+  font:16px Arial,sans-serif
+}
+main{
+  max-width:680px;
+  margin:auto;
+  padding:25px 18px 60px
+}
+a{color:#d4bfd1;text-decoration:none}
+h1{
+  font:32px Georgia,serif;
+  margin:35px 0 10px
+}
+.muted{color:#bdb4c0;line-height:1.5}
+.card{
+  background:#25222c;
+  border:1px solid #483c4c;
+  border-radius:18px;
+  padding:18px;
+  margin-top:18px
+}
+label{
+  display:block;
+  margin:14px 0 7px;
+  color:#d8c9db
+}
+input,textarea,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #55475c;
+  border-radius:12px;
+  background:#16131c;
+  color:white;
+  font:inherit
+}
+textarea{min-height:100px;resize:vertical}
+button{
+  background:#76243f;
+  color:white;
+  border:0;
+  border-radius:12px;
+  padding:12px 15px;
+  font:inherit;
+  cursor:pointer
+}
+.secondary{background:#39313f}
+.danger{
+  background:#50232e;
+  border:1px solid #a44b63
+}
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px
+}
+.entry h3{
+  margin:8px 0;
+  overflow-wrap:anywhere
+}
+.entry p{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.5
+}
+.tag{color:#e4b5c8;font-size:13px}
+.hidden{display:none}
+.small{font-size:13px;color:#aea4b2}
+</style>
+</head>
+
+<body>
+<main>
+
+<a href="stories.html">← Мои истории</a>
+
+<h1>☾ Дневник памяти</h1>
+
+<p class="muted">
+  Сохраняй важные события, отношения, секреты
+  и повороты сюжета. В каждой истории —
+  собственные воспоминания.
+</p>
+
+<div class="card">
+  <label for="storySelect">Выбери историю</label>
+  <select id="storySelect"></select>
+
+  <p class="small">
+    Записи сохраняются в браузере этого устройства.
+    Пока они не передаются нейросети.
+  </p>
+</div>
+
+<section id="workspace" class="hidden">
+
+  <div class="card">
+    <h2 id="editorHeading">Новое воспоминание</h2>
+
+    <form id="memoryForm">
+
+      <label for="category">Тип воспоминания</label>
+      <select id="category">
+        <option value="Событие">Событие</option>
+        <option value="Отношения">Отношения</option>
+        <option value="Секрет">Секрет</option>
+        <option value="Персонаж">Персонаж</option>
+        <option value="Другое">Другое</option>
+      </select>
+
+      <label for="title">Краткое название</label>
+      <input
+        id="title"
+        maxlength="100"
+        placeholder="Например: Знакомство в Париже"
+        required
+      >
+
+      <label for="detail">Что важно запомнить?</label>
+      <textarea
+        id="detail"
+        placeholder="Опиши факт или событие..."
+        required
+      ></textarea>
+
+      <div class="actions">
+        <button type="submit" id="saveButton">
+          Сохранить воспоминание
+        </button>
+
+        <button
+          type="button"
+          class="secondary hidden"
+          id="cancelEdit"
+        >
+          Отмена
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <h2>Сохранённые воспоминания</h2>
+  <div id="entries"></div>
+
+</section>
+
+<p id="empty" class="muted"></p>
+
+</main>
+
+<script>
+const KEY='grey-world-stories-v1';
+
+const $=id=>document.getElementById(id);
+
+let selectedId='';
+let editingId=null;
+
+function readStories(){
+  try{
+    const data=JSON.parse(localStorage.getItem(KEY));
+    return Array.isArray(data)?data:[];
+  }catch{
+    return [];
+  }
+}
+
+function saveStories(data){
+  try{
+    localStorage.setItem(KEY,JSON.stringify(data));
+    return true;
+  }catch{
+    alert('Не удалось сохранить. Возможно, память браузера заполнена.');
+    return false;
+  }
+}
+
+function makeId(){
+  return Date.now().toString(36)
+    +'-'+Math.random().toString(36).slice(2);
+}
+
+function currentStory(){
+  return readStories().find(s=>s&&s.id===selectedId);
+}
+
+function entriesOf(story){
+  return Array.isArray(story&&story.memoryEntries)
+    ?story.memoryEntries.filter(e=>e&&typeof e.id==='string')
+    :[];
+}
+
+function resetEditor(){
+  editingId=null;
+  $('memoryForm').reset();
+  $('editorHeading').textContent='Новое воспоминание';
+  $('saveButton').textContent='Сохранить воспоминание';
+  $('cancelEdit').classList.add('hidden');
+}
+
+function modifyEntries(next){
+  const stories=readStories();
+  const i=stories.findIndex(s=>s&&s.id===selectedId);
+
+  if(i<0){
+    alert('История не найдена.');
+    return false;
+  }
+
+  stories[i]={
+    ...stories[i],
+    memoryEntries:next
+  };
+
+  if(!saveStories(stories))return false;
+
+  resetEditor();
+  renderEntries();
+  return true;
+}
+
+function createButton(text,cls,callback){
+  const b=document.createElement('button');
+  b.type='button';
+  b.textContent=text;
+  b.className=cls;
+  b.addEventListener('click',callback);
+  return b;
+}
+
+function renderEntries(){
+  const list=$('entries');
+  list.replaceChildren();
+
+  const story=currentStory();
+  if(!story)return;
+
+  const items=entriesOf(story);
+
+  if(!items.length){
+    const p=document.createElement('p');
+    p.className='muted';
+    p.textContent='Пока нет воспоминаний. Добавь первое!';
+    list.appendChild(p);
+    return;
+  }
+
+  items.slice().reverse().forEach(entry=>{
+    const card=document.createElement('article');
+    card.className='card entry';
+
+    const tag=document.createElement('div');
+    tag.className='tag';
+    tag.textContent=entry.category||'Событие';
+
+    const heading=document.createElement('h3');
+    heading.textContent=entry.title||'Без названия';
+
+    const detail=document.createElement('p');
+    detail.textContent=entry.detail||'';
+
+    const actions=document.createElement('div');
+    actions.className='actions';
+
+    actions.appendChild(
+      createButton('Изменить','secondary',()=>{
+        editingId=entry.id;
+
+        $('category').value=entry.category||'Событие';
+        $('title').value=entry.title||'';
+        $('detail').value=entry.detail||'';
+
+        $('editorHeading').textContent='Изменить воспоминание';
+        $('saveButton').textContent='Сохранить изменения';
+        $('cancelEdit').classList.remove('hidden');
+
+        $('memoryForm').scrollIntoView({behavior:'smooth'});
+      })
+    );
+
+    actions.appendChild(
+      createButton('Удалить','danger',()=>{
+        if(!confirm('Удалить воспоминание «'+entry.title+'»?')){
+          return;
+        }
+
+        modifyEntries(
+          entriesOf(currentStory()).filter(e=>e.id!==entry.id)
+        );
+      })
+    );
+
+    card.append(tag,heading,detail,actions);
+    list.appendChild(card);
+  });
+}
+
+function chooseStory(){
+  selectedId=$('storySelect').value;
+  resetEditor();
+
+  $('workspace').classList.toggle('hidden',!selectedId);
+
+  $('empty').textContent=selectedId
+    ?''
+    :'Создай историю в разделе «Мои истории», чтобы вести дневник.';
+
+  if(selectedId)renderEntries();
+}
+
+function initialize(){
+  const stories=readStories().filter(s=>
+    s&&
+    typeof s.id==='string'&&
+    typeof s.title==='string'
+  );
+
+  const select=$('storySelect');
+  select.replaceChildren();
+
+  if(!stories.length){
+    select.add(new Option('Нет историй',''));
+    chooseStory();
+    return;
+  }
+
+  stories.forEach(s=>{
+    select.add(new Option(
+      s.title+(s.archived?' · архив':''),
+      s.id
+    ));
+  });
+
+  const requested=new URLSearchParams(location.search).get('story');
+
+  if(requested&&stories.some(s=>s.id===requested)){
+    select.value=requested;
+  }
+
+  chooseStory();
+}
+
+$('storySelect').addEventListener('change',chooseStory);
+
+$('cancelEdit').addEventListener('click',resetEditor);
+
+$('memoryForm').addEventListener('submit',event=>{
+  event.preventDefault();
+
+  const story=currentStory();
+  if(!story)return;
+
+  const title=$('title').value.trim();
+  const detail=$('detail').value.trim();
+
+  if(!title||!detail){
+    alert('Заполни название и описание.');
+    return;
+  }
+
+  const next=entriesOf(story).slice();
+
+  const entry={
+    id:editingId||makeId(),
+    category:$('category').value,
+    title,
+    detail
+  };
+
+  const i=next.findIndex(e=>e.id===entry.id);
+
+  if(i>=0){
+    next[i]=entry;
+  }else{
+    next.push(entry);
+  }
+
+  modifyEntries(next);
+});
+
+initialize();
+</script>
+
+</body>
+</html>
