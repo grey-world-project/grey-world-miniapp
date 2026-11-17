@@ -103,22 +103,22 @@ const chat = document.getElementById('chat');
 
 const storageKey = 'grey-world-chat-v1';
 
+
 function startNewStory() {
-  const confirmed = confirm(
-    'Начать новую историю? Текущая переписка будет удалена.'
-  );
+  const title = prompt('Как назовём новую историю?');
 
-  if (!confirmed) return;
+  if (title === null) return;
 
-  try {
-    localStorage.removeItem(storageKey);
-  } catch (error) {
-    alert('Не удалось очистить историю.');
+  const name = title.trim();
+
+  if (!name) {
+    alert('Напиши название истории.');
     return;
   }
 
-  location.reload();
+  alert('Название: ' + name + '. Следующим шагом подключим сохранение отдельных историй.');
 }
+
 
 function addMessage(text, role) {
   const bubble = document.createElement('div');
