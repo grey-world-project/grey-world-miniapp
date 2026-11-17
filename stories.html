@@ -53,6 +53,7 @@ h1 { margin-top: 45px; }
   padding: 24px;
   border-radius: 20px;
   margin-top: 22px;
+  border: 1px solid #403746;
 }
 
 .tag {
@@ -60,14 +61,51 @@ h1 { margin-top: 45px; }
   font-size: 13px;
 }
 
-.card h2 {
-  margin-bottom: 8px;
+.hero-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 1px solid #655568;
+  flex-shrink: 0;
+}
+
+.avatar-placeholder {
+  width: 76px;
+  height: 76px;
+  border-radius: 16px;
+  background: #39313f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e1bfce;
+  font-size: 30px;
+  flex-shrink: 0;
+}
+
+.hero-name {
+  font-size: 21px;
+  font-weight: bold;
   overflow-wrap: anywhere;
+}
+
+.card h2 {
+  margin: 20px 0 8px;
+  overflow-wrap: anywhere;
+  font-size: 24px;
 }
 
 .description {
   color: #c4bdc8;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .meta {
@@ -145,6 +183,8 @@ h1 { margin-top: 45px; }
 
 <script>
 const storiesKey = 'grey-world-stories-v1';
+const heroesKey = 'grey-world-heroes-v1';
+
 const storiesList = document.getElementById('storiesList');
 const activeTab = document.getElementById('activeTab');
 const archiveTab = document.getElementById('archiveTab');
@@ -161,6 +201,51 @@ function readStories() {
   } catch (error) {
     return [];
   }
+}
+
+function readHeroes() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(heroesKey));
+    return Array.isArray(saved) ? saved : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function getHero(story) {
+  const heroId = story.heroId || 'grey';
+
+  if (heroId === 'grey') {
+    return {
+      id: 'grey',
+      name: 'Грэй',
+      photo: '',
+      personality:
+        'Самоуверенный, независимый и остроумный.'
+    };
+  }
+
+  const hero = readHeroes().find(item =>
+    item && item.id === heroId
+  );
+
+  if (!hero) {
+    return {
+      id: heroId,
+      name: 'Персонаж удалён',
+      photo: '',
+      personality:
+        'Анкета персонажа больше не найдена. ' +
+        'Сама история и переписка сохранены.'
+    };
+  }
+
+  return {
+    id: hero.id,
+    name: hero.name || 'Без имени',
+    photo: hero.photo || '',
+    personality: hero.personality || ''
+  };
 }
 
 function saveStories(stories) {
@@ -230,6 +315,20 @@ function changeArchiveStatus(story, archived) {
     return;
   }
 
+  if (archived === false) {
+    const activeCount = readStories().filter(
+      item => item && item.archived !== true
+    ).length;
+
+    if (activeCount >= 5) {
+      alert(
+        'В демонстрационной версии доступно ' +
+        'не более 5 активных историй.'
+      );
+      return;
+    }
+  }
+
   const question = archived
     ? 'Переместить историю «' + current.title + '» в архив?'
     : 'Вернуть историю «' + current.title + '» в активные?';
@@ -280,9 +379,7 @@ function deleteStory(story) {
     return;
   }
 
-  if (saveStories(remaining)) {
-    renderStories();
-  }
+  if (saveStories(remaining)) renderStories();
 }
 
 function downloadStory(story) {
@@ -293,6 +390,7 @@ function downloadStory(story) {
     return;
   }
 
+  const hero = getHero(current);
   const messages = Array.isArray(current.messages)
     ? current.messages
     : [];
@@ -300,18 +398,21 @@ function downloadStory(story) {
   const lines = [
     'GREY WORLD',
     'История: ' + current.title,
-    'Персонаж: Грэй',
-    '',
-    'Грэй: ' + greeting,
+    'Персонаж: ' + hero.name,
     ''
   ];
+
+  if (hero.id === 'grey') {
+    lines.push('Грэй: ' + greeting);
+    lines.push('');
+  }
 
   messages.forEach(item => {
     if (!item || typeof item.text !== 'string') return;
 
     const author = item.role === 'user'
       ? 'Пользователь'
-      : 'Грэй';
+      : hero.name;
 
     lines.push(author + ': ' + item.text);
     lines.push('');
@@ -340,22 +441,53 @@ function downloadStory(story) {
 }
 
 function createStoryCard(story) {
+  const hero = getHero(story);
+
   const card = document.createElement('div');
   card.className = 'card';
 
   const tag = document.createElement('span');
   tag.className = 'tag';
   tag.textContent = story.archived === true
-    ? 'Грэй · Архивная история'
-    : 'Грэй · Активная история';
+    ? 'Архивная история'
+    : 'Активная история';
+
+  card.appendChild(tag);
+
+  const heroRow = document.createElement('div');
+  heroRow.className = 'hero-row';
+
+  if (hero.photo) {
+    const image = document.createElement('img');
+    image.className = 'avatar';
+    image.src = hero.photo;
+    image.alt = 'Аватар персонажа ' + hero.name;
+    heroRow.appendChild(image);
+  } else {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'avatar-placeholder';
+    placeholder.textContent = '✦';
+    heroRow.appendChild(placeholder);
+  }
+
+  const heroName = document.createElement('div');
+  heroName.className = 'hero-name';
+  heroName.textContent = hero.name;
+  heroRow.appendChild(heroName);
+
+  card.appendChild(heroRow);
 
   const title = document.createElement('h2');
   title.textContent = story.title;
+  card.appendChild(title);
 
   const description = document.createElement('p');
   description.className = 'description';
-  description.textContent =
-    'История с самоуверенным и остроумным Грэем.';
+
+  description.textContent = hero.personality ||
+    'История с персонажем «' + hero.name + '».';
+
+  card.appendChild(description);
 
   const count = Array.isArray(story.messages)
     ? story.messages.length
@@ -364,6 +496,7 @@ function createStoryCard(story) {
   const meta = document.createElement('p');
   meta.className = 'meta';
   meta.textContent = 'Сообщений: ' + count;
+  card.appendChild(meta);
 
   const actions = document.createElement('div');
   actions.className = 'actions';
@@ -422,17 +555,13 @@ function createStoryCard(story) {
   actions.appendChild(archiveButton);
   actions.appendChild(deleteButton);
 
-  card.appendChild(tag);
-  card.appendChild(title);
-  card.appendChild(description);
-  card.appendChild(meta);
   card.appendChild(actions);
 
   return card;
 }
 
 function renderStories() {
-  storiesList.textContent = '';
+  storiesList.replaceChildren();
 
   const stories = readStories().filter(story =>
     story &&
@@ -493,9 +622,7 @@ window.addEventListener('pageshow', function() {
 });
 
 document.addEventListener('visibilitychange', function() {
-  if (!document.hidden) {
-    renderStories();
-  }
+  if (!document.hidden) renderStories();
 });
 
 renderStories();
