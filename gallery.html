@@ -2,98 +2,153 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Галерея — GREY WORLD</title>
-<style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: #111116;
-  color: #e5e2e8;
-  font-family: Arial, sans-serif;
-}
-header {
-  text-align: center;
-  padding: 45px 20px 25px;
-}
-h1 {
-  font-family: Georgia, serif;
-  letter-spacing: 5px;
-  font-size: 30px;
-}
-.subtitle { color: #bcb3bf; }
-main {
-  max-width: 650px;
-  margin: auto;
-  padding: 20px;
-}
-.card {
-  background: #22202a;
-  border: 1px solid #403747;
-  border-radius: 16px;
-  padding: 24px;
-  margin: 20px 0;
-}
-.card h2 { margin-top: 0; }
-.card p { color: #bcb3bf; line-height: 1.6; }
-.tag {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  background: #392432;
-  color: #e8c8d6;
-  font-size: 13px;
-}
-button, .back {
-  display: inline-block;
-  margin-top: 16px;
-  padding: 13px 20px;
-  background: #76243f;
-  color: white;
-  border: 0;
-  border-radius: 12px;
-  font-size: 16px;
-  text-decoration: none;
-}
-.notice {
-  text-align: center;
-  color: #bcb3bf;
-  font-size: 13px;
-  margin-top: 40px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Галерея персонажей — GREY WORLD</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #111116;
+      color: #e5e2e8;
+      font-family: Arial, sans-serif;
+      padding: 35px 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 65px;
+    }
+
+    .logo {
+      font-family: Georgia, serif;
+      font-size: clamp(32px, 8vw, 46px);
+      letter-spacing: 5px;
+      margin: 0;
+    }
+
+    .subtitle {
+      color: #aaa3b0;
+      margin-top: 20px;
+    }
+
+    .back {
+      display: inline-block;
+      background: #76243f;
+      color: white;
+      text-decoration: none;
+      padding: 14px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #25222c;
+      border: 1px solid #403746;
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .tag {
+      display: inline-block;
+      color: #e1bfce;
+      background: #3b2734;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    h2 {
+      margin-top: 12px;
+      font-size: 28px;
+    }
+
+    .description {
+      color: #bdb5c1;
+      line-height: 1.65;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 15px 20px;
+      border-radius: 12px;
+      color: white;
+      background: #76243f;
+      text-decoration: none;
+      border: none;
+      font: inherit;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .secondary {
+      background: #39313f;
+    }
+
+    footer {
+      text-align: center;
+      color: #aaa3b0;
+      font-size: 13px;
+      margin-top: 45px;
+    }
+  </style>
 </head>
+
 <body>
-<header>
-  <h1>GREY WORLD</h1>
-  <p class="subtitle">Галерея персонажей</p>
-</header>
-<main>
-  <a class="back" href="index.html">← На главную</a>
+
+  <header>
+    <h1 class="logo">GREY WORLD</h1>
+    <p class="subtitle">Галерея персонажей</p>
+  </header>
+
+  <a class="back" href="index.html">
+    ← На главную
+  </a>
 
   <div class="card">
     <span class="tag">Первый персонаж</span>
+
     <h2>Грэй</h2>
-    <p>
+
+    <p class="description">
       Самоуверенный, независимый и остроумный.
       Его сарказм способен вывести из себя,
       но за колкими словами иногда скрывается
       неожиданная теплота.
     </p>
-    <p>
+
+    <p class="description">
       Не любит подчиняться чужим правилам.
       Обожает словесные дуэли и всегда
       оставляет последнее слово за собой.
     </p>
-    <button onclick="location.href='chat.html'">
-      Начать историю
-    </button>
+
+    <div class="actions">
+      <a class="button" href="chat.html">
+        + Новая история
+      </a>
+
+      <a class="button secondary" href="stories.html">
+        Мои истории
+      </a>
+    </div>
   </div>
 
-  <p class="notice">
+  <footer>
     18+ · Демонстрационная версия · GREY WORLD
-  </p>
-</main>
+  </footer>
+
 </body>
 </html>
