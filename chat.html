@@ -81,6 +81,9 @@ button {
   <a class="back" href="gallery.html">← К персонажам</a>
   <h1>Грэй</h1>
   <div class="status">GREY WORLD · Демонстрационный чат</div>
+  <button type="button" onclick="startNewStory()">
+  + Новая история
+</button>
 </header>
 
 <div class="chat" id="chat">
@@ -99,6 +102,23 @@ const input = document.getElementById('message');
 const chat = document.getElementById('chat');
 
 const storageKey = 'grey-world-chat-v1';
+
+function startNewStory() {
+  const confirmed = confirm(
+    'Начать новую историю? Текущая переписка будет удалена.'
+  );
+
+  if (!confirmed) return;
+
+  try {
+    localStorage.removeItem(storageKey);
+  } catch (error) {
+    alert('Не удалось очистить историю.');
+    return;
+  }
+
+  location.reload();
+}
 
 function addMessage(text, role) {
   const bubble = document.createElement('div');
