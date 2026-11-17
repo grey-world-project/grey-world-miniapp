@@ -52,14 +52,28 @@ h1 {
   line-height: 1.5;
 }
 
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
 .button {
   display: inline-block;
   background: #76243f;
   color: white;
   text-decoration: none;
-  padding: 14px 20px;
+  padding: 14px 18px;
+  border: none;
   border-radius: 12px;
-  margin-top: 12px;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.download {
+  background: #39313f;
 }
 
 .meta {
@@ -103,6 +117,9 @@ h1 {
 const storiesKey = 'grey-world-stories-v1';
 const storiesList = document.getElementById('storiesList');
 
+const greeting =
+  'Ну здравствуй. Я Грэй. Надеюсь, ты пришла не ради скучных разговоров?';
+
 function readStories() {
   try {
     const saved = JSON.parse(
@@ -113,6 +130,55 @@ function readStories() {
   } catch (error) {
     return [];
   }
+}
+
+function downloadStory(story) {
+  const messages = Array.isArray(story.messages)
+    ? story.messages
+    : [];
+
+  const lines = [
+    'GREY WORLD',
+    'История: ' + story.title,
+    'Персонаж: Грэй',
+    '',
+    'Грэй: ' + greeting,
+    ''
+  ];
+
+  messages.forEach(item => {
+    if (!item || typeof item.text !== 'string') {
+      return;
+    }
+
+    const author = item.role === 'user'
+      ? 'Пользователь'
+      : 'Грэй';
+
+    lines.push(author + ': ' + item.text);
+    lines.push('');
+  });
+
+  const content = '\uFEFF' + lines.join('\n');
+
+  const blob = new Blob(
+    [content],
+    { type: 'text/plain;charset=utf-8' }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'grey-world-story.txt';
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(function() {
+    URL.revokeObjectURL(url);
+  }, 60000);
 }
 
 function createStoryCard(story) {
@@ -139,17 +205,32 @@ function createStoryCard(story) {
   meta.className = 'meta';
   meta.textContent = 'Сообщений: ' + count;
 
+  const actions = document.createElement('div');
+  actions.className = 'actions';
+
   const link = document.createElement('a');
   link.className = 'button';
   link.textContent = 'Продолжить историю';
   link.href =
     'chat.html?story=' + encodeURIComponent(story.id);
 
+  const downloadButton = document.createElement('button');
+  downloadButton.type = 'button';
+  downloadButton.className = 'button download';
+  downloadButton.textContent = 'Скачать историю';
+
+  downloadButton.addEventListener('click', function() {
+    downloadStory(story);
+  });
+
+  actions.appendChild(link);
+  actions.appendChild(downloadButton);
+
   card.appendChild(tag);
   card.appendChild(title);
   card.appendChild(description);
   card.appendChild(meta);
-  card.appendChild(link);
+  card.appendChild(actions);
 
   return card;
 }
