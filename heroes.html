@@ -57,7 +57,7 @@
     }
     textarea { min-height: 95px; resize: vertical; }
     label { display: block; color: #d6cbd9; }
-    .hidden { display: none; }
+    .hidden { display: none !important; }
     .details { white-space: pre-wrap; overflow-wrap: anywhere; }
     .details p { margin: 9px 0; }
     .actions { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -65,6 +65,50 @@
       padding: 25px;
       text-align: center;
       color: #b6adb9;
+    }
+
+    /* Аватар персонажа */
+    .hero-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .hero-header h2 { margin: 0; overflow-wrap: anywhere; }
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 18px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid #655568;
+      background: #19151e;
+    }
+    .avatar-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      color: #d6b7cb;
+    }
+    .avatar-preview {
+      width: 120px;
+      height: 120px;
+      margin: 10px 0;
+      border-radius: 18px;
+      object-fit: cover;
+      border: 1px solid #655568;
+    }
+    .photo-controls { margin-bottom: 18px; }
+    .photo-controls button { font-size: 14px; }
+    .photo-note { font-size: 13px; }
+    .profile-photo {
+      display: block;
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      border-radius: 18px;
+      margin: 14px 0;
     }
   </style>
 </head>
@@ -79,6 +123,24 @@
   <section id="editor" class="card hidden">
     <h2 id="editorTitle">Новый персонаж</h2>
     <form id="heroForm">
+
+      <label>Фотография персонажа
+        <input id="heroPhoto" type="file" accept="image/*">
+      </label>
+
+      <div id="photoControls" class="photo-controls hidden">
+        <img id="photoPreview" class="avatar-preview" alt="Аватар персонажа">
+        <div>
+          <button id="removePhoto" type="button" class="danger">
+            Удалить фотографию
+          </button>
+        </div>
+      </div>
+      <p class="muted photo-note">
+        Можно загрузить одну фотографию. Она будет уменьшена
+        для экономии памяти телефона.
+      </p>
+
       <label>Имя персонажа *
         <input id="heroName" maxlength="100" required>
       </label>
@@ -101,7 +163,7 @@
         <textarea id="heroPreferences" placeholder="Интересы, границы, предпочтения..."></textarea>
       </label>
       <div class="actions">
-        <button type="submit">Сохранить героя</button>
+        <button id="saveHeroButton" type="submit">Сохранить героя</button>
         <button type="button" class="secondary" id="cancelEdit">Отмена</button>
       </div>
     </form>
@@ -116,6 +178,11 @@
   const list = document.getElementById('heroesList');
   const editor = document.getElementById('editor');
   const form = document.getElementById('heroForm');
+  const photoInput = document.getElementById('heroPhoto');
+  const photoPreview = document.getElementById('photoPreview');
+  const photoControls = document.getElementById('photoControls');
+  const saveButton = document.getElementById('saveHeroButton');
+
   const fields = {
     name: document.getElementById('heroName'),
     age: document.getElementById('heroAge'),
@@ -127,6 +194,8 @@
   };
 
   let editingId = null;
+  let currentPhoto = '';
+  let photoBusy = false;
 
   function readHeroes() {
     try {
@@ -142,8 +211,21 @@
       localStorage.setItem(KEY, JSON.stringify(heroes));
       return true;
     } catch (error) {
-      alert('Не удалось сохранить данные. Проверь память браузера.');
+      alert(
+        'Не удалось сохранить данные. Возможно, память браузера заполнена. ' +
+        'Попробуй уменьшить количество фотографий.'
+      );
       return false;
+    }
+  }
+
+  function updatePhotoPreview() {
+    if (currentPhoto) {
+      photoPreview.src = currentPhoto;
+      photoControls.classList.remove('hidden');
+    } else {
+      photoPreview.removeAttribute('src');
+      photoControls.classList.add('hidden');
     }
   }
 
@@ -155,6 +237,9 @@
       fields[key].value = hero ? (hero[key] || '') : '';
     });
 
+    currentPhoto = hero ? (hero.photo || '') : '';
+    updatePhotoPreview();
+
     document.getElementById('editorTitle').textContent =
       hero ? 'Редактировать героя' : 'Новый персонаж';
 
@@ -165,7 +250,9 @@
   function hideEditor() {
     editor.classList.add('hidden');
     editingId = null;
+    currentPhoto = '';
     form.reset();
+    updatePhotoPreview();
   }
 
   function makeButton(text, className, action) {
@@ -187,6 +274,88 @@
     parent.appendChild(p);
   }
 
+  function resizePhoto(file) {
+    return new Promise((resolve, reject) => {
+      if (!file.type.startsWith('image/')) {
+        reject(new Error('Выбери файл изображения.'));
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onerror = () => {
+        reject(new Error('Не удалось прочитать фотографию.'));
+      };
+
+      reader.onload = () => {
+        const image = new Image();
+
+        image.onerror = () => {
+          reject(new Error('Не удалось открыть изображение.'));
+        };
+
+        image.onload = () => {
+          try {
+            const maxSize = 400;
+            const scale = Math.min(
+              1,
+              maxSize / Math.max(image.width, image.height)
+            );
+
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(image.width * scale));
+            canvas.height = Math.max(1, Math.round(image.height * scale));
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+              reject(new Error('Не удалось обработать фотографию.'));
+              return;
+            }
+
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            const data = canvas.toDataURL('image/jpeg', 0.72);
+            resolve(data);
+          } catch (error) {
+            reject(new Error('Не удалось уменьшить фотографию.'));
+          }
+        };
+
+        image.src = reader.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  photoInput.addEventListener('change', async () => {
+    const file = photoInput.files && photoInput.files[0];
+    if (!file) return;
+
+    photoBusy = true;
+    saveButton.disabled = true;
+    saveButton.textContent = 'Обработка фотографии...';
+
+    try {
+      const resized = await resizePhoto(file);
+      currentPhoto = resized;
+      updatePhotoPreview();
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      photoInput.value = '';
+      photoBusy = false;
+      saveButton.disabled = false;
+      saveButton.textContent = 'Сохранить героя';
+    }
+  });
+
+  document.getElementById('removePhoto').addEventListener('click', () => {
+    currentPhoto = '';
+    photoInput.value = '';
+    updatePhotoPreview();
+  });
+
   function render() {
     list.replaceChildren();
     const heroes = readHeroes();
@@ -203,12 +372,38 @@
       const card = document.createElement('article');
       card.className = 'card';
 
+      const header = document.createElement('div');
+      header.className = 'hero-header';
+
+      if (hero.photo) {
+        const avatar = document.createElement('img');
+        avatar.className = 'avatar';
+        avatar.src = hero.photo;
+        avatar.alt = 'Аватар ' + (hero.name || 'персонажа');
+        header.appendChild(avatar);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'avatar avatar-placeholder';
+        placeholder.textContent = '✦';
+        header.appendChild(placeholder);
+      }
+
       const title = document.createElement('h2');
       title.textContent = hero.name || 'Без имени';
-      card.appendChild(title);
+      header.appendChild(title);
+      card.appendChild(header);
 
       const details = document.createElement('div');
       details.className = 'details hidden';
+
+      if (hero.photo) {
+        const fullPhoto = document.createElement('img');
+        fullPhoto.className = 'profile-photo';
+        fullPhoto.src = hero.photo;
+        fullPhoto.alt = 'Фотография персонажа';
+        details.appendChild(fullPhoto);
+      }
+
       addDetail(details, 'Возраст', hero.age);
       addDetail(details, 'Пол / гендер', hero.gender);
       addDetail(details, 'Внешность', hero.appearance);
@@ -231,7 +426,7 @@
       const remove = makeButton('Удалить', 'danger', () => {
         const confirmed = confirm(
           'Удалить персонажа «' + hero.name + '»?\n\n' +
-          'Анкета будет удалена без возможности восстановления.'
+          'Анкета и фотография будут удалены без возможности восстановления.'
         );
         if (!confirmed) return;
 
@@ -256,6 +451,7 @@
 
   form.addEventListener('submit', event => {
     event.preventDefault();
+    if (photoBusy) return;
 
     const name = fields.name.value.trim();
     if (!name) {
@@ -268,7 +464,8 @@
       id: editingId || (
         Date.now().toString(36) +
         '-' + Math.random().toString(36).slice(2)
-      )
+      ),
+      photo: currentPhoto
     };
 
     Object.keys(fields).forEach(key => {
