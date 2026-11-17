@@ -93,23 +93,58 @@ button {
 </form>
 
 <script>
+
 const form = document.getElementById('form');
 const input = document.getElementById('message');
 const chat = document.getElementById('chat');
 
+const storageKey = 'grey-world-chat-v1';
+
+function addMessage(text, role) {
+  const bubble = document.createElement('div');
+  bubble.className = 'message ' + role;
+  bubble.textContent = text;
+  chat.appendChild(bubble);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+let messages = [];
+
+try {
+  const saved = JSON.parse(localStorage.getItem(storageKey));
+  if (Array.isArray(saved)) {
+    messages = saved.filter(item =>
+      item &&
+      typeof item.text === 'string' &&
+      (item.role === 'user' || item.role === 'bot')
+    );
+  }
+} catch (error) {
+  messages = [];
+}
+
+messages.forEach(item => {
+  addMessage(item.text, item.role);
+});
+
 form.addEventListener('submit', function(event) {
   event.preventDefault();
+
   const text = input.value.trim();
   if (!text) return;
 
-  const bubble = document.createElement('div');
-  bubble.className = 'message user';
-  bubble.textContent = text;
-  chat.appendChild(bubble);
+  addMessage(text, 'user');
+  messages.push({ text: text, role: 'user' });
+
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+  } catch (error) {
+    console.warn('Не удалось сохранить переписку');
+  }
 
   input.value = '';
-  chat.scrollTop = chat.scrollHeight;
 });
+
 </script>
 
 </body>
