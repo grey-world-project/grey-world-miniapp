@@ -22,13 +22,9 @@ body {
   text-decoration: none;
 }
 
-h1 {
-  margin-top: 45px;
-}
+h1 { margin-top: 45px; }
 
-.subtitle {
-  color: #aaa3b0;
-}
+.subtitle { color: #aaa3b0; }
 
 .card {
   background: #25222c;
@@ -72,7 +68,7 @@ h1 {
   cursor: pointer;
 }
 
-.download {
+.secondary {
   background: #39313f;
 }
 
@@ -122,13 +118,62 @@ const greeting =
 
 function readStories() {
   try {
-    const saved = JSON.parse(
-      localStorage.getItem(storiesKey)
-    );
-
+    const saved = JSON.parse(localStorage.getItem(storiesKey));
     return Array.isArray(saved) ? saved : [];
   } catch (error) {
     return [];
+  }
+}
+
+function saveStories(stories) {
+  try {
+    localStorage.setItem(storiesKey, JSON.stringify(stories));
+    return true;
+  } catch (error) {
+    alert('Не удалось сохранить изменения.');
+    return false;
+  }
+}
+
+function renameStory(story) {
+  const newTitle = prompt(
+    'Новое название истории:',
+    story.title
+  );
+
+  if (newTitle === null) return;
+
+  const name = newTitle.trim();
+
+  if (!name) {
+    alert('Название не может быть пустым.');
+    return;
+  }
+
+  if (name.length > 100) {
+    alert('Название не должно превышать 100 символов.');
+    return;
+  }
+
+  const stories = readStories();
+
+  const index = stories.findIndex(
+    item => item && item.id === story.id
+  );
+
+  if (index === -1) {
+    alert('История не найдена.');
+    return;
+  }
+
+  stories[index] = {
+    ...stories[index],
+    title: name,
+    updatedAt: Date.now()
+  };
+
+  if (saveStories(stories)) {
+    renderStories();
   }
 }
 
@@ -147,9 +192,7 @@ function downloadStory(story) {
   ];
 
   messages.forEach(item => {
-    if (!item || typeof item.text !== 'string') {
-      return;
-    }
+    if (!item || typeof item.text !== 'string') return;
 
     const author = item.role === 'user'
       ? 'Пользователь'
@@ -208,22 +251,32 @@ function createStoryCard(story) {
   const actions = document.createElement('div');
   actions.className = 'actions';
 
-  const link = document.createElement('a');
-  link.className = 'button';
-  link.textContent = 'Продолжить историю';
-  link.href =
+  const continueLink = document.createElement('a');
+  continueLink.className = 'button';
+  continueLink.textContent = 'Продолжить историю';
+  continueLink.href =
     'chat.html?story=' + encodeURIComponent(story.id);
+
+  const renameButton = document.createElement('button');
+  renameButton.type = 'button';
+  renameButton.className = 'button secondary';
+  renameButton.textContent = '✎ Переименовать';
+
+  renameButton.addEventListener('click', function() {
+    renameStory(story);
+  });
 
   const downloadButton = document.createElement('button');
   downloadButton.type = 'button';
-  downloadButton.className = 'button download';
+  downloadButton.className = 'button secondary';
   downloadButton.textContent = 'Скачать историю';
 
   downloadButton.addEventListener('click', function() {
     downloadStory(story);
   });
 
-  actions.appendChild(link);
+  actions.appendChild(continueLink);
+  actions.appendChild(renameButton);
   actions.appendChild(downloadButton);
 
   card.appendChild(tag);
