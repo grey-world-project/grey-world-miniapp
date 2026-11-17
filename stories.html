@@ -24,7 +24,32 @@ body {
 
 h1 { margin-top: 45px; }
 
-.subtitle { color: #aaa3b0; }
+.subtitle {
+  color: #aaa3b0;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.tab {
+  flex: 1;
+  padding: 14px 10px;
+  background: #29252f;
+  color: #c4bdc8;
+  border: 1px solid #403746;
+  border-radius: 12px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #76243f;
+  color: white;
+  border-color: #76243f;
+}
 
 .card {
   background: #25222c;
@@ -80,7 +105,8 @@ h1 { margin-top: 45px; }
 
 .empty {
   color: #aaa3b0;
-  padding: 24px 0;
+  padding: 25px 5px;
+  line-height: 1.6;
 }
 
 .notice {
@@ -103,6 +129,24 @@ h1 { margin-top: 45px; }
   Твои миры. Твои сюжеты. Твои правила.
 </p>
 
+<div class="tabs">
+  <button
+    class="tab active"
+    id="activeTab"
+    type="button"
+  >
+    Активные
+  </button>
+
+  <button
+    class="tab"
+    id="archiveTab"
+    type="button"
+  >
+    Архив
+  </button>
+</div>
+
 <div id="storiesList"></div>
 
 <p class="notice">
@@ -113,8 +157,13 @@ h1 { margin-top: 45px; }
 const storiesKey = 'grey-world-stories-v1';
 const storiesList = document.getElementById('storiesList');
 
+const activeTab = document.getElementById('activeTab');
+const archiveTab = document.getElementById('archiveTab');
+
 const greeting =
   'Ну здравствуй. Я Грэй. Надеюсь, ты пришла не ради скучных разговоров?';
+
+let currentTab = 'active';
 
 function readStories() {
   try {
@@ -177,6 +226,35 @@ function renameStory(story) {
   }
 }
 
+function changeArchiveStatus(story, archived) {
+  const question = archived
+    ? 'Переместить историю «' + story.title + '» в архив?'
+    : 'Вернуть историю «' + story.title + '» в активные?';
+
+  if (!confirm(question)) return;
+
+  const stories = readStories();
+
+  const index = stories.findIndex(
+    item => item && item.id === story.id
+  );
+
+  if (index === -1) {
+    alert('История не найдена.');
+    return;
+  }
+
+  stories[index] = {
+    ...stories[index],
+    archived: archived,
+    updatedAt: Date.now()
+  };
+
+  if (saveStories(stories)) {
+    renderStories();
+  }
+}
+
 function downloadStory(story) {
   const messages = Array.isArray(story.messages)
     ? story.messages
@@ -230,7 +308,9 @@ function createStoryCard(story) {
 
   const tag = document.createElement('span');
   tag.className = 'tag';
-  tag.textContent = 'Грэй · Сохранённая история';
+  tag.textContent = story.archived === true
+    ? 'Грэй · Архивная история'
+    : 'Грэй · Активная история';
 
   const title = document.createElement('h2');
   title.textContent = story.title;
@@ -253,7 +333,10 @@ function createStoryCard(story) {
 
   const continueLink = document.createElement('a');
   continueLink.className = 'button';
-  continueLink.textContent = 'Продолжить историю';
+  continueLink.textContent = story.archived === true
+    ? 'Читать историю'
+    : 'Продолжить историю';
+
   continueLink.href =
     'chat.html?story=' + encodeURIComponent(story.id);
 
@@ -275,9 +358,24 @@ function createStoryCard(story) {
     downloadStory(story);
   });
 
+  const archiveButton = document.createElement('button');
+  archiveButton.type = 'button';
+  archiveButton.className = 'button secondary';
+
+  const isArchived = story.archived === true;
+
+  archiveButton.textContent = isArchived
+    ? 'Вернуть в активные'
+    : 'В архив';
+
+  archiveButton.addEventListener('click', function() {
+    changeArchiveStatus(story, !isArchived);
+  });
+
   actions.appendChild(continueLink);
   actions.appendChild(renameButton);
   actions.appendChild(downloadButton);
+  actions.appendChild(archiveButton);
 
   card.appendChild(tag);
   card.appendChild(title);
@@ -294,15 +392,19 @@ function renderStories() {
   const stories = readStories().filter(story =>
     story &&
     typeof story.id === 'string' &&
-    typeof story.title === 'string'
+    typeof story.title === 'string' &&
+    (currentTab === 'archive'
+      ? story.archived === true
+      : story.archived !== true)
   );
 
   if (stories.length === 0) {
     const empty = document.createElement('p');
     empty.className = 'empty';
-    empty.textContent =
-      'Пока нет сохранённых историй. ' +
-      'Открой Грэя и начни свою первую историю.';
+
+    empty.textContent = currentTab === 'archive'
+      ? 'В архиве пока нет историй.'
+      : 'Активных историй пока нет.';
 
     storiesList.appendChild(empty);
     return;
@@ -316,6 +418,30 @@ function renderStories() {
     storiesList.appendChild(createStoryCard(story));
   });
 }
+
+function switchTab(tab) {
+  currentTab = tab;
+
+  activeTab.classList.toggle(
+    'active',
+    tab === 'active'
+  );
+
+  archiveTab.classList.toggle(
+    'active',
+    tab === 'archive'
+  );
+
+  renderStories();
+}
+
+activeTab.addEventListener('click', function() {
+  switchTab('active');
+});
+
+archiveTab.addEventListener('click', function() {
+  switchTab('archive');
+});
 
 renderStories();
 </script>
