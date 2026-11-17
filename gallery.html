@@ -7,9 +7,7 @@
   <title>Галерея персонажей — GREY WORLD</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -21,7 +19,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 65px;
+      margin-bottom: 45px;
     }
 
     .logo {
@@ -46,11 +44,17 @@
       margin-bottom: 20px;
     }
 
+    .section-title {
+      margin: 30px 0 16px;
+      font-size: 24px;
+    }
+
     .card {
       background: #25222c;
       border: 1px solid #403746;
       border-radius: 20px;
       padding: 24px;
+      margin-bottom: 18px;
     }
 
     .tag {
@@ -65,18 +69,21 @@
     h2 {
       margin-top: 12px;
       font-size: 28px;
+      overflow-wrap: anywhere;
     }
 
     .description {
       color: #bdb5c1;
       line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 30px;
+      margin-top: 24px;
     }
 
     .button {
@@ -93,8 +100,42 @@
       text-align: center;
     }
 
-    .secondary {
-      background: #39313f;
+    .secondary { background: #39313f; }
+
+    .hero-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .hero-avatar {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid #655568;
+      flex-shrink: 0;
+    }
+
+    .hero-placeholder {
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #342b3a;
+      color: #e1bfce;
+      font-size: 36px;
+      border-radius: 18px;
+      flex-shrink: 0;
+    }
+
+    .hero-header h2 { margin: 0; }
+
+    .empty {
+      color: #bdb5c1;
+      line-height: 1.6;
     }
 
     footer {
@@ -113,30 +154,26 @@
     <p class="subtitle">Галерея персонажей</p>
   </header>
 
-  <a class="back" href="index.html">
-    ← На главную
-  </a>
+  <a class="back" href="index.html">← На главную</a>
+
+  <h2 class="section-title">Персонажи GREY WORLD</h2>
 
   <div class="card">
     <span class="tag">Первый персонаж</span>
 
     <h2>Грэй</h2>
 
-    <p class="description">
-      Самоуверенный, независимый и остроумный.
-      Его сарказм способен вывести из себя,
-      но за колкими словами иногда скрывается
-      неожиданная теплота.
-    </p>
+    <p class="description">Самоуверенный, независимый и остроумный.
+Его сарказм способен вывести из себя,
+но за колкими словами иногда скрывается
+неожиданная теплота.</p>
 
-    <p class="description">
-      Не любит подчиняться чужим правилам.
-      Обожает словесные дуэли и всегда
-      оставляет последнее слово за собой.
-    </p>
+    <p class="description">Не любит подчиняться чужим правилам.
+Обожает словесные дуэли и всегда
+оставляет последнее слово за собой.</p>
 
     <div class="actions">
-      <a class="button" href="chat.html">
+      <a class="button" href="chat.html?new=1&amp;hero=grey">
         + Новая история
       </a>
 
@@ -146,9 +183,116 @@
     </div>
   </div>
 
+  <h2 class="section-title">Мои персонажи</h2>
+
+  <div id="myHeroes"></div>
+
+  <div class="actions">
+    <a class="button secondary" href="heroes.html">
+      + Создать персонажа
+    </a>
+  </div>
+
   <footer>
     18+ · Демонстрационная версия · GREY WORLD
   </footer>
+
+  <script>
+    const HEROES_KEY = 'grey-world-heroes-v1';
+    const container = document.getElementById('myHeroes');
+
+    function readHeroes() {
+      try {
+        const data = JSON.parse(localStorage.getItem(HEROES_KEY));
+        return Array.isArray(data) ? data : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function createLink(text, href, secondary = false) {
+      const link = document.createElement('a');
+      link.className = secondary ? 'button secondary' : 'button';
+      link.textContent = text;
+      link.href = href;
+      return link;
+    }
+
+    function renderHeroes() {
+      container.replaceChildren();
+
+      const heroes = readHeroes();
+
+      if (!heroes.length) {
+        const empty = document.createElement('div');
+        empty.className = 'card empty';
+        empty.textContent =
+          'Пока нет созданных персонажей. ' +
+          'Ты можешь создать своего первого героя.';
+        container.appendChild(empty);
+        return;
+      }
+
+      heroes.forEach(hero => {
+        if (!hero || !hero.id) return;
+
+        const card = document.createElement('article');
+        card.className = 'card';
+
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = 'Мой персонаж';
+        card.appendChild(tag);
+
+        const header = document.createElement('div');
+        header.className = 'hero-header';
+
+        if (hero.photo) {
+          const image = document.createElement('img');
+          image.className = 'hero-avatar';
+          image.src = hero.photo;
+          image.alt = 'Аватар персонажа';
+          header.appendChild(image);
+        } else {
+          const placeholder = document.createElement('div');
+          placeholder.className = 'hero-placeholder';
+          placeholder.textContent = '✦';
+          header.appendChild(placeholder);
+        }
+
+        const name = document.createElement('h2');
+        name.textContent = hero.name || 'Без имени';
+        header.appendChild(name);
+        card.appendChild(header);
+
+        if (hero.personality) {
+          const description = document.createElement('p');
+          description.className = 'description';
+          description.textContent = hero.personality;
+          card.appendChild(description);
+        }
+
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+
+        actions.appendChild(
+          createLink(
+            '+ Новая история',
+            'chat.html?new=1&hero=' + encodeURIComponent(hero.id)
+          )
+        );
+
+        actions.appendChild(
+          createLink('Редактировать анкету', 'heroes.html', true)
+        );
+
+        card.appendChild(actions);
+        container.appendChild(card);
+      });
+    }
+
+    renderHeroes();
+  </script>
 
 </body>
 </html>
