@@ -98,6 +98,11 @@ h1 { margin-top: 45px; }
 
 .secondary { background: #39313f; }
 
+.delete {
+  background: #50232e;
+  border: 1px solid #a44b63;
+}
+
 .empty {
   color: #aaa3b0;
   padding: 25px 5px;
@@ -168,10 +173,23 @@ function saveStories(stories) {
   }
 }
 
+function findCurrentStory(story) {
+  return readStories().find(
+    item => item && item.id === story.id
+  );
+}
+
 function renameStory(story) {
+  const current = findCurrentStory(story);
+
+  if (!current) {
+    alert('История не найдена.');
+    return;
+  }
+
   const newTitle = prompt(
     'Новое название истории:',
-    story.title
+    current.title
   );
 
   if (newTitle === null) return;
@@ -193,10 +211,7 @@ function renameStory(story) {
     item => item && item.id === story.id
   );
 
-  if (index === -1) {
-    alert('История не найдена.');
-    return;
-  }
+  if (index === -1) return;
 
   stories[index] = {
     ...stories[index],
@@ -208,9 +223,16 @@ function renameStory(story) {
 }
 
 function changeArchiveStatus(story, archived) {
+  const current = findCurrentStory(story);
+
+  if (!current) {
+    alert('История не найдена.');
+    return;
+  }
+
   const question = archived
-    ? 'Переместить историю «' + story.title + '» в архив?'
-    : 'Вернуть историю «' + story.title + '» в активные?';
+    ? 'Переместить историю «' + current.title + '» в архив?'
+    : 'Вернуть историю «' + current.title + '» в активные?';
 
   if (!confirm(question)) return;
 
@@ -219,10 +241,7 @@ function changeArchiveStatus(story, archived) {
     item => item && item.id === story.id
   );
 
-  if (index === -1) {
-    alert('История не найдена.');
-    return;
-  }
+  if (index === -1) return;
 
   stories[index] = {
     ...stories[index],
@@ -233,14 +252,54 @@ function changeArchiveStatus(story, archived) {
   if (saveStories(stories)) renderStories();
 }
 
+function deleteStory(story) {
+  const current = findCurrentStory(story);
+
+  if (!current) {
+    alert('История не найдена.');
+    renderStories();
+    return;
+  }
+
+  const question =
+    'Удалить историю «' + current.title + '»?\n\n' +
+    'Вся переписка этой истории будет удалена ' +
+    'без возможности восстановления.\n\n' +
+    'Другие истории останутся без изменений.';
+
+  if (!confirm(question)) return;
+
+  const stories = readStories();
+  const remaining = stories.filter(
+    item => !item || item.id !== story.id
+  );
+
+  if (remaining.length === stories.length) {
+    alert('История уже отсутствует.');
+    renderStories();
+    return;
+  }
+
+  if (saveStories(remaining)) {
+    renderStories();
+  }
+}
+
 function downloadStory(story) {
-  const messages = Array.isArray(story.messages)
-    ? story.messages
+  const current = findCurrentStory(story);
+
+  if (!current) {
+    alert('История не найдена.');
+    return;
+  }
+
+  const messages = Array.isArray(current.messages)
+    ? current.messages
     : [];
 
   const lines = [
     'GREY WORLD',
-    'История: ' + story.title,
+    'История: ' + current.title,
     'Персонаж: Грэй',
     '',
     'Грэй: ' + greeting,
@@ -339,6 +398,7 @@ function createStoryCard(story) {
   archiveButton.className = 'button secondary';
 
   const isArchived = story.archived === true;
+
   archiveButton.textContent = isArchived
     ? 'Вернуть в активные'
     : 'В архив';
@@ -347,10 +407,20 @@ function createStoryCard(story) {
     changeArchiveStatus(story, !isArchived);
   });
 
+  const deleteButton = document.createElement('button');
+  deleteButton.type = 'button';
+  deleteButton.className = 'button delete';
+  deleteButton.textContent = 'Удалить историю';
+
+  deleteButton.addEventListener('click', function() {
+    deleteStory(story);
+  });
+
   actions.appendChild(continueLink);
   actions.appendChild(renameButton);
   actions.appendChild(downloadButton);
   actions.appendChild(archiveButton);
+  actions.appendChild(deleteButton);
 
   card.appendChild(tag);
   card.appendChild(title);
@@ -418,18 +488,10 @@ archiveTab.addEventListener('click', function() {
   switchTab('archive');
 });
 
-/*
-  Обновляем истории при каждом возвращении
-  на страницу, включая возврат через Safari.
-*/
 window.addEventListener('pageshow', function() {
   renderStories();
 });
 
-/*
-  Дополнительное обновление, когда вкладка
-  снова становится видимой.
-*/
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden) {
     renderStories();
