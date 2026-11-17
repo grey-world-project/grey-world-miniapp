@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Галерея — GREY WORLD</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #111116;
+  color: #e5e2e8;
+  font-family: Arial, sans-serif;
+}
+header {
+  text-align: center;
+  padding: 45px 20px 25px;
+}
+h1 {
+  font-family: Georgia, serif;
+  letter-spacing: 5px;
+  font-size: 30px;
+}
+.subtitle { color: #bcb3bf; }
+main {
+  max-width: 650px;
+  margin: auto;
+  padding: 20px;
+}
+.card {
+  background: #22202a;
+  border: 1px solid #403747;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+}
+.card h2 { margin-top: 0; }
+.card p { color: #bcb3bf; line-height: 1.6; }
+.tag {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #392432;
+  color: #e8c8d6;
+  font-size: 13px;
+}
+button, .back {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 13px 20px;
+  background: #76243f;
+  color: white;
+  border: 0;
+  border-radius: 12px;
+  font-size: 16px;
+  text-decoration: none;
+}
+.notice {
+  text-align: center;
+  color: #bcb3bf;
+  font-size: 13px;
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>GREY WORLD</h1>
+  <p class="subtitle">Галерея персонажей</p>
+</header>
+<main>
+  <a class="back" href="index.html">← На главную</a>
+
+  <div class="card">
+    <span class="tag">Первый персонаж</span>
+    <h2>Грэй</h2>
+    <p>
+      Самоуверенный, независимый и остроумный.
+      Его сарказм способен вывести из себя,
+      но за колкими словами иногда скрывается
+      неожиданная теплота.
+    </p>
+    <p>
+      Не любит подчиняться чужим правилам.
+      Обожает словесные дуэли и всегда
+      оставляет последнее слово за собой.
+    </p>
+    <button onclick="alert('Чат с Грэем скоро появится!')">
+      Начать историю
+    </button>
+  </div>
+
+  <p class="notice">
+    18+ · Демонстрационная версия · GREY WORLD
+  </p>
+</main>
+</body>
+</html>
