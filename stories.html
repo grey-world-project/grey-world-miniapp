@@ -5,16 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Мои истории — GREY WORLD</title>
-
 <style>
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
+  padding: 25px 20px;
   background: #111116;
   color: #e5e2e8;
   font-family: Arial, sans-serif;
-  padding: 25px 20px;
 }
 
 .back {
@@ -24,9 +23,7 @@ body {
 
 h1 { margin-top: 45px; }
 
-.subtitle {
-  color: #aaa3b0;
-}
+.subtitle { color: #aaa3b0; }
 
 .tabs {
   display: flex;
@@ -73,6 +70,12 @@ h1 { margin-top: 45px; }
   line-height: 1.5;
 }
 
+.meta {
+  color: #aaa3b0;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -82,10 +85,10 @@ h1 { margin-top: 45px; }
 
 .button {
   display: inline-block;
+  padding: 14px 18px;
   background: #76243f;
   color: white;
   text-decoration: none;
-  padding: 14px 18px;
   border: none;
   border-radius: 12px;
   font: inherit;
@@ -93,15 +96,7 @@ h1 { margin-top: 45px; }
   cursor: pointer;
 }
 
-.secondary {
-  background: #39313f;
-}
-
-.meta {
-  color: #aaa3b0;
-  font-size: 13px;
-  margin-top: 12px;
-}
+.secondary { background: #39313f; }
 
 .empty {
   color: #aaa3b0;
@@ -124,25 +119,15 @@ h1 { margin-top: 45px; }
 </a>
 
 <h1>Мои истории</h1>
-
 <p class="subtitle">
   Твои миры. Твои сюжеты. Твои правила.
 </p>
 
 <div class="tabs">
-  <button
-    class="tab active"
-    id="activeTab"
-    type="button"
-  >
+  <button class="tab active" id="activeTab" type="button">
     Активные
   </button>
-
-  <button
-    class="tab"
-    id="archiveTab"
-    type="button"
-  >
+  <button class="tab" id="archiveTab" type="button">
     Архив
   </button>
 </div>
@@ -156,7 +141,6 @@ h1 { margin-top: 45px; }
 <script>
 const storiesKey = 'grey-world-stories-v1';
 const storiesList = document.getElementById('storiesList');
-
 const activeTab = document.getElementById('activeTab');
 const archiveTab = document.getElementById('archiveTab');
 
@@ -205,7 +189,6 @@ function renameStory(story) {
   }
 
   const stories = readStories();
-
   const index = stories.findIndex(
     item => item && item.id === story.id
   );
@@ -221,9 +204,7 @@ function renameStory(story) {
     updatedAt: Date.now()
   };
 
-  if (saveStories(stories)) {
-    renderStories();
-  }
+  if (saveStories(stories)) renderStories();
 }
 
 function changeArchiveStatus(story, archived) {
@@ -234,7 +215,6 @@ function changeArchiveStatus(story, archived) {
   if (!confirm(question)) return;
 
   const stories = readStories();
-
   const index = stories.findIndex(
     item => item && item.id === story.id
   );
@@ -250,9 +230,7 @@ function changeArchiveStatus(story, archived) {
     updatedAt: Date.now()
   };
 
-  if (saveStories(stories)) {
-    renderStories();
-  }
+  if (saveStories(stories)) renderStories();
 }
 
 function downloadStory(story) {
@@ -344,7 +322,6 @@ function createStoryCard(story) {
   renameButton.type = 'button';
   renameButton.className = 'button secondary';
   renameButton.textContent = '✎ Переименовать';
-
   renameButton.addEventListener('click', function() {
     renameStory(story);
   });
@@ -353,7 +330,6 @@ function createStoryCard(story) {
   downloadButton.type = 'button';
   downloadButton.className = 'button secondary';
   downloadButton.textContent = 'Скачать историю';
-
   downloadButton.addEventListener('click', function() {
     downloadStory(story);
   });
@@ -363,7 +339,6 @@ function createStoryCard(story) {
   archiveButton.className = 'button secondary';
 
   const isArchived = story.archived === true;
-
   archiveButton.textContent = isArchived
     ? 'Вернуть в активные'
     : 'В архив';
@@ -441,6 +416,24 @@ activeTab.addEventListener('click', function() {
 
 archiveTab.addEventListener('click', function() {
   switchTab('archive');
+});
+
+/*
+  Обновляем истории при каждом возвращении
+  на страницу, включая возврат через Safari.
+*/
+window.addEventListener('pageshow', function() {
+  renderStories();
+});
+
+/*
+  Дополнительное обновление, когда вкладка
+  снова становится видимой.
+*/
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    renderStories();
+  }
 });
 
 renderStories();
