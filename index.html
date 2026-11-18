@@ -3,134 +3,338 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GREY WORLD</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d0d10">
+<title>GREY WORLD — Главная</title>
 <style>
 *{box-sizing:border-box}
+:root{
+ color-scheme:dark;
+ --bg:#0d0d10;
+ --card:#1b1b20;
+ --card2:#25252b;
+ --red:#85283c;
+ --silver:#c5c7ce;
+ --text:#f2f1f3;
+ --muted:#a9a9b3;
+ --border:#414149
+}
 body{
- margin:0;
- background:#111116;
- color:#e5e2e8;
- font-family:Arial,sans-serif
+ margin:0;min-height:100vh;
+ background:radial-gradient(ellipse at top,#292026 0%,#141418 38%,#0d0d10 85%);
+ color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
-header{
+a{color:inherit;text-decoration:none}
+main{max-width:600px;margin:auto;padding:0 16px 115px}
+.hero{
  text-align:center;
- padding:45px 20px 28px;
- background:linear-gradient(#24202c,#111116)
+ padding:45px 15px 30px
 }
-.moon{font-size:64px;color:#c8c8d2}
+.moon{
+ font-size:57px;line-height:1;
+ color:var(--silver);
+ text-shadow:0 0 24px #c5c7ce30
+}
 h1{
  font-family:Georgia,serif;
- letter-spacing:5px;
- margin:12px 0
+ font-size:30px;letter-spacing:4px;
+ color:var(--silver);
+ margin:14px 0 9px
 }
-.subtitle{color:#bcb3bf;font-size:14px}
-main{padding:20px;max-width:600px;margin:auto}
-h2{font-size:19px;margin:20px 0}
+.subtitle{
+ color:var(--muted);
+ font-size:13px;letter-spacing:.3px
+}
+.welcome{
+ font-size:21px;margin:10px 0 17px;
+ font-weight:700
+}
+.panel{
+ background:linear-gradient(145deg,#242329,#19191e);
+ border:1px solid var(--border);
+ border-radius:21px;
+ padding:18px;margin-bottom:15px;
+ box-shadow:0 12px 30px #0003
+}
+.section-top{
+ display:flex;align-items:center;
+ justify-content:space-between;gap:10px
+}
+.section-top h2{font-size:17px;margin:0}
+.link{
+ font-size:12px;color:#d8a3b0
+}
+.greeting{
+ font-size:13px;color:var(--muted);
+ margin:9px 0 0
+}
+.overview{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;margin-top:16px
+}
+.mini{
+ background:#29282e;
+ border:1px solid #3d3c44;
+ border-radius:15px;
+ padding:13px 11px
+}
+.mini span{
+ display:block;color:var(--muted);
+ font-size:12px
+}
+.mini b{
+ display:block;margin-top:8px;
+ font-size:21px;color:var(--silver)
+}
+.request{
+ margin-top:12px;padding:13px;
+ background:#29282e;
+ border:1px solid #3d3c44;
+ border-radius:15px
+}
+.request .row{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px
+}
+.request strong{font-size:20px}
+.request small{color:var(--muted);font-size:12px}
+.bar{
+ height:7px;background:#3c3b42;
+ border-radius:20px;overflow:hidden;
+ margin-top:11px
+}
+.bar span{
+ display:block;height:100%;width:100%;
+ background:linear-gradient(90deg,#7b2337,#c4536a);
+ border-radius:20px
+}
+h2.section-title{
+ font-size:18px;margin:25px 0 14px
+}
 .card{
- background:#22202a;
- border:1px solid #403744;
- border-radius:16px;
- padding:20px;
- margin:12px 0
+ display:flex;align-items:center;
+ gap:14px;
+ background:linear-gradient(145deg,#242329,#19191e);
+ border:1px solid var(--border);
+ border-radius:18px;
+ padding:17px 15px;
+ margin-bottom:11px
 }
-.card h3{margin:0 0 8px;color:#eee5eb}
+.card:active{background:#30252c}
+.card-icon{
+ width:49px;height:49px;
+ flex-shrink:0;
+ display:grid;place-items:center;
+ border-radius:15px;
+ background:#38252d;
+ color:#e3a8b6;
+ font-size:25px
+}
+.card-body{flex:1;min-width:0}
+.card h3{
+ font-size:16px;margin:0 0 6px
+}
 .card p{
- margin:0;
- color:#bcb3bf;
- font-size:14px;
- line-height:1.5
+ margin:0;color:var(--muted);
+ font-size:12px;line-height:1.5
 }
-button{
- background:#76243f;
- color:white;
- border:0;
- border-radius:12px;
- padding:13px 18px;
- margin-top:15px;
- font-size:15px;
- cursor:pointer
-}
-.profile-card{
- border-color:#74518b;
- background:linear-gradient(135deg,#302039,#22202a)
-}
-.profile-card button{
- background:#9650b5
+.arrow{
+ font-size:24px;
+ color:#a9a9b3
 }
 .notice{
- text-align:center;
- color:#bcb3bf;
- font-size:12px;
- margin:30px 0
+ text-align:center;color:var(--muted);
+ font-size:12px;margin:30px 0
+}
+.bottom{
+ position:fixed;bottom:0;left:0;right:0;
+ z-index:10;
+ display:grid;grid-template-columns:repeat(5,1fr);
+ background:rgba(15,15,19,.96);
+ border-top:1px solid #49434a;
+ padding:10px 5px calc(9px + env(safe-area-inset-bottom));
+ backdrop-filter:blur(18px)
+}
+.bottom a{
+ display:flex;flex-direction:column;
+ align-items:center;gap:5px;
+ font-size:10px;color:#9fa0aa;
+ white-space:nowrap
+}
+.bottom .symbol{
+ font-size:22px;line-height:25px
+}
+.bottom a.active{
+ color:#e5a5b3;font-weight:700
 }
 </style>
 </head>
 <body>
 
-<header>
-<div class="moon">☾</div>
-<h1>GREY WORLD</h1>
-<p class="subtitle">Ваш герой. Ваш выбор. Ваша история.</p>
-</header>
-
 <main>
-<h2>Добро пожаловать в свой мир</h2>
+ <header class="hero">
+  <div class="moon">☾</div>
+  <h1>GREY WORLD</h1>
+  <p class="subtitle">Ваш герой. Ваш выбор. Ваша история.</p>
+ </header>
 
-<div class="card profile-card">
-<h3>☾ Мой профиль</h3>
-<p>
-Личный кабинет, игровой ник, баланс Лун
-и Осколков Луны, награды и моя картотека.
-</p>
-<button onclick="location.href='profile.html'">
-Открыть профиль
-</button>
-</div>
+ <h2 class="welcome">Добро пожаловать в свой мир</h2>
 
-<div class="card">
-<h3>✦ Галерея персонажей</h3>
-<p>Выбирай героев и создавай собственные истории.</p>
-<button onclick="location.href='gallery.html'">
-Открыть галерею
-</button>
-</div>
+ <section class="panel">
+  <div class="section-top">
+   <h2 id="hello">Мой мир</h2>
+   <a class="link" href="profile.html">Мой профиль ›</a>
+  </div>
+  <p class="greeting">Твои истории начинаются здесь.</p>
 
-<div class="card">
-<h3>♛ Мои герои</h3>
-<p>Создавай персонажей для разных сюжетов.</p>
-<button onclick="location.href='heroes.html'">
-Мои герои
-</button>
-</div>
+  <div class="overview">
+   <div class="mini">
+    <span>🌙 Луны</span>
+    <b id="moons">—</b>
+   </div>
+   <div class="mini">
+    <span>💠 Осколки Луны</span>
+    <b id="shards">—</b>
+   </div>
+  </div>
 
-<div class="card">
-<h3>☷ Мои истории</h3>
-<p>
-Продолжай приключения с того места,
-где остановился.
-</p>
-<button onclick="location.href='stories.html'">
-Мои истории
-</button>
-</div>
+  <div class="request">
+   <div class="row">
+    <small>Доступно запросов сегодня</small>
+    <strong>
+     <span id="requests">200</span>
+     <small>/ <span id="limit">200</span></small>
+    </strong>
+   </div>
+   <div class="bar"><span id="progress"></span></div>
+   <p class="greeting" id="requestNote">
+    До 100 ответов средней длины
+   </p>
+  </div>
+ </section>
 
-<div class="card">
-<h3>☷ Резервные копии</h3>
-<p>
-Сохраняй свои истории, анкеты персонажей
-и дневники памяти. При необходимости
-восстанавливай данные из сохранённой копии.
-</p>
-<button onclick="location.href='backup.html'">
-Резервные копии
-</button>
-</div>
+ <h2 class="section-title">Исследовать GREY WORLD</h2>
 
-<p class="notice">
-18+ · Демонстрационная версия · GREY WORLD
-</p>
+ <a class="card" href="gallery.html">
+  <div class="card-icon">♧</div>
+  <div class="card-body">
+   <h3>Галерея персонажей</h3>
+   <p>Выбирай героев и создавай собственные истории.</p>
+  </div>
+  <span class="arrow">›</span>
+ </a>
+
+ <a class="card" href="heroes.html">
+  <div class="card-icon">♛</div>
+  <div class="card-body">
+   <h3>Мои герои</h3>
+   <p>Создавай и редактируй своих персонажей.</p>
+  </div>
+  <span class="arrow">›</span>
+ </a>
+
+ <a class="card" href="stories.html">
+  <div class="card-icon">▤</div>
+  <div class="card-body">
+   <h3>Мои истории</h3>
+   <p>Продолжай приключения с того места, где остановился.</p>
+  </div>
+  <span class="arrow">›</span>
+ </a>
+
+ <a class="card" href="profile.html">
+  <div class="card-icon">◉</div>
+  <div class="card-body">
+   <h3>Мой профиль</h3>
+   <p>Баланс, награды, лимиты и личная картотека.</p>
+  </div>
+  <span class="arrow">›</span>
+ </a>
+
+ <a class="card" href="backup.html">
+  <div class="card-icon">☷</div>
+  <div class="card-body">
+   <h3>Резервные копии</h3>
+   <p>Сохраняй и восстанавливай анкеты, истории и память.</p>
+  </div>
+  <span class="arrow">›</span>
+ </a>
+
+ <p class="notice">
+  18+ · Демонстрационная версия · GREY WORLD
+ </p>
 </main>
 
+<nav class="bottom" aria-label="Основная навигация">
+ <a href="stories.html">
+  <span class="symbol">▤</span><span>Чаты</span>
+ </a>
+ <a href="gallery.html">
+  <span class="symbol">♧</span><span>Каталог</span>
+ </a>
+ <a href="index.html" class="active" aria-current="page">
+  <span class="symbol">☾</span><span>Главная</span>
+ </a>
+ <a href="heroes.html">
+  <span class="symbol">✦</span><span>Герои</span>
+ </a>
+ <a href="profile.html">
+  <span class="symbol">◉</span><span>Профиль</span>
+ </a>
+</nav>
+
+<script>
+(function(){
+"use strict";
+
+function read(key,fallback){
+ try{
+  return JSON.parse(localStorage.getItem(key))??fallback;
+ }catch(e){return fallback;}
+}
+
+function todayKey(){
+ const d=new Date();
+ return d.getFullYear()+"-"+
+  String(d.getMonth()+1).padStart(2,"0")+"-"+
+  String(d.getDate()).padStart(2,"0");
+}
+
+const profile=read("grey-world-profile-v1",null);
+const el=id=>document.getElementById(id);
+
+if(profile){
+ el("hello").textContent="Привет, "+(profile.nickname||"путешественник")+"!";
+ el("moons").textContent=
+  Number(profile.moons||0).toLocaleString("ru-RU");
+ el("shards").textContent=
+  Number(profile.shards||0).toLocaleString("ru-RU");
+}else{
+ el("hello").textContent="Мой мир";
+ el("moons").textContent="—";
+ el("shards").textContent="—";
+}
+
+const state=read("grey-world-requests-v1",{});
+const expires=Date.parse(state.expiresAt);
+const isPlus=state.plan==="plus"&&
+ Number.isFinite(expires)&&Date.now()<expires;
+
+const limit=isPlus?1000:200;
+const used=state.date===todayKey()
+ ?Math.max(0,Number(state.used)||0):0;
+const remaining=Math.max(0,limit-used);
+
+el("requests").textContent=remaining;
+el("limit").textContent=limit;
+el("progress").style.width=
+ Math.min(100,remaining/limit*100)+"%";
+el("requestNote").textContent=
+ "До "+Math.floor(remaining/2)+" ответов средней длины";
+
+})();
+</script>
 </body>
 </html>
