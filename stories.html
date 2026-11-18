@@ -3,656 +3,646 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d0d10">
 <title>Мои истории — GREY WORLD</title>
-
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  padding: 25px 20px;
-  background: #111116;
-  color: #e5e2e8;
-  font-family: Arial, sans-serif;
+*{box-sizing:border-box}
+:root{
+ color-scheme:dark;
+ --bg:#0d0d10;
+ --card:#252329;
+ --accent:#85283c;
+ --text:#f2f1f3;
+ --muted:#a9a9b3;
+ --border:#414149
 }
-
-.back {
-  color: #b9b3bf;
-  text-decoration: none;
+body{
+ margin:0;min-height:100dvh;
+ background:radial-gradient(ellipse at top,#292026 0%,#141418 38%,#0d0d10 85%);
+ color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
-
-h1 { margin-top: 45px; }
-
-.subtitle { color: #aaa3b0; }
-
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-top: 30px;
+button,a{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+main{max-width:650px;margin:auto;padding:24px 16px 120px}
+.top{
+ display:flex;align-items:center;justify-content:space-between;
+ margin-bottom:30px
 }
-
-.tab {
-  flex: 1;
-  padding: 14px 10px;
-  background: #29252f;
-  color: #c4bdc8;
-  border: 1px solid #403746;
-  border-radius: 12px;
-  font: inherit;
-  cursor: pointer;
+.brand{
+ font-family:Georgia,serif;letter-spacing:2px;
+ font-size:20px;color:#c5c7ce
 }
-
-.tab.active {
-  background: #76243f;
-  color: white;
-  border-color: #76243f;
+.top a{font-size:13px;color:var(--muted)}
+h1{font-size:29px;margin:0 0 8px}
+.subtitle{color:var(--muted);font-size:14px;margin:0 0 25px}
+.tabs{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:10px;margin-bottom:23px
 }
-
-.card {
-  background: #25222c;
-  padding: 24px;
-  border-radius: 20px;
-  margin-top: 22px;
-  border: 1px solid #403746;
+.tab{
+ border:1px solid #494850;background:#29282e;
+ color:#c4bdc8;border-radius:14px;padding:14px;
+ font-size:15px
 }
-
-.tag {
-  color: #d7a0b5;
-  font-size: 13px;
+.tab.active{
+ background:#652537;border-color:#a4485e;color:white
 }
-
-.hero-row {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-top: 15px;
+.story-card{
+ display:flex;align-items:center;gap:12px;
+ background:linear-gradient(135deg,#28242d,#201e25);
+ border:1px solid var(--border);
+ border-radius:18px;padding:12px;
+ margin-bottom:12px;min-width:0
 }
-
-.avatar {
-  width: 76px;
-  height: 76px;
-  border-radius: 16px;
-  object-fit: cover;
-  border: 1px solid #655568;
-  flex-shrink: 0;
+.story-link{
+ display:flex;align-items:center;gap:13px;
+ flex:1;min-width:0
 }
-
-.avatar-placeholder {
-  width: 76px;
-  height: 76px;
-  border-radius: 16px;
-  background: #39313f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #e1bfce;
-  font-size: 30px;
-  flex-shrink: 0;
+.avatar{
+ width:74px;height:86px;object-fit:cover;
+ border-radius:13px;border:1px solid #655568;
+ flex-shrink:0
 }
-
-.hero-name {
-  font-size: 21px;
-  font-weight: bold;
-  overflow-wrap: anywhere;
+.placeholder{
+ width:74px;height:86px;border-radius:13px;
+ background:linear-gradient(135deg,#48313e,#26232d);
+ display:grid;place-items:center;
+ font-family:Georgia,serif;font-size:35px;
+ color:#d3bdc7;flex-shrink:0
 }
-
-.card h2 {
-  margin: 20px 0 8px;
-  overflow-wrap: anywhere;
-  font-size: 24px;
+.info{min-width:0;flex:1}
+.hero-name{font-size:12px;color:#d7a0b5;margin-bottom:5px}
+.story-title{
+ font-size:16px;font-weight:700;line-height:1.3;
+ margin:0 0 7px;overflow-wrap:anywhere;
+ display:-webkit-box;-webkit-line-clamp:2;
+ -webkit-box-orient:vertical;overflow:hidden
 }
-
-.description {
-  color: #c4bdc8;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
+.preview{
+ font-size:13px;color:#bcb5c0;
+ line-height:1.4;overflow:hidden;
+ display:-webkit-box;-webkit-line-clamp:2;
+ -webkit-box-orient:vertical;
+ overflow-wrap:anywhere;white-space:pre-line
 }
-
-.meta {
-  color: #aaa3b0;
-  font-size: 13px;
-  margin-top: 12px;
+.meta{
+ margin-top:8px;font-size:11px;color:#8f8995;
+ display:flex;gap:8px;flex-wrap:wrap
 }
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
+.more{
+ flex-shrink:0;width:38px;height:43px;
+ border-radius:12px;border:1px solid #514752;
+ background:#343039;color:#eee;
+ font-size:23px
 }
-
-.button {
-  display: inline-block;
-  padding: 14px 18px;
-  background: #76243f;
-  color: white;
-  text-decoration: none;
-  border: none;
-  border-radius: 12px;
-  font: inherit;
-  font-size: 14px;
-  cursor: pointer;
+.empty{
+ padding:30px 15px;text-align:center;
+ border:1px solid var(--border);
+ border-radius:18px;background:#242329;
+ color:var(--muted);font-size:14px;line-height:1.6
 }
-
-.secondary { background: #39313f; }
-
-.memory {
-  background: #47304c;
-  border: 1px solid #88658d;
+.empty a{color:#e5a5b3;text-decoration:underline}
+footer{
+ text-align:center;color:var(--muted);
+ font-size:12px;margin:32px 0
 }
-
-.delete {
-  background: #50232e;
-  border: 1px solid #a44b63;
+.bottom{
+ position:fixed;bottom:0;left:0;right:0;z-index:10;
+ display:grid;grid-template-columns:repeat(5,1fr);
+ background:rgba(15,15,19,.96);
+ border-top:1px solid #49434a;
+ padding:10px 5px calc(9px + env(safe-area-inset-bottom));
+ backdrop-filter:blur(18px)
 }
-
-.empty {
-  color: #aaa3b0;
-  padding: 25px 5px;
-  line-height: 1.6;
+.bottom a{
+ display:flex;flex-direction:column;align-items:center;
+ gap:5px;font-size:10px;color:#9fa0aa;white-space:nowrap
 }
-
-.notice {
-  color: #99929f;
-  font-size: 13px;
-  margin-top: 35px;
+.bottom .symbol{font-size:22px;line-height:25px}
+.bottom a.active{color:#e5a5b3;font-weight:700}
+dialog{
+ width:min(94vw,470px);max-height:85dvh;overflow:auto;
+ border:1px solid #62505a;border-radius:22px;
+ background:#1b1920;color:white;padding:20px
+}
+dialog::backdrop{background:#000c}
+.modal-head{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;margin-bottom:8px
+}
+.modal-head h2{
+ font-size:19px;margin:0;overflow-wrap:anywhere
+}
+.close{
+ background:#38373e;color:white;border:0;
+ width:36px;height:36px;border-radius:50%;
+ font-size:23px;flex-shrink:0
+}
+.modal-subtitle{
+ font-size:13px;color:#bcb3bf;margin:0 0 20px
+}
+.menu-action{
+ display:block;width:100%;text-align:left;
+ border:1px solid #494850;background:#29282e;
+ color:white;border-radius:13px;
+ padding:15px;margin:9px 0;font-size:14px
+}
+.menu-action.primary{
+ background:#76243f;border-color:#a4485e
+}
+.menu-action.delete{
+ color:#ffabb8;border-color:#8d4256;
+ background:#39232d
 }
 </style>
 </head>
-
 <body>
 
-<a class="back" href="gallery.html">
-  ← К персонажам
-</a>
+<main>
+ <div class="top">
+  <strong class="brand">☾ GREY WORLD</strong>
+  <a href="gallery.html">К персонажам ↗</a>
+ </div>
 
-<h1>Мои истории</h1>
+ <h1>Мои истории</h1>
+ <p class="subtitle">Твои миры. Твои сюжеты. Твои правила.</p>
 
-<p class="subtitle">
-  Твои миры. Твои сюжеты. Твои правила.
-</p>
+ <div class="tabs">
+  <button class="tab active" id="activeTab" type="button">Активные</button>
+  <button class="tab" id="archiveTab" type="button">Архив</button>
+ </div>
 
-<div class="tabs">
-  <button class="tab active" id="activeTab" type="button">
-    Активные
-  </button>
+ <div id="storiesList"></div>
 
-  <button class="tab" id="archiveTab" type="button">
-    Архив
-  </button>
-</div>
+ <footer>18+ · Демонстрационная версия · GREY WORLD</footer>
+</main>
 
-<div id="storiesList"></div>
+<nav class="bottom" aria-label="Основная навигация">
+ <a href="stories.html" class="active" aria-current="page">
+  <span class="symbol">▤</span><span>Чаты</span>
+ </a>
+ <a href="gallery.html">
+  <span class="symbol">♧</span><span>Каталог</span>
+ </a>
+ <a href="index.html">
+  <span class="symbol">☾</span><span>Главная</span>
+ </a>
+ <a href="heroes.html">
+  <span class="symbol">✦</span><span>Герои</span>
+ </a>
+ <a href="profile.html">
+  <span class="symbol">◉</span><span>Профиль</span>
+ </a>
+</nav>
 
-<p class="notice">
-  GREY WORLD · Демонстрационная версия · 18+
-</p>
+<dialog id="storyMenu">
+ <div class="modal-head">
+  <h2 id="menuTitle">Меню истории</h2>
+  <button class="close" id="closeMenu" type="button" aria-label="Закрыть">×</button>
+ </div>
+ <p class="modal-subtitle" id="menuHero"></p>
+ <div id="menuActions"></div>
+</dialog>
 
 <script>
-const storiesKey = 'grey-world-stories-v1';
-const heroesKey = 'grey-world-heroes-v1';
+(function(){
+"use strict";
 
-const storiesList = document.getElementById('storiesList');
-const activeTab = document.getElementById('activeTab');
-const archiveTab = document.getElementById('archiveTab');
+const storiesKey="grey-world-stories-v1";
+const heroesKey="grey-world-heroes-v1";
+const GREY_PHOTO="BB56DDB9-E37A-4AD4-A669-FED650095B0E.png";
 
-const greeting =
-  'Ну здравствуй. Я Грэй. Надеюсь, ты пришла не ради скучных разговоров?';
+const greeting="Ну здравствуй. Я Грэй. Надеюсь, ты пришла не ради скучных разговоров?";
+const $=id=>document.getElementById(id);
 
-let currentTab = 'active';
+let currentTab="active";
+let selectedStoryId=null;
 
-function readStories() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(storiesKey));
-    return Array.isArray(saved) ? saved : [];
-  } catch (error) {
-    return [];
-  }
+function read(key){
+ try{
+  const value=JSON.parse(localStorage.getItem(key));
+  return Array.isArray(value)?value:[];
+ }catch(e){
+  return [];
+ }
 }
 
-function readHeroes() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(heroesKey));
-    return Array.isArray(saved) ? saved : [];
-  } catch (error) {
-    return [];
-  }
+function readStories(){return read(storiesKey)}
+function readHeroes(){return read(heroesKey)}
+
+function saveStories(stories){
+ try{
+  localStorage.setItem(storiesKey,JSON.stringify(stories));
+  return true;
+ }catch(e){
+  alert("Не удалось сохранить изменения. Возможно, память Safari заполнена.");
+  return false;
+ }
 }
 
-function getHero(story) {
-  const heroId = story.heroId || 'grey';
+function getHero(story){
+ const id=String(story.heroId||"grey");
 
-  if (heroId === 'grey') {
-    return {
-      id: 'grey',
-      name: 'Грэй',
-      photo: '',
-      personality:
-        'Самоуверенный, независимый и остроумный.'
-    };
-  }
-
-  const hero = readHeroes().find(item =>
-    item && item.id === heroId
-  );
-
-  if (!hero) {
-    return {
-      id: heroId,
-      name: 'Персонаж удалён',
-      photo: '',
-      personality:
-        'Анкета персонажа больше не найдена. ' +
-        'Сама история и переписка сохранены.'
-    };
-  }
-
-  return {
-    id: hero.id,
-    name: hero.name || 'Без имени',
-    photo: hero.photo || '',
-    personality: hero.personality || ''
+ if(id==="grey"){
+  return{
+   id:"grey",
+   name:"Грэй",
+   photo:GREY_PHOTO,
+   personality:"Самоуверенный, независимый и остроумный."
   };
-}
+ }
 
-function saveStories(stories) {
-  try {
-    localStorage.setItem(
-      storiesKey,
-      JSON.stringify(stories)
-    );
-    return true;
-  } catch (error) {
-    alert('Не удалось сохранить изменения.');
-    return false;
-  }
-}
+ const hero=readHeroes().find(h=>h&&String(h.id)===id);
 
-function findCurrentStory(story) {
-  return readStories().find(
-    item => item && item.id === story.id
-  );
-}
-
-function renameStory(story) {
-  const current = findCurrentStory(story);
-
-  if (!current) {
-    alert('История не найдена.');
-    return;
-  }
-
-  const newTitle = prompt(
-    'Новое название истории:',
-    current.title
-  );
-
-  if (newTitle === null) return;
-
-  const name = newTitle.trim();
-
-  if (!name) {
-    alert('Название не может быть пустым.');
-    return;
-  }
-
-  if (name.length > 100) {
-    alert('Название не должно превышать 100 символов.');
-    return;
-  }
-
-  const stories = readStories();
-  const index = stories.findIndex(
-    item => item && item.id === story.id
-  );
-
-  if (index === -1) return;
-
-  stories[index] = {
-    ...stories[index],
-    title: name,
-    updatedAt: Date.now()
+ if(!hero){
+  return{
+   id,
+   name:"Персонаж удалён",
+   photo:"",
+   personality:"Анкета персонажа не найдена. История сохранена."
   };
+ }
 
-  if (saveStories(stories)) renderStories();
+ return{
+  id,
+  name:hero.name||"Без имени",
+  photo:hero.photo||"",
+  personality:hero.personality||""
+ };
 }
 
-function changeArchiveStatus(story, archived) {
-  const current = findCurrentStory(story);
-
-  if (!current) {
-    alert('История не найдена.');
-    return;
-  }
-
-  if (archived === false) {
-    const activeCount = readStories().filter(
-      item => item && item.archived !== true
-    ).length;
-
-    if (activeCount >= 5) {
-      alert(
-        'В демонстрационной версии доступно ' +
-        'не более 5 активных историй.'
-      );
-      return;
-    }
-  }
-
-  const question = archived
-    ? 'Переместить историю «' + current.title + '» в архив?'
-    : 'Вернуть историю «' + current.title + '» в активные?';
-
-  if (!confirm(question)) return;
-
-  const stories = readStories();
-  const index = stories.findIndex(
-    item => item && item.id === story.id
-  );
-
-  if (index === -1) return;
-
-  stories[index] = {
-    ...stories[index],
-    archived: archived,
-    updatedAt: Date.now()
-  };
-
-  if (saveStories(stories)) renderStories();
+function currentStory(id){
+ return readStories().find(s=>s&&s.id===id)||null;
 }
 
-function deleteStory(story) {
-  const current = findCurrentStory(story);
+function messagePreview(story){
+ const messages=Array.isArray(story.messages)
+  ?story.messages.filter(m=>m&&typeof m.text==="string")
+  :[];
 
-  if (!current) {
-    alert('История не найдена.');
-    renderStories();
-    return;
-  }
+ if(messages.length){
+  const last=messages[messages.length-1];
+  return(last.role==="user"?"Ты: ":"")+
+   last.text.replace(/\s+/g," ").trim();
+ }
 
-  const question =
-    'Удалить историю «' + current.title + '»?\n\n' +
-    'Вся переписка и дневник памяти этой истории ' +
-    'будут удалены без возможности восстановления.\n\n' +
-    'Другие истории останутся без изменений.';
-
-  if (!confirm(question)) return;
-
-  const stories = readStories();
-
-  const remaining = stories.filter(
-    item => !item || item.id !== story.id
-  );
-
-  if (remaining.length === stories.length) {
-    alert('История уже отсутствует.');
-    renderStories();
-    return;
-  }
-
-  if (saveStories(remaining)) renderStories();
+ return story.heroId==="grey"
+  ?greeting
+  :"История ещё не началась. Открой чат и напиши первое сообщение.";
 }
 
-function downloadStory(story) {
-  const current = findCurrentStory(story);
-
-  if (!current) {
-    alert('История не найдена.');
-    return;
-  }
-
-  const hero = getHero(current);
-
-  const messages = Array.isArray(current.messages)
-    ? current.messages
-    : [];
-
-  const lines = [
-    'GREY WORLD',
-    'История: ' + current.title,
-    'Персонаж: ' + hero.name,
-    ''
-  ];
-
-  if (hero.id === 'grey') {
-    lines.push('Грэй: ' + greeting);
-    lines.push('');
-  }
-
-  messages.forEach(item => {
-    if (!item || typeof item.text !== 'string') return;
-
-    const author = item.role === 'user'
-      ? 'Пользователь'
-      : hero.name;
-
-    lines.push(author + ': ' + item.text);
-    lines.push('');
-  });
-
-  const content = '\uFEFF' + lines.join('\n');
-
-  const blob = new Blob(
-    [content],
-    { type: 'text/plain;charset=utf-8' }
-  );
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-
-  link.href = url;
-  link.download = 'grey-world-story.txt';
-
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(function() {
-    URL.revokeObjectURL(url);
-  }, 60000);
+function formatDate(value){
+ if(!value)return "";
+ const date=new Date(value);
+ if(Number.isNaN(date.getTime()))return "";
+ return date.toLocaleDateString("ru-RU",{
+  day:"numeric",month:"short"
+ });
 }
 
-function createStoryCard(story) {
-  const hero = getHero(story);
+function renameStory(id){
+ const current=currentStory(id);
+ if(!current){
+  alert("История не найдена.");
+  return;
+ }
 
-  const card = document.createElement('div');
-  card.className = 'card';
+ const answer=prompt("Новое название истории:",current.title);
+ if(answer===null)return;
 
-  const tag = document.createElement('span');
-  tag.className = 'tag';
+ const title=answer.trim();
+ if(!title||title.length>100){
+  alert("Название должно содержать от 1 до 100 символов.");
+  return;
+ }
 
-  tag.textContent = story.archived === true
-    ? 'Архивная история'
-    : 'Активная история';
+ const stories=readStories();
+ const index=stories.findIndex(s=>s&&s.id===id);
+ if(index<0)return;
 
-  card.appendChild(tag);
+ stories[index]={
+  ...stories[index],
+  title,
+  updatedAt:Date.now()
+ };
 
-  const heroRow = document.createElement('div');
-  heroRow.className = 'hero-row';
-
-  if (hero.photo) {
-    const image = document.createElement('img');
-    image.className = 'avatar';
-    image.src = hero.photo;
-    image.alt = 'Аватар персонажа ' + hero.name;
-    heroRow.appendChild(image);
-  } else {
-    const placeholder = document.createElement('div');
-    placeholder.className = 'avatar-placeholder';
-    placeholder.textContent = '✦';
-    heroRow.appendChild(placeholder);
-  }
-
-  const heroName = document.createElement('div');
-  heroName.className = 'hero-name';
-  heroName.textContent = hero.name;
-
-  heroRow.appendChild(heroName);
-  card.appendChild(heroRow);
-
-  const title = document.createElement('h2');
-  title.textContent = story.title;
-  card.appendChild(title);
-
-  const description = document.createElement('p');
-  description.className = 'description';
-
-  description.textContent = hero.personality ||
-    'История с персонажем «' + hero.name + '».';
-
-  card.appendChild(description);
-
-  const count = Array.isArray(story.messages)
-    ? story.messages.length
-    : 0;
-
-  const meta = document.createElement('p');
-  meta.className = 'meta';
-  meta.textContent = 'Сообщений: ' + count;
-
-  card.appendChild(meta);
-
-  const actions = document.createElement('div');
-  actions.className = 'actions';
-
-  const continueLink = document.createElement('a');
-  continueLink.className = 'button';
-
-  continueLink.textContent = story.archived === true
-    ? 'Читать историю'
-    : 'Продолжить историю';
-
-  continueLink.href =
-    'chat.html?story=' + encodeURIComponent(story.id);
-
-  const memoryLink = document.createElement('a');
-  memoryLink.className = 'button memory';
-  memoryLink.textContent = '📖 Дневник памяти';
-
-  memoryLink.href =
-    'memory.html?story=' + encodeURIComponent(story.id);
-
-  const renameButton = document.createElement('button');
-  renameButton.type = 'button';
-  renameButton.className = 'button secondary';
-  renameButton.textContent = '✎ Переименовать';
-
-  renameButton.addEventListener('click', function() {
-    renameStory(story);
-  });
-
-  const downloadButton = document.createElement('button');
-  downloadButton.type = 'button';
-  downloadButton.className = 'button secondary';
-  downloadButton.textContent = 'Скачать историю';
-
-  downloadButton.addEventListener('click', function() {
-    downloadStory(story);
-  });
-
-  const archiveButton = document.createElement('button');
-  archiveButton.type = 'button';
-  archiveButton.className = 'button secondary';
-
-  const isArchived = story.archived === true;
-
-  archiveButton.textContent = isArchived
-    ? 'Вернуть в активные'
-    : 'В архив';
-
-  archiveButton.addEventListener('click', function() {
-    changeArchiveStatus(story, !isArchived);
-  });
-
-  const deleteButton = document.createElement('button');
-  deleteButton.type = 'button';
-  deleteButton.className = 'button delete';
-  deleteButton.textContent = 'Удалить историю';
-
-  deleteButton.addEventListener('click', function() {
-    deleteStory(story);
-  });
-
-  actions.appendChild(continueLink);
-  actions.appendChild(memoryLink);
-  actions.appendChild(renameButton);
-  actions.appendChild(downloadButton);
-  actions.appendChild(archiveButton);
-  actions.appendChild(deleteButton);
-
-  card.appendChild(actions);
-
-  return card;
+ if(saveStories(stories))renderStories();
 }
 
-function renderStories() {
-  storiesList.replaceChildren();
+function changeArchiveStatus(id,archived){
+ const current=currentStory(id);
+ if(!current){
+  alert("История не найдена.");
+  return;
+ }
 
-  const stories = readStories().filter(story =>
-    story &&
-    typeof story.id === 'string' &&
-    typeof story.title === 'string' &&
-    (currentTab === 'archive'
-      ? story.archived === true
-      : story.archived !== true)
-  );
-
-  if (stories.length === 0) {
-    const empty = document.createElement('p');
-    empty.className = 'empty';
-
-    empty.textContent = currentTab === 'archive'
-      ? 'В архиве пока нет историй.'
-      : 'Активных историй пока нет.';
-
-    storiesList.appendChild(empty);
-    return;
+ if(!archived){
+  const count=readStories().filter(s=>s&&s.archived!==true).length;
+  if(count>=5){
+   alert("В демонстрационной версии доступно не более 5 активных историй.");
+   return;
   }
+ }
 
-  stories.sort((a, b) =>
-    (b.updatedAt || 0) - (a.updatedAt || 0)
-  );
+ const question=archived
+  ?"Переместить историю «"+current.title+"» в архив?"
+  :"Вернуть историю «"+current.title+"» в активные?";
 
-  stories.forEach(story => {
-    storiesList.appendChild(createStoryCard(story));
-  });
+ if(!confirm(question))return;
+
+ const stories=readStories();
+ const index=stories.findIndex(s=>s&&s.id===id);
+ if(index<0)return;
+
+ stories[index]={
+  ...stories[index],
+  archived,
+  updatedAt:Date.now()
+ };
+
+ if(saveStories(stories))renderStories();
 }
 
-function switchTab(tab) {
-  currentTab = tab;
-
-  activeTab.classList.toggle(
-    'active',
-    tab === 'active'
-  );
-
-  archiveTab.classList.toggle(
-    'active',
-    tab === 'archive'
-  );
-
+function deleteStory(id){
+ const current=currentStory(id);
+ if(!current){
+  alert("История не найдена.");
   renderStories();
+  return;
+ }
+
+ const question=
+  "Удалить историю «"+current.title+"»?\n\n"+
+  "Вся переписка и дневник памяти этой истории "+
+  "будут удалены без возможности восстановления.\n\n"+
+  "Другие истории останутся без изменений.";
+
+ if(!confirm(question))return;
+
+ const stories=readStories();
+ const remaining=stories.filter(s=>!s||s.id!==id);
+
+ if(remaining.length===stories.length){
+  alert("История уже отсутствует.");
+  return;
+ }
+
+ if(saveStories(remaining))renderStories();
 }
 
-activeTab.addEventListener('click', function() {
-  switchTab('active');
-});
+function downloadStory(id){
+ const story=currentStory(id);
+ if(!story){
+  alert("История не найдена.");
+  return;
+ }
 
-archiveTab.addEventListener('click', function() {
-  switchTab('archive');
-});
+ const hero=getHero(story);
+ const messages=Array.isArray(story.messages)?story.messages:[];
+ const lines=[
+  "GREY WORLD",
+  "История: "+story.title,
+  "Персонаж: "+hero.name,
+  ""
+ ];
 
-window.addEventListener('pageshow', function() {
+ if(hero.id==="grey"){
+  lines.push("Грэй: "+greeting,"");
+ }
+
+ messages.forEach(item=>{
+  if(!item||typeof item.text!=="string")return;
+  const author=item.role==="user"?"Пользователь":hero.name;
+  lines.push(author+": "+item.text,"");
+ });
+
+ const blob=new Blob(
+  ["\uFEFF"+lines.join("\n")],
+  {type:"text/plain;charset=utf-8"}
+ );
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+ link.href=url;
+ link.download="grey-world-story.txt";
+ document.body.appendChild(link);
+ link.click();
+ link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+
+function makeMenuButton(text,action,kind=""){
+ const button=document.createElement("button");
+ button.type="button";
+ button.className="menu-action"+(kind?" "+kind:"");
+ button.textContent=text;
+ button.addEventListener("click",()=>{
+  $("storyMenu").close();
+  action();
+ });
+ return button;
+}
+
+function openStoryMenu(id){
+ const story=currentStory(id);
+ if(!story){
   renderStories();
+  return;
+ }
+
+ selectedStoryId=id;
+ const hero=getHero(story);
+
+ $("menuTitle").textContent=story.title;
+ $("menuHero").textContent=hero.name;
+
+ const actions=$("menuActions");
+ actions.replaceChildren();
+
+ const chatLink=document.createElement("a");
+ chatLink.className="menu-action primary";
+ chatLink.href="chat.html?story="+encodeURIComponent(id);
+ chatLink.textContent=story.archived===true
+  ?"Читать историю"
+  :"Продолжить историю";
+ actions.appendChild(chatLink);
+
+ const memoryLink=document.createElement("a");
+ memoryLink.className="menu-action";
+ memoryLink.href="memory.html?story="+encodeURIComponent(id);
+ memoryLink.textContent="📖 Дневник памяти";
+ actions.appendChild(memoryLink);
+
+ actions.appendChild(makeMenuButton(
+  "✎ Переименовать",
+  ()=>renameStory(id)
+ ));
+
+ actions.appendChild(makeMenuButton(
+  "↓ Скачать историю",
+  ()=>downloadStory(id)
+ ));
+
+ const archived=story.archived===true;
+ actions.appendChild(makeMenuButton(
+  archived?"Вернуть в активные":"Переместить в архив",
+  ()=>changeArchiveStatus(id,!archived)
+ ));
+
+ actions.appendChild(makeMenuButton(
+  "Удалить историю",
+  ()=>deleteStory(id),
+  "delete"
+ ));
+
+ $("storyMenu").showModal();
+}
+
+function createStoryCard(story){
+ const hero=getHero(story);
+ const card=document.createElement("article");
+ card.className="story-card";
+
+ const link=document.createElement("a");
+ link.className="story-link";
+ link.href="chat.html?story="+encodeURIComponent(story.id);
+ link.setAttribute(
+  "aria-label",
+  (story.archived===true?"Читать":"Продолжить")+
+  " историю "+story.title
+ );
+
+ if(hero.photo){
+  const image=document.createElement("img");
+  image.className="avatar";
+  image.src=hero.photo;
+  image.alt="Фото "+hero.name;
+  image.loading="lazy";
+  link.appendChild(image);
+ }else{
+  const placeholder=document.createElement("div");
+  placeholder.className="placeholder";
+  placeholder.textContent="☾";
+  link.appendChild(placeholder);
+ }
+
+ const info=document.createElement("div");
+ info.className="info";
+
+ const name=document.createElement("div");
+ name.className="hero-name";
+ name.textContent=hero.name;
+ info.appendChild(name);
+
+ const title=document.createElement("h2");
+ title.className="story-title";
+ title.textContent=story.title;
+ info.appendChild(title);
+
+ const preview=document.createElement("div");
+ preview.className="preview";
+ preview.textContent=messagePreview(story);
+ info.appendChild(preview);
+
+ const meta=document.createElement("div");
+ meta.className="meta";
+
+ const count=Array.isArray(story.messages)
+  ?story.messages.length:0;
+
+ const countSpan=document.createElement("span");
+ countSpan.textContent=count+" сообщ.";
+ meta.appendChild(countSpan);
+
+ const date=formatDate(story.updatedAt||story.createdAt);
+ if(date){
+  const dateSpan=document.createElement("span");
+  dateSpan.textContent="· "+date;
+  meta.appendChild(dateSpan);
+ }
+
+ info.appendChild(meta);
+ link.appendChild(info);
+ card.appendChild(link);
+
+ const more=document.createElement("button");
+ more.type="button";
+ more.className="more";
+ more.textContent="⋯";
+ more.setAttribute("aria-label","Действия с историей "+story.title);
+ more.addEventListener("click",()=>openStoryMenu(story.id));
+ card.appendChild(more);
+
+ return card;
+}
+
+function renderStories(){
+ const list=$("storiesList");
+ list.replaceChildren();
+
+ const stories=readStories().filter(story=>
+  story&&
+  typeof story.id==="string"&&
+  typeof story.title==="string"&&
+  (currentTab==="archive"
+   ?story.archived===true
+   :story.archived!==true)
+ );
+
+ if(!stories.length){
+  const empty=document.createElement("div");
+  empty.className="empty";
+
+  if(currentTab==="archive"){
+   empty.textContent="В архиве пока нет историй.";
+  }else{
+   empty.textContent="Активных историй пока нет.";
+   const link=document.createElement("a");
+   link.href="gallery.html";
+   link.textContent=" Выбрать персонажа";
+   empty.appendChild(document.createElement("p"));
+   empty.appendChild(link);
+  }
+
+  list.appendChild(empty);
+  return;
+ }
+
+ stories.sort((a,b)=>
+  (b.updatedAt||0)-(a.updatedAt||0)
+ );
+
+ stories.forEach(story=>{
+  list.appendChild(createStoryCard(story));
+ });
+}
+
+function switchTab(tab){
+ currentTab=tab;
+
+ $("activeTab").classList.toggle("active",tab==="active");
+ $("archiveTab").classList.toggle("active",tab==="archive");
+
+ renderStories();
+}
+
+$("activeTab").addEventListener("click",()=>switchTab("active"));
+$("archiveTab").addEventListener("click",()=>switchTab("archive"));
+
+$("closeMenu").addEventListener("click",()=>{
+ $("storyMenu").close();
 });
 
-document.addEventListener('visibilitychange', function() {
-  if (!document.hidden) renderStories();
+window.addEventListener("pageshow",renderStories);
+
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden)renderStories();
 });
 
 renderStories();
+})();
 </script>
-
 </body>
 </html>
