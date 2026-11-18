@@ -3,116 +3,239 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Галерея персонажей — GREY WORLD</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d0d10">
+<title>Каталог — GREY WORLD</title>
 <style>
 *{box-sizing:border-box}
+:root{
+ color-scheme:dark;
+ --bg:#0d0d10;--card:#202025;
+ --red:#85283c;--silver:#c5c7ce;
+ --text:#f2f1f3;--muted:#a9a9b3;
+ --border:#414149
+}
 body{
- margin:0;background:#111116;color:#e5e2e8;
- font-family:Arial,sans-serif;padding:35px 20px
+ margin:0;min-height:100vh;color:var(--text);
+ background:radial-gradient(ellipse at top,#292026 0%,#141418 38%,#0d0d10 85%);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
-main{max-width:650px;margin:auto}
-header{text-align:center;margin-bottom:35px}
-.logo{
- font-family:Georgia,serif;font-size:clamp(32px,8vw,46px);
- letter-spacing:5px;margin:0
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+main{max-width:650px;margin:auto;padding:24px 16px 115px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:27px}
+.brand{font-family:Georgia,serif;letter-spacing:2px;font-size:20px;color:var(--silver)}
+.top a{color:var(--muted);font-size:13px}
+h1{font-size:28px;margin:0 0 18px}
+.search{
+ display:flex;align-items:center;gap:10px;
+ background:#25252b;border:1px solid #494850;
+ border-radius:16px;padding:0 14px;margin-bottom:14px
 }
-.subtitle{color:#aaa3b0;margin-top:20px}
-.back{
- display:inline-block;background:#76243f;color:white;
- text-decoration:none;padding:14px 20px;
- border-radius:12px;margin-bottom:20px
+.search span{font-size:21px;color:var(--silver)}
+.search input{
+ width:100%;padding:16px 0;background:none;
+ border:0;outline:none;color:white;font-size:15px
 }
-.section-title{margin:30px 0 16px;font-size:24px}
-.card{
- background:#25222c;border:1px solid #403746;
- border-radius:20px;padding:24px;margin-bottom:18px
+.search input::placeholder{color:#9998a2}
+.toolbar{display:flex;gap:9px;margin-bottom:18px}
+.filter-btn,.chip{
+ border:1px solid #494850;
+ background:#29282e;color:var(--silver);
+ border-radius:25px;padding:11px 14px;
+ white-space:nowrap;font-size:13px
 }
-.tag{
- display:inline-block;color:#e1bfce;background:#3b2734;
- padding:7px 12px;border-radius:20px;font-size:13px
-}
-h2{margin-top:12px;font-size:28px;overflow-wrap:anywhere}
-.description{
- color:#bdb5c1;line-height:1.65;
- white-space:pre-wrap;overflow-wrap:anywhere
-}
-.actions{
- display:flex;flex-wrap:wrap;gap:12px;margin-top:24px
-}
-.button{
- display:inline-block;padding:15px 20px;border-radius:12px;
- color:white;background:#76243f;text-decoration:none;
- border:0;font:inherit;font-size:16px;cursor:pointer;
- text-align:center
-}
-.secondary{background:#39313f}
-.button:disabled{opacity:.5;cursor:not-allowed}
-.hero-header{
- display:flex;align-items:center;gap:18px;margin-top:18px
-}
-.hero-avatar{
- width:90px;height:90px;object-fit:cover;
- border-radius:18px;border:1px solid #655568;flex-shrink:0
-}
-.hero-placeholder{
- width:90px;height:90px;display:flex;align-items:center;
- justify-content:center;background:#342b3a;
- color:#e1bfce;font-size:36px;border-radius:18px;
- flex-shrink:0
-}
-.hero-header h2{margin:0}
-.empty{color:#bdb5c1;line-height:1.6}
+.filter-btn{border-radius:13px;font-size:18px}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip.active{background:#652537;border-color:#a4485e;color:white}
 .counter{
- background:#302339;border:1px solid #6e4a7e;
- border-radius:16px;padding:18px;margin:18px 0
+ background:linear-gradient(145deg,#242329,#19191e);
+ border:1px solid var(--border);
+ border-radius:18px;padding:15px;margin-bottom:22px
 }
-.counter strong{font-size:20px}
-.bar{
- background:#493950;height:9px;border-radius:20px;
- margin-top:14px;overflow:hidden
+.counter-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.counter strong{font-size:15px}
+.counter a{font-size:12px;color:#e1a8b6}
+.bar{height:7px;background:#3c3b42;border-radius:20px;overflow:hidden;margin-top:12px}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#7b2337,#c4536a)}
+.hint{font-size:12px;color:var(--muted);line-height:1.5;margin:11px 0 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hero-card{
+ position:relative;min-width:0;
+ border-radius:18px;overflow:hidden;
+ background:#242329;border:1px solid #49454d;
+ display:flex;flex-direction:column
 }
-.fill{background:#b477d9;height:100%;width:0}
-.hint{font-size:13px;color:#bdb5c1;line-height:1.5}
-footer{
- text-align:center;color:#aaa3b0;
- font-size:13px;margin-top:45px
+.photo{
+ width:100%;aspect-ratio:3/4;
+ object-fit:cover;display:block;
+ background:#29282e
 }
+.placeholder{
+ width:100%;aspect-ratio:3/4;
+ display:grid;place-items:center;
+ background:linear-gradient(145deg,#3b2a31,#1c1c22);
+ font-family:Georgia,serif;font-size:64px;color:#b5b5bf
+}
+.heart{
+ position:absolute;right:9px;top:9px;
+ width:37px;height:37px;border-radius:50%;
+ border:1px solid #77717a;
+ background:#16141bcb;color:#fff;
+ font-size:22px;display:grid;place-items:center
+}
+.heart.saved{color:#e6a0b0;background:#512432}
+.hero-info{padding:12px;flex:1;display:flex;flex-direction:column;gap:7px}
+.hero-info h2{font-size:16px;margin:0;overflow-wrap:anywhere}
+.kind{font-size:11px;color:#d1a5b0}
+.desc{
+ color:var(--muted);font-size:12px;
+ line-height:1.4;display:-webkit-box;
+ -webkit-line-clamp:3;-webkit-box-orient:vertical;
+ overflow:hidden;white-space:pre-line
+}
+.state{font-size:11px;color:#c8c9d1;margin-top:auto}
+.card-actions{display:grid;gap:7px;padding:0 12px 12px}
+.action{
+ display:block;text-align:center;width:100%;
+ padding:11px 7px;border-radius:11px;
+ border:0;background:var(--red);
+ color:white;font-size:12px;font-weight:600;
+ text-decoration:none
+}
+.action.secondary{background:#38373e}
+.action:disabled{opacity:.45}
+.empty{
+ grid-column:1/-1;background:#242329;
+ border:1px solid var(--border);
+ border-radius:18px;padding:24px;
+ color:var(--muted);font-size:14px;line-height:1.6
+}
+.create{
+ display:block;margin:19px 0;
+ background:#30232a;border:1px solid #71394a;
+ border-radius:14px;padding:16px;
+ text-align:center;color:#f2c3ce;
+ font-weight:600;font-size:14px
+}
+footer{text-align:center;color:var(--muted);font-size:12px;margin:30px 0}
+.bottom{
+ position:fixed;bottom:0;left:0;right:0;z-index:10;
+ display:grid;grid-template-columns:repeat(5,1fr);
+ background:rgba(15,15,19,.96);border-top:1px solid #49434a;
+ padding:10px 5px calc(9px + env(safe-area-inset-bottom));
+ backdrop-filter:blur(18px)
+}
+.bottom a{
+ display:flex;flex-direction:column;align-items:center;
+ gap:5px;font-size:10px;color:#9fa0aa;white-space:nowrap
+}
+.bottom .symbol{font-size:22px;line-height:25px}
+.bottom a.active{color:#e5a5b3;font-weight:700}
+dialog{
+ width:min(94vw,470px);max-height:85vh;overflow:auto;
+ border:1px solid #62505a;border-radius:22px;
+ background:#1b1920;color:white;padding:20px
+}
+dialog::backdrop{background:#000c}
+.modal-top{display:flex;justify-content:space-between;align-items:center}
+.modal-top h2{margin:0;font-size:21px}
+.close{background:#38373e;border:0;border-radius:50%;color:white;width:37px;height:37px;font-size:23px}
+.filter-title{color:var(--silver);font-size:12px;letter-spacing:1px;margin:24px 0 12px}
+.sort-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.sort-option{
+ padding:14px 7px;background:#29282e;
+ color:white;border:1px solid #494850;
+ border-radius:13px;font-size:13px
+}
+.sort-option.selected{background:#542332;border-color:#b84f68}
+.check-row{
+ display:flex;align-items:center;justify-content:space-between;
+ padding:16px 0;border-bottom:1px solid #38353d;
+ gap:15px;font-size:14px
+}
+.check-row input{accent-color:#a83f57;width:21px;height:21px}
+.modal-actions{display:flex;gap:10px;margin-top:24px}
+.modal-actions button{flex:1;padding:14px;border:0;border-radius:13px;color:white;background:#85283c;font-weight:600}
+.modal-actions .reset{background:#38373e}
 </style>
 </head>
 <body>
 <main>
-<header>
-<h1 class="logo">GREY WORLD</h1>
-<p class="subtitle">Галерея персонажей</p>
-</header>
+ <div class="top">
+  <strong class="brand">☾ GREY WORLD</strong>
+  <a href="index.html">На главную ↗</a>
+ </div>
 
-<a class="back" href="index.html">← На главную</a>
+ <h1>Каталог персонажей</h1>
 
-<div class="counter">
-<strong>Моя картотека: <span id="count">0 / 10</span></strong>
-<div class="bar"><div class="fill" id="fill"></div></div>
-<p class="hint">
-В профиле можно держать не более 10 активных героев.
-Создание и добавление персонажей бесплатны.
-</p>
-<a class="button secondary" href="profile.html">Мой профиль</a>
-</div>
+ <div class="search">
+  <span>⌕</span>
+  <input id="search" type="search" placeholder="Поиск персонажа или тега...">
+ </div>
 
-<h2 class="section-title">Персонажи GREY WORLD</h2>
-<div id="officialHeroes"></div>
+ <div class="toolbar">
+  <button class="filter-btn" id="openFilters" aria-label="Сортировка и фильтры">☷</button>
+  <div class="chips">
+   <button class="chip active" data-category="all">Все</button>
+   <button class="chip" data-category="official">Официальные</button>
+   <button class="chip" data-category="mine">Мои герои</button>
+   <button class="chip" data-category="active">В картотеке</button>
+   <button class="chip" data-category="favorites">Избранное</button>
+  </div>
+ </div>
 
-<h2 class="section-title">Мои персонажи</h2>
-<div id="myHeroes"></div>
+ <section class="counter">
+  <div class="counter-top">
+   <strong>Моя картотека: <span id="count">0 / 10</span></strong>
+   <a href="profile.html">Мой профиль ›</a>
+  </div>
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <p class="hint">До 10 активных героев. Добавление и создание бесплатны. Истории сохраняются при удалении из картотеки.</p>
+ </section>
 
-<div class="actions">
-<a class="button secondary" href="heroes.html">
-+ Создать персонажа
-</a>
-</div>
+ <div class="grid" id="catalog"></div>
 
-<footer>18+ · Демонстрационная версия · GREY WORLD</footer>
+ <a class="create" href="heroes.html">＋ Создать своего персонажа</a>
+
+ <footer>18+ · Демонстрационная версия · GREY WORLD</footer>
 </main>
+
+<nav class="bottom" aria-label="Основная навигация">
+ <a href="stories.html"><span class="symbol">▤</span><span>Чаты</span></a>
+ <a href="gallery.html" class="active" aria-current="page"><span class="symbol">♧</span><span>Каталог</span></a>
+ <a href="index.html"><span class="symbol">☾</span><span>Главная</span></a>
+ <a href="heroes.html"><span class="symbol">✦</span><span>Герои</span></a>
+ <a href="profile.html"><span class="symbol">◉</span><span>Профиль</span></a>
+</nav>
+
+<dialog id="filters">
+ <div class="modal-top">
+  <h2>Сортировка и фильтры</h2>
+  <button class="close" id="closeFilters" aria-label="Закрыть">×</button>
+ </div>
+
+ <div class="filter-title">СОРТИРОВКА</div>
+ <div class="sort-grid">
+  <button class="sort-option selected" data-sort="new">По дате</button>
+  <button class="sort-option" data-sort="nameAsc">А–Я</button>
+  <button class="sort-option" data-sort="nameDesc">Я–А</button>
+  <button class="sort-option" data-sort="favorites">Избранные сначала</button>
+ </div>
+
+ <div class="filter-title">ФИЛЬТРЫ</div>
+ <label class="check-row">Только с фото <input id="onlyPhoto" type="checkbox"></label>
+ <label class="check-row">Только официальные <input id="onlyOfficial" type="checkbox"></label>
+ <label class="check-row">Только в картотеке <input id="onlyActive" type="checkbox"></label>
+ <label class="check-row">Только избранные <input id="onlyFavorites" type="checkbox"></label>
+
+ <div class="modal-actions">
+  <button class="reset" id="resetFilters">Сбросить</button>
+  <button id="applyFilters">Применить</button>
+ </div>
+</dialog>
 
 <script>
 (function(){
@@ -121,228 +244,290 @@ footer{
 const HEROES_KEY="grey-world-heroes-v1";
 const ACTIVE_KEY="grey-world-active-heroes-v1";
 const STORIES_KEY="grey-world-stories-v1";
+const FAVORITES_KEY="grey-world-favorites-v1";
 const MAX_HEROES=10;
+const el=id=>document.getElementById(id);
 
-const official=[
- {
-  id:"grey",
-  name:"Грэй",
-  personality:
-   "Самоуверенный, независимый и остроумный.\n"+
-   "Его сарказм способен вывести из себя,\n"+
-   "но за колкими словами иногда скрывается\n"+
-   "неожиданная теплота.\n\n"+
-   "Не любит подчиняться чужим правилам.\n"+
-   "Обожает словесные дуэли и всегда\n"+
-   "оставляет последнее слово за собой."
- }
-];
+const official=[{
+ id:"grey",
+ name:"Грэй",
+ personality:
+  "Самоуверенный, независимый и остроумный.\n"+
+  "Его сарказм способен вывести из себя,\n"+
+  "но за колкими словами иногда скрывается\n"+
+  "неожиданная теплота.\n\n"+
+  "Не любит подчиняться чужим правилам.\n"+
+  "Обожает словесные дуэли и всегда\n"+
+  "оставляет последнее слово за собой."
+}];
 
 function read(key,fallback){
- try{
-  const value=JSON.parse(localStorage.getItem(key));
-  return value??fallback;
- }catch(e){return fallback;}
+ try{return JSON.parse(localStorage.getItem(key))??fallback}
+ catch(e){return fallback}
 }
-
 function getHeroes(){
- const value=read(HEROES_KEY,[]);
- return Array.isArray(value)?value:[];
+ const v=read(HEROES_KEY,[]);
+ return Array.isArray(v)?v:[];
 }
-
 function getStories(){
- const value=read(STORIES_KEY,[]);
- return Array.isArray(value)?value:[];
+ const v=read(STORIES_KEY,[]);
+ return Array.isArray(v)?v:[];
 }
-
 function validIds(){
  return new Set([
   ...official.map(h=>String(h.id)),
   ...getHeroes().filter(h=>h&&h.id).map(h=>String(h.id))
  ]);
 }
-
 function getActive(){
  const stored=read(ACTIVE_KEY,null);
  const allowed=validIds();
-
  if(Array.isArray(stored)){
   return [...new Set(stored.map(String))]
-   .filter(id=>allowed.has(id))
-   .slice(0,MAX_HEROES);
+   .filter(id=>allowed.has(id)).slice(0,MAX_HEROES);
  }
-
- // Первый запуск: сохраняем уже созданных героев.
- // Герои существующих историй также сохраняют доступ.
- const ids=[
-  ...getHeroes().filter(h=>h&&h.id).map(h=>String(h.id))
- ];
-
+ const ids=getHeroes().filter(h=>h&&h.id).map(h=>String(h.id));
  getStories().forEach(story=>{
   if(!story)return;
   const id=story.heroId??story.hero;
-  if(id!=null&&allowed.has(String(id))){
-   ids.push(String(id));
-  }
+  if(id!=null&&allowed.has(String(id)))ids.push(String(id));
  });
-
  const initial=[...new Set(ids)].slice(0,MAX_HEROES);
  localStorage.setItem(ACTIVE_KEY,JSON.stringify(initial));
  return initial;
 }
-
 function setActive(ids){
  localStorage.setItem(ACTIVE_KEY,JSON.stringify(ids));
  render();
 }
-
-function updateCount(active){
- document.getElementById("count").textContent=
-  active.length+" / "+MAX_HEROES;
- document.getElementById("fill").style.width=
-  (active.length/MAX_HEROES*100)+"%";
+function getFavorites(){
+ const v=read(FAVORITES_KEY,[]);
+ return Array.isArray(v)?v.map(String):[];
+}
+function toggleFavorite(id){
+ const set=new Set(getFavorites());
+ if(set.has(id))set.delete(id);else set.add(id);
+ localStorage.setItem(FAVORITES_KEY,JSON.stringify([...set]));
+ render();
 }
 
-function button(text,action,secondary){
- const b=document.createElement("button");
- b.type="button";
- b.className="button"+(secondary?" secondary":"");
- b.textContent=text;
- b.onclick=action;
- return b;
+let category="all";
+let sort="new";
+let filters={photo:false,official:false,active:false,favorites:false};
+
+function allHeroes(){
+ return [
+  ...official.map((h,i)=>({...h,isOfficial:true,order:i})),
+  ...getHeroes().filter(h=>h&&h.id)
+   .map((h,i)=>({...h,isOfficial:false,order:official.length+i}))
+ ];
 }
 
-function link(text,url,secondary){
- const a=document.createElement("a");
- a.className="button"+(secondary?" secondary":"");
- a.href=url;
- a.textContent=text;
- return a;
-}
-
-function card(hero,isOfficial,active){
+function matches(hero,active,favorites,query){
  const id=String(hero.id);
  const selected=active.includes(id);
+ const liked=favorites.includes(id);
+ const text=[
+  hero.name,hero.personality,hero.description,
+  hero.tags,hero.backstory
+ ].filter(Boolean).join(" ").toLowerCase();
 
- const article=document.createElement("article");
- article.className="card";
+ if(query&&!text.includes(query))return false;
+ if(category==="official"&&!hero.isOfficial)return false;
+ if(category==="mine"&&hero.isOfficial)return false;
+ if(category==="active"&&!selected)return false;
+ if(category==="favorites"&&!liked)return false;
+ if(filters.photo&&!hero.photo)return false;
+ if(filters.official&&!hero.isOfficial)return false;
+ if(filters.active&&!selected)return false;
+ if(filters.favorites&&!liked)return false;
+ return true;
+}
 
- const tag=document.createElement("span");
- tag.className="tag";
- tag.textContent=isOfficial
-  ?"Персонаж GREY WORLD"
-  :"Мой персонаж";
- article.appendChild(tag);
+function makeButton(text,fn,secondary){
+ const b=document.createElement("button");
+ b.type="button";b.className="action"+(secondary?" secondary":"");
+ b.textContent=text;b.onclick=fn;return b;
+}
+function makeLink(text,url,secondary){
+ const a=document.createElement("a");
+ a.className="action"+(secondary?" secondary":"");
+ a.href=url;a.textContent=text;return a;
+}
 
- const header=document.createElement("div");
- header.className="hero-header";
+function createCard(hero,active,favorites){
+ const id=String(hero.id);
+ const selected=active.includes(id);
+ const liked=favorites.includes(id);
+ const card=document.createElement("article");
+ card.className="hero-card";
 
  if(hero.photo){
   const img=document.createElement("img");
-  img.className="hero-avatar";
-  img.src=hero.photo;
-  img.alt="Аватар персонажа";
-  header.appendChild(img);
+  img.className="photo";img.src=hero.photo;
+  img.alt="Фото персонажа "+(hero.name||"");
+  card.appendChild(img);
  }else{
-  const avatar=document.createElement("div");
-  avatar.className="hero-placeholder";
-  avatar.textContent="✦";
-  header.appendChild(avatar);
+  const placeholder=document.createElement("div");
+  placeholder.className="placeholder";
+  placeholder.textContent="☾";
+  card.appendChild(placeholder);
  }
 
+ const heart=document.createElement("button");
+ heart.type="button";
+ heart.className="heart"+(liked?" saved":"");
+ heart.textContent=liked?"♥":"♡";
+ heart.setAttribute("aria-label",liked?"Убрать из избранного":"В избранное");
+ heart.onclick=()=>toggleFavorite(id);
+ card.appendChild(heart);
+
+ const info=document.createElement("div");
+ info.className="hero-info";
  const title=document.createElement("h2");
  title.textContent=hero.name||"Без имени";
- header.appendChild(title);
- article.appendChild(header);
+ info.appendChild(title);
+
+ const kind=document.createElement("div");
+ kind.className="kind";
+ kind.textContent=hero.isOfficial?"Официальный":"Мой персонаж";
+ info.appendChild(kind);
 
  if(hero.personality){
-  const p=document.createElement("p");
-  p.className="description";
-  p.textContent=hero.personality;
-  article.appendChild(p);
+  const p=document.createElement("div");
+  p.className="desc";p.textContent=hero.personality;
+  info.appendChild(p);
  }
 
+ const state=document.createElement("div");
+ state.className="state";
+ state.textContent=selected?"✓ В картотеке":"Не добавлен";
+ info.appendChild(state);
+ card.appendChild(info);
+
  const actions=document.createElement("div");
- actions.className="actions";
+ actions.className="card-actions";
 
  if(selected){
-  actions.appendChild(
-   link("+ Новая история",
-    "chat.html?new=1&hero="+encodeURIComponent(id),false)
-  );
-
-  actions.appendChild(
-   button("Убрать из картотеки",()=>{
-    const message=
-     "Убрать героя «"+(hero.name||"Без имени")+"» "+
-     "из активной картотеки?\n\n"+
-     "Сохранённые истории не удалятся, "+
-     "но для продолжения общения героя "+
-     "потребуется вернуть в картотеку.";
-
-    if(!confirm(message))return;
-    setActive(getActive().filter(x=>x!==id));
-   },true)
-  );
+  actions.appendChild(makeLink(
+   "+ Новая история",
+   "chat.html?new=1&hero="+encodeURIComponent(id),false
+  ));
+  actions.appendChild(makeButton("Убрать из картотеки",()=>{
+   if(!confirm(
+    "Убрать героя «"+(hero.name||"Без имени")+"» из картотеки?\n\n"+
+    "Все истории сохранятся. Чтобы продолжить общение, "+
+    "нужно будет добавить героя обратно."
+   ))return;
+   setActive(getActive().filter(x=>x!==id));
+  },true));
  }else{
-  const add=button("Добавить в мою картотеку",()=>{
+  const add=makeButton("Добавить в картотеку",()=>{
    const current=getActive();
-   if(current.includes(id))return;
    if(current.length>=MAX_HEROES){
     alert("Все 10 мест заняты. Сначала убери другого героя.");
     return;
    }
    setActive([...current,id]);
   },false);
-
   if(active.length>=MAX_HEROES)add.disabled=true;
   actions.appendChild(add);
  }
 
- actions.appendChild(
-  link("Мои истории","stories.html",true)
- );
+ actions.appendChild(makeLink("Мои истории","stories.html",true));
 
- if(!isOfficial){
-  actions.appendChild(
-   link("Редактировать анкету","heroes.html",true)
-  );
+ if(!hero.isOfficial){
+  actions.appendChild(makeLink("Редактировать","heroes.html",true));
  }
-
- article.appendChild(actions);
- return article;
+ card.appendChild(actions);
+ return card;
 }
 
 function render(){
  const active=getActive();
- updateCount(active);
+ const favorites=getFavorites();
+ const query=el("search").value.trim().toLowerCase();
 
- const officialBox=document.getElementById("officialHeroes");
- const customBox=document.getElementById("myHeroes");
+ el("count").textContent=active.length+" / "+MAX_HEROES;
+ el("fill").style.width=(active.length/MAX_HEROES*100)+"%";
 
- officialBox.replaceChildren();
- customBox.replaceChildren();
+ let heroes=allHeroes().filter(h=>matches(h,active,favorites,query));
 
- official.forEach(hero=>{
-  officialBox.appendChild(card(hero,true,active));
- });
+ if(sort==="nameAsc"){
+  heroes.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ru"));
+ }else if(sort==="nameDesc"){
+  heroes.sort((a,b)=>(b.name||"").localeCompare(a.name||"","ru"));
+ }else if(sort==="favorites"){
+  heroes.sort((a,b)=>
+   Number(favorites.includes(String(b.id)))-
+   Number(favorites.includes(String(a.id)))||
+   a.order-b.order
+  );
+ }else{
+  heroes.sort((a,b)=>a.order-b.order);
+ }
 
- const heroes=getHeroes();
+ const box=el("catalog");
+ box.replaceChildren();
+
  if(!heroes.length){
   const empty=document.createElement("div");
-  empty.className="card empty";
-  empty.textContent=
-   "Пока нет созданных персонажей. "+
-   "Ты можешь создать своего первого героя.";
-  customBox.appendChild(empty);
- }else{
-  heroes.forEach(hero=>{
-   if(hero&&hero.id){
-    customBox.appendChild(card(hero,false,active));
-   }
-  });
+  empty.className="empty";
+  empty.textContent="По выбранным условиям персонажей не найдено.";
+  box.appendChild(empty);
+  return;
  }
+ heroes.forEach(hero=>box.appendChild(createCard(hero,active,favorites)));
 }
+
+document.querySelectorAll("[data-category]").forEach(b=>{
+ b.onclick=()=>{
+  category=b.dataset.category;
+  document.querySelectorAll("[data-category]").forEach(x=>
+   x.classList.toggle("active",x===b)
+  );
+  render();
+ };
+});
+
+el("search").addEventListener("input",render);
+
+function showSort(){
+ document.querySelectorAll("[data-sort]").forEach(b=>
+  b.classList.toggle("selected",b.dataset.sort===sort)
+ );
+}
+document.querySelectorAll("[data-sort]").forEach(b=>{
+ b.onclick=()=>{
+  sort=b.dataset.sort;
+  showSort();
+ };
+});
+
+el("openFilters").onclick=()=>el("filters").showModal();
+el("closeFilters").onclick=()=>el("filters").close();
+
+el("applyFilters").onclick=()=>{
+ filters={
+  photo:el("onlyPhoto").checked,
+  official:el("onlyOfficial").checked,
+  active:el("onlyActive").checked,
+  favorites:el("onlyFavorites").checked
+ };
+ el("filters").close();
+ render();
+};
+
+el("resetFilters").onclick=()=>{
+ sort="new";
+ filters={photo:false,official:false,active:false,favorites:false};
+ ["onlyPhoto","onlyOfficial","onlyActive","onlyFavorites"].forEach(id=>
+  el(id).checked=false
+ );
+ showSort();
+ el("filters").close();
+ render();
+};
 
 render();
 })();
