@@ -3,416 +3,828 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d0d10">
 <title>Мои герои — GREY WORLD</title>
 <style>
 *{box-sizing:border-box}
-:root{--bg:#100e14;--card:#252129;--line:#49404d;--text:#eee9f0;--muted:#aaa1af;--pink:#d5a0b5;--wine:#752841}
-body{margin:0;background:radial-gradient(ellipse at 50% 0%,#2a1d28 0%,#151119 36%,var(--bg) 75%);background-attachment:fixed;color:var(--text);font:16px/1.5 Arial,sans-serif}
-main{max-width:760px;margin:auto;padding:25px 16px 110px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.logo{font:22px Georgia,serif;letter-spacing:3px;color:#dcd4de}
-a{color:var(--pink);text-decoration:none}
-.back{font-size:13px;color:#aaa1af;text-align:right}
-h1{font-size:32px;margin:34px 0 5px}
-.subtitle,.muted{color:var(--muted)}
-.subtitle{margin:0 0 25px}
-.card{background:linear-gradient(145deg,#29242e,#211e27);border:1px solid var(--line);border-radius:22px;padding:18px;margin:14px 0}
-button{font:inherit;cursor:pointer;border:1px solid #98516c;border-radius:14px;background:var(--wine);color:white;padding:12px 16px}
-button.secondary{background:#35303a;border-color:#514653}
-button.danger{background:#432630;border-color:#95506a;color:#ffc0cf}
-button:disabled{opacity:.5}
-.new-button{width:100%;margin:5px 0 18px;font-weight:bold}
-.hidden,[hidden]{display:none!important}
-.hero-summary{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:0;background:transparent;padding:0;color:inherit}
-.avatar{width:76px;height:76px;border-radius:17px;object-fit:cover;flex-shrink:0;border:1px solid #675566;background:#332a37}
-.placeholder{display:grid;place-items:center;font-size:28px;color:var(--pink)}
-.hero-info{min-width:0;flex:1}
-.hero-info strong{display:block;font-size:19px;overflow-wrap:anywhere}
-.hero-info small{display:block;font-size:13px;color:var(--muted);margin-top:5px}
-.chevron{font-size:22px;color:var(--pink)}
-.hero-details{border-top:1px solid var(--line);margin-top:17px;padding-top:16px}
-.details{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;color:#d9d2dc}
-.details p{margin:10px 0}
-.details strong{color:var(--pink)}
-.profile-photo{display:block;width:100%;max-width:240px;border-radius:17px;margin:10px 0 17px}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
-.actions button{flex:1;min-width:120px;font-size:14px}
-.editor{padding:20px}
-.editor h2{margin:0 0 17px;font-size:22px}
-label{display:block;margin:13px 0 5px;color:#e0c9d7;font-size:14px}
-input,textarea,select{display:block;width:100%;background:#17141c;border:1px solid #554658;border-radius:13px;color:white;padding:13px;font:inherit;margin-top:7px}
-input[type=file]{font-size:13px}
-textarea{min-height:95px;resize:vertical}
-.avatar-preview{width:120px;height:120px;object-fit:cover;border-radius:17px;margin:12px 0}
-.photo-note{font-size:12px;line-height:1.5}
-.empty{text-align:center;padding:35px 15px;color:var(--muted)}
-.notice{text-align:center;color:#8f8794;font-size:12px;margin:35px 0}
-.nav{position:fixed;bottom:0;left:0;right:0;z-index:8;display:grid;grid-template-columns:repeat(5,1fr);background:#120f17f5;border-top:1px solid #453b48;padding:11px 3px calc(11px + env(safe-area-inset-bottom));backdrop-filter:blur(15px)}
-.nav a{text-align:center;color:#a49ba9;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
-.nav .symbol{font-size:24px;line-height:27px}
-.nav a.active{color:#e1a5bc;font-weight:bold}
-@media(max-width:360px){.logo{font-size:18px;letter-spacing:2px}.nav a{font-size:10px}.avatar{width:65px;height:65px}}
+:root{
+  color-scheme:dark;
+  --bg:#0d0d10;
+  --panel:#222126;
+  --line:#45434a;
+  --red:#85283c;
+  --silver:#c5c7ce;
+  --muted:#aaa9b2;
+}
+body{
+  margin:0;
+  background:radial-gradient(ellipse at top,#292026 0%,#151519 40%,#0d0d10 85%);
+  color:#f2f1f3;
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+}
+main{max-width:650px;margin:auto;padding:24px 16px 120px}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.brand{font:20px Georgia,serif;letter-spacing:2px;color:var(--silver)}
+.top a{font-size:13px;color:var(--muted)}
+h1{font-size:29px;margin:0 0 5px}
+.muted{color:var(--muted)}
+.subtitle{margin:0 0 20px;font-size:14px}
+.primary,.secondary,.danger{
+  border:0;border-radius:13px;padding:13px 16px;
+  color:white;font-weight:600;background:var(--red);
+}
+.secondary{background:#38373e}
+.danger{background:#53252f;border:1px solid #995061}
+.primary:disabled{opacity:.5}
+.card{
+  background:linear-gradient(145deg,#252329,#1c1c20);
+  border:1px solid var(--line);
+  border-radius:19px;padding:17px;margin:15px 0;
+}
+.hidden{display:none!important}
+.hero-head{display:flex;gap:14px;align-items:center;cursor:pointer}
+.avatar{
+  width:74px;height:88px;border-radius:12px;
+  object-fit:cover;background:#353039;flex-shrink:0;
+}
+.placeholder{
+  display:grid;place-items:center;
+  font:40px Georgia,serif;color:var(--silver);
+}
+.hero-head h2{font-size:18px;margin:0 0 3px}
+.hero-head p{
+  font-size:12px;color:var(--muted);margin:0;
+  display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:2;overflow:hidden;
+}
+.arrow{margin-left:auto;color:var(--silver)}
+.hero-details{
+  margin-top:15px;border-top:1px solid var(--line);
+  padding-top:15px;
+}
+.hero-details p{
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  margin:9px 0;
+}
+.hero-details img{
+  display:block;width:100%;max-width:230px;
+  border-radius:14px;margin-bottom:14px;
+}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+.actions button{flex:1;min-width:120px}
+.editor{margin-top:18px}
+.editor h2{margin:0 0 15px;font-size:21px}
+.section{
+  margin:22px 0 12px;font-size:15px;
+  font-weight:700;color:var(--silver);
+}
+label{
+  display:block;margin:15px 0 6px;
+  font-weight:600;font-size:14px;
+}
+input:not([type=file]),textarea,select{
+  display:block;width:100%;
+  background:#121216;color:#fff;
+  border:1px solid #55515a;
+  border-radius:12px;padding:12px;outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:#bc6c80}
+textarea{resize:vertical;min-height:95px}
+textarea.large{min-height:260px;line-height:1.55}
+input[type=file]{
+  width:100%;color:var(--muted);font-size:13px;
+}
+.hint{font-size:12px;color:var(--muted);margin:6px 0 12px}
+.count{
+  text-align:right;font-size:12px;
+  color:var(--muted);margin:3px 0 12px;
+}
+.count.over{color:#ff858e}
+.invalid{border-color:#ff858e!important}
+.mode{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:9px;margin:12px 0;
+}
+.mode button{
+  border:1px solid var(--line);
+  background:#323038;color:var(--silver);
+  border-radius:13px;padding:13px;
+}
+.mode button.active{
+  background:#642537;border-color:#ad5268;color:white;
+}
+.preview{
+  width:120px;height:140px;object-fit:cover;
+  border-radius:14px;display:block;margin:12px 0;
+}
+.editor-actions{display:flex;gap:10px;margin-top:25px}
+.editor-actions button{flex:1}
+.bottom{
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  display:grid;grid-template-columns:repeat(5,1fr);
+  background:#0f0f13f5;
+  border-top:1px solid #49434a;
+  padding:10px 5px calc(9px + env(safe-area-inset-bottom));
+  backdrop-filter:blur(18px);
+}
+.bottom a{
+  display:flex;flex-direction:column;align-items:center;
+  gap:5px;font-size:10px;color:#9fa0aa;white-space:nowrap;
+}
+.bottom .symbol{font-size:22px;line-height:25px}
+.bottom a.active{color:#e5a5b3;font-weight:700}
+.empty{padding:25px;text-align:center;color:var(--muted)}
+.notice{
+  font-size:12px;color:var(--muted);
+  text-align:center;margin-top:30px;
+}
 </style>
 </head>
 <body>
 <main>
 <div class="top">
-<div class="logo">☾ GREY WORLD</div>
-<a class="back" href="gallery.html">К персонажам ↗</a>
+  <strong class="brand">☾ GREY WORLD</strong>
+  <a href="index.html">На главную ↗</a>
 </div>
 
 <h1>Мои герои</h1>
-<p class="subtitle">Твои персонажи. Их характеры. Их истории.</p>
+<p class="subtitle muted">
+  Создавай персонажей и управляй их анкетами.
+</p>
 
-<button class="new-button" id="newHero" type="button">+ Создать своего персонажа</button>
+<button class="primary" id="newHero" type="button">
+  ＋ Создать персонажа
+</button>
 
-<section id="editor" class="card editor hidden">
-<h2 id="editorTitle">Новый персонаж</h2>
-<form id="heroForm">
-<label>Фотография персонажа
-<input id="heroPhoto" type="file" accept="image/*">
-</label>
-<div id="photoControls" class="hidden">
-<img id="photoPreview" class="avatar-preview" alt="Аватар персонажа">
-<div><button id="removePhoto" type="button" class="danger">Удалить фотографию</button></div>
-</div>
-<p class="muted photo-note">Можно загрузить одну фотографию. Она будет уменьшена для экономии памяти телефона.</p>
+<section class="card editor hidden" id="editor">
+  <h2 id="editorTitle">Новый персонаж</h2>
 
-<label>Имя персонажа *
-<input id="heroName" maxlength="100" required>
-</label>
-<label>Возраст
-<input id="heroAge" maxlength="50" placeholder="Например, 28 лет">
-</label>
-<label>Пол / гендер
-<input id="heroGender" maxlength="100">
-</label>
-<label>Внешность
-<textarea id="heroAppearance" placeholder="Рост, глаза, волосы, особые приметы..."></textarea>
-</label>
-<label>Характер
-<textarea id="heroPersonality" placeholder="Темперамент, привычки, сильные и слабые стороны..."></textarea>
-</label>
-<label>Предыстория
-<textarea id="heroBackstory" placeholder="Прошлое персонажа, важные события..."></textarea>
-</label>
-<label>Предпочтения и особенности
-<textarea id="heroPreferences" placeholder="Интересы, границы, предпочтения..."></textarea>
-</label>
-<div class="actions">
-<button id="saveHeroButton" type="submit">Сохранить героя</button>
-<button type="button" class="secondary" id="cancelEdit">Отмена</button>
-</div>
-</form>
+  <form id="heroForm">
+
+    <div class="section">ОСНОВНАЯ ИНФОРМАЦИЯ</div>
+
+    <label for="heroPhoto">Фотография персонажа</label>
+    <input id="heroPhoto" type="file" accept="image/*">
+    <p class="hint">
+      Одна фотография, автоматически уменьшается
+      для экономии памяти.
+    </p>
+
+    <div id="photoControls" class="hidden">
+      <img id="photoPreview" class="preview" alt="Фото персонажа">
+      <button class="danger" type="button" id="removePhoto">
+        Удалить фотографию
+      </button>
+    </div>
+
+    <label for="heroName">Имя персонажа *</label>
+    <input id="heroName" maxlength="100" required>
+
+    <label for="heroAge">Возраст</label>
+    <input id="heroAge" maxlength="50" placeholder="Например, 28 лет">
+
+    <label for="heroGender">Пол / гендер</label>
+    <input id="heroGender" maxlength="100">
+
+    <label for="heroDescription">
+      Краткое описание для каталога
+    </label>
+    <textarea
+      id="heroDescription"
+      maxlength="250"
+      rows="3"
+      placeholder="Кто этот персонаж? Заинтересуй читателя несколькими фразами."
+    ></textarea>
+    <div class="count" id="descriptionCount"></div>
+
+    <label for="heroFullDescription">
+      Полное описание для каталога
+    </label>
+    <textarea
+      id="heroFullDescription"
+      maxlength="1500"
+      rows="5"
+      placeholder="Больше информации о герое для его публичной карточки."
+    ></textarea>
+    <div class="count" id="fullDescriptionCount"></div>
+
+    <label for="heroCategory">Категория</label>
+    <select id="heroCategory">
+      <option value="">Не выбрана</option>
+      <option value="Романтика">Романтика</option>
+      <option value="Драма">Драма</option>
+      <option value="Фэнтези">Фэнтези</option>
+      <option value="Мистика">Мистика</option>
+      <option value="Приключения">Приключения</option>
+      <option value="Детектив">Детектив</option>
+      <option value="Другое">Другое</option>
+    </select>
+
+    <label for="heroTags">Хештеги</label>
+    <input
+      id="heroTags"
+      maxlength="200"
+      placeholder="#драма #романтика"
+    >
+    <p class="hint">
+      Помогают находить героя в каталоге.
+    </p>
+
+    <div class="section">ПРОМПТ ДЛЯ ИИ</div>
+    <p class="hint">
+      Выбери удобный способ заполнения.
+      Оба режима бесплатные.
+    </p>
+
+    <div class="mode">
+      <button type="button" class="active" data-mode="beginner">
+        Новичок
+      </button>
+      <button type="button" data-mode="expert">
+        Эксперт
+      </button>
+    </div>
+
+    <div id="beginnerFields">
+
+      <label for="heroAppearance">Внешность</label>
+      <textarea
+        id="heroAppearance"
+        maxlength="200"
+        placeholder="Рост, волосы, глаза, особые приметы..."
+      ></textarea>
+      <div class="count" id="appearanceCount"></div>
+
+      <label for="heroPersonality">Характер</label>
+      <textarea
+        id="heroPersonality"
+        maxlength="650"
+        placeholder="Манера речи, привычки, темперамент, поведение..."
+      ></textarea>
+      <div class="count" id="personalityCount"></div>
+
+      <label for="heroBackstory">Предыстория и детали</label>
+      <textarea
+        id="heroBackstory"
+        maxlength="650"
+        placeholder="Прошлое, важные события, связи, особенности..."
+      ></textarea>
+      <div class="count" id="backstoryCount"></div>
+
+    </div>
+
+    <div id="expertFields" class="hidden">
+      <label for="heroExpertPrompt">
+        Авторский промпт персонажа
+      </label>
+      <textarea
+        id="heroExpertPrompt"
+        class="large"
+        maxlength="3500"
+        placeholder="Опиши внешность, характер, биографию, стиль речи, правила поведения и взаимодействия с игроком..."
+      ></textarea>
+      <div class="count" id="expertCount"></div>
+      <p class="hint">
+        Поле увеличивается по мере ввода текста.
+      </p>
+    </div>
+
+    <div class="section">ДОПОЛНИТЕЛЬНО</div>
+
+    <label for="heroPreferences">
+      Предпочтения и особенности
+    </label>
+    <textarea
+      id="heroPreferences"
+      maxlength="1000"
+      placeholder="Дополнительные сведения и ограничения персонажа..."
+    ></textarea>
+    <div class="count" id="preferencesCount"></div>
+
+    <p class="hint">
+      Публикацию в общем каталоге после модерации
+      подключим позже. Сейчас герой сохраняется только у тебя.
+    </p>
+
+    <div class="editor-actions">
+      <button type="button" class="secondary" id="cancelEdit">
+        Отмена
+      </button>
+      <button type="submit" class="primary" id="saveHeroButton">
+        Сохранить героя
+      </button>
+    </div>
+
+  </form>
 </section>
 
 <section id="heroesList" aria-label="Сохранённые герои"></section>
-<p class="notice">18+ · Демонстрационная версия · GREY WORLD</p>
+
+<p class="notice">
+  18+ · Демонстрационная версия · GREY WORLD
+</p>
 </main>
 
-<nav class="nav" aria-label="Навигация">
-<a href="stories.html"><span class="symbol">▤</span>Чаты</a>
-<a href="gallery.html"><span class="symbol">♧</span>Каталог</a>
-<a href="index.html"><span class="symbol">☾</span>Главная</a>
-<a class="active" href="heroes.html" aria-current="page"><span class="symbol">✦</span>Герои</a>
-<a href="profile.html"><span class="symbol">◉</span>Профиль</a>
+<nav class="bottom" aria-label="Основная навигация">
+  <a href="stories.html">
+    <span class="symbol">▤</span>
+    <span>Чаты</span>
+  </a>
+  <a href="gallery.html">
+    <span class="symbol">♧</span>
+    <span>Каталог</span>
+  </a>
+  <a href="index.html">
+    <span class="symbol">☾</span>
+    <span>Главная</span>
+  </a>
+  <a href="heroes.html" class="active" aria-current="page">
+    <span class="symbol">✦</span>
+    <span>Герои</span>
+  </a>
+  <a href="profile.html">
+    <span class="symbol">◉</span>
+    <span>Профиль</span>
+  </a>
 </nav>
 
 <script>
+(function(){
 'use strict';
 
 const KEY='grey-world-heroes-v1';
-const list=document.getElementById('heroesList');
-const editor=document.getElementById('editor');
-const form=document.getElementById('heroForm');
-const photoInput=document.getElementById('heroPhoto');
-const photoPreview=document.getElementById('photoPreview');
-const photoControls=document.getElementById('photoControls');
-const saveButton=document.getElementById('saveHeroButton');
+const $=id=>document.getElementById(id);
+
+const editor=$('editor');
+const form=$('heroForm');
+const list=$('heroesList');
+const photoInput=$('heroPhoto');
+const saveButton=$('saveHeroButton');
 
 const fields={
-name:document.getElementById('heroName'),
-age:document.getElementById('heroAge'),
-gender:document.getElementById('heroGender'),
-appearance:document.getElementById('heroAppearance'),
-personality:document.getElementById('heroPersonality'),
-backstory:document.getElementById('heroBackstory'),
-preferences:document.getElementById('heroPreferences')
+  name:$('heroName'),
+  age:$('heroAge'),
+  gender:$('heroGender'),
+  description:$('heroDescription'),
+  fullDescription:$('heroFullDescription'),
+  category:$('heroCategory'),
+  tags:$('heroTags'),
+  appearance:$('heroAppearance'),
+  personality:$('heroPersonality'),
+  backstory:$('heroBackstory'),
+  expertPrompt:$('heroExpertPrompt'),
+  preferences:$('heroPreferences')
 };
 
 let editingId=null;
 let currentPhoto='';
 let photoBusy=false;
+let mode='beginner';
+let originalHero=null;
 
 function readHeroes(){
-try{
-const data=JSON.parse(localStorage.getItem(KEY));
-return Array.isArray(data)?data:[];
-}catch{return [];}
+  try{
+    const v=JSON.parse(localStorage.getItem(KEY));
+    return Array.isArray(v)?v:[];
+  }catch{
+    return [];
+  }
 }
 
-function saveHeroes(heroes){
-try{
-localStorage.setItem(KEY,JSON.stringify(heroes));
-return true;
-}catch{
-alert('Не удалось сохранить данные. Возможно, память браузера заполнена. Попробуй уменьшить количество фотографий.');
-return false;
-}
+function saveHeroes(v){
+  try{
+    localStorage.setItem(KEY,JSON.stringify(v));
+    return true;
+  }catch{
+    alert('Не удалось сохранить данные. Возможно, память Safari заполнена.');
+    return false;
+  }
 }
 
-function updatePhotoPreview(){
-if(currentPhoto){
-photoPreview.src=currentPhoto;
-photoControls.classList.remove('hidden');
-}else{
-photoPreview.removeAttribute('src');
-photoControls.classList.add('hidden');
+function preview(){
+  if(currentPhoto){
+    $('photoPreview').src=currentPhoto;
+    $('photoControls').classList.remove('hidden');
+  }else{
+    $('photoPreview').removeAttribute('src');
+    $('photoControls').classList.add('hidden');
+  }
 }
+
+function updateCount(id,countId,limit){
+  const field=$(id);
+  const counter=$(countId);
+  counter.textContent=field.value.length+' / '+limit+' символов';
+  counter.classList.toggle('over',field.value.length>limit);
+  field.classList.toggle('invalid',field.value.length>limit);
 }
+
+const counts=[
+  ['heroDescription','descriptionCount',250],
+  ['heroFullDescription','fullDescriptionCount',1500],
+  ['heroAppearance','appearanceCount',200],
+  ['heroPersonality','personalityCount',650],
+  ['heroBackstory','backstoryCount',650],
+  ['heroExpertPrompt','expertCount',3500],
+  ['heroPreferences','preferencesCount',1000]
+];
+
+function refreshCounts(){
+  counts.forEach(c=>updateCount(...c));
+}
+
+counts.forEach(([id])=>{
+  $(id).addEventListener('input',refreshCounts);
+});
+
+function growExpert(){
+  const field=$('heroExpertPrompt');
+  field.style.height='auto';
+  field.style.height=Math.max(260,field.scrollHeight+3)+'px';
+}
+
+$('heroExpertPrompt').addEventListener('input',growExpert);
+
+function setMode(next){
+  mode=next;
+  $('beginnerFields').classList.toggle('hidden',next!=='beginner');
+  $('expertFields').classList.toggle('hidden',next!=='expert');
+
+  document.querySelectorAll('[data-mode]').forEach(b=>{
+    b.classList.toggle('active',b.dataset.mode===next);
+  });
+
+  if(next==='expert')growExpert();
+}
+
+document.querySelectorAll('[data-mode]').forEach(b=>{
+  b.onclick=()=>setMode(b.dataset.mode);
+});
 
 function showEditor(hero=null){
-editingId=hero?hero.id:null;
-form.reset();
-Object.keys(fields).forEach(key=>{
-fields[key].value=hero?(hero[key]||''):'';
-});
-currentPhoto=hero?(hero.photo||''):'';
-updatePhotoPreview();
-document.getElementById('editorTitle').textContent=hero?'Редактировать героя':'Новый персонаж';
-editor.classList.remove('hidden');
-editor.scrollIntoView({behavior:'smooth',block:'start'});
+  originalHero=hero?{...hero}:null;
+  editingId=hero?hero.id:null;
+
+  form.reset();
+
+  Object.entries(fields).forEach(([k,field])=>{
+    field.value=hero?(hero[k]??''):'';
+  });
+
+  currentPhoto=hero?.photo||'';
+  preview();
+
+  setMode(hero?.promptMode==='expert'?'expert':'beginner');
+  refreshCounts();
+
+  $('editorTitle').textContent=hero
+    ?'Редактировать героя'
+    :'Новый персонаж';
+
+  editor.classList.remove('hidden');
+  editor.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function hideEditor(){
-editor.classList.add('hidden');
-editingId=null;
-currentPhoto='';
-form.reset();
-updatePhotoPreview();
-}
-
-function makeButton(text,className,action){
-const button=document.createElement('button');
-button.type='button';
-button.textContent=text;
-if(className)button.className=className;
-button.addEventListener('click',action);
-return button;
-}
-
-function addDetail(parent,label,value){
-if(!value)return;
-const p=document.createElement('p');
-const strong=document.createElement('strong');
-strong.textContent=label+': ';
-p.appendChild(strong);
-p.appendChild(document.createTextNode(value));
-parent.appendChild(p);
+  editor.classList.add('hidden');
+  editingId=null;
+  originalHero=null;
+  currentPhoto='';
+  form.reset();
+  preview();
 }
 
 function resizePhoto(file){
-return new Promise((resolve,reject)=>{
-if(!file.type.startsWith('image/')){
-reject(new Error('Выбери файл изображения.'));
-return;
-}
-const reader=new FileReader();
-reader.onerror=()=>reject(new Error('Не удалось прочитать фотографию.'));
-reader.onload=()=>{
-const image=new Image();
-image.onerror=()=>reject(new Error('Не удалось открыть изображение.'));
-image.onload=()=>{
-try{
-const maxSize=400;
-const scale=Math.min(1,maxSize/Math.max(image.width,image.height));
-const canvas=document.createElement('canvas');
-canvas.width=Math.max(1,Math.round(image.width*scale));
-canvas.height=Math.max(1,Math.round(image.height*scale));
-const ctx=canvas.getContext('2d');
-if(!ctx){
-reject(new Error('Не удалось обработать фотографию.'));
-return;
-}
-ctx.drawImage(image,0,0,canvas.width,canvas.height);
-resolve(canvas.toDataURL('image/jpeg',0.72));
-}catch{
-reject(new Error('Не удалось уменьшить фотографию.'));
-}
-};
-image.src=reader.result;
-};
-reader.readAsDataURL(file);
-});
+  return new Promise((resolve,reject)=>{
+    if(!file.type.startsWith('image/')){
+      return reject(Error('Выбери файл изображения.'));
+    }
+
+    const reader=new FileReader();
+
+    reader.onerror=()=>{
+      reject(Error('Не удалось прочитать фото.'));
+    };
+
+    reader.onload=()=>{
+      const img=new Image();
+
+      img.onerror=()=>{
+        reject(Error('Не удалось открыть фото.'));
+      };
+
+      img.onload=()=>{
+        try{
+          const scale=Math.min(
+            1,400/Math.max(img.width,img.height)
+          );
+
+          const canvas=document.createElement('canvas');
+
+          canvas.width=Math.max(
+            1,Math.round(img.width*scale)
+          );
+          canvas.height=Math.max(
+            1,Math.round(img.height*scale)
+          );
+
+          const ctx=canvas.getContext('2d');
+          if(!ctx)throw Error();
+
+          ctx.drawImage(
+            img,0,0,canvas.width,canvas.height
+          );
+
+          resolve(canvas.toDataURL('image/jpeg',.72));
+        }catch{
+          reject(Error('Не удалось уменьшить фотографию.'));
+        }
+      };
+
+      img.src=reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
 }
 
 photoInput.addEventListener('change',async()=>{
-const file=photoInput.files&&photoInput.files[0];
-if(!file)return;
-photoBusy=true;
-saveButton.disabled=true;
-saveButton.textContent='Обработка фотографии...';
-try{
-currentPhoto=await resizePhoto(file);
-updatePhotoPreview();
-}catch(error){
-alert(error.message);
-}finally{
-photoInput.value='';
-photoBusy=false;
-saveButton.disabled=false;
-saveButton.textContent='Сохранить героя';
-}
+  const file=photoInput.files?.[0];
+  if(!file)return;
+
+  photoBusy=true;
+  saveButton.disabled=true;
+  saveButton.textContent='Обработка фото...';
+
+  try{
+    currentPhoto=await resizePhoto(file);
+    preview();
+  }catch(e){
+    alert(e.message);
+  }finally{
+    photoInput.value='';
+    photoBusy=false;
+    saveButton.disabled=false;
+    saveButton.textContent='Сохранить героя';
+  }
 });
 
-document.getElementById('removePhoto').addEventListener('click',()=>{
-currentPhoto='';
-photoInput.value='';
-updatePhotoPreview();
-});
-
-function render(){
-list.replaceChildren();
-const heroes=readHeroes();
-
-if(!heroes.length){
-const empty=document.createElement('div');
-empty.className='card empty';
-empty.textContent='Пока нет созданных героев. Создай первого!';
-list.appendChild(empty);
-return;
-}
-
-heroes.forEach(hero=>{
-const card=document.createElement('article');
-card.className='card';
-
-const summary=document.createElement('button');
-summary.type='button';
-summary.className='hero-summary';
-summary.setAttribute('aria-expanded','false');
-
-if(hero.photo){
-const avatar=document.createElement('img');
-avatar.className='avatar';
-avatar.src=hero.photo;
-avatar.alt='Аватар '+(hero.name||'персонажа');
-summary.appendChild(avatar);
-}else{
-const placeholder=document.createElement('div');
-placeholder.className='avatar placeholder';
-placeholder.textContent='✦';
-summary.appendChild(placeholder);
-}
-
-const info=document.createElement('div');
-info.className='hero-info';
-const name=document.createElement('strong');
-name.textContent=hero.name||'Без имени';
-const hint=document.createElement('small');
-hint.textContent='Нажми, чтобы открыть анкету';
-info.append(name,hint);
-
-const chevron=document.createElement('span');
-chevron.className='chevron';
-chevron.textContent='⌄';
-summary.append(info,chevron);
-card.appendChild(summary);
-
-const expanded=document.createElement('div');
-expanded.className='hero-details hidden';
-
-const details=document.createElement('div');
-details.className='details';
-
-if(hero.photo){
-const fullPhoto=document.createElement('img');
-fullPhoto.className='profile-photo';
-fullPhoto.src=hero.photo;
-fullPhoto.alt='Фотография персонажа';
-details.appendChild(fullPhoto);
-}
-
-addDetail(details,'Возраст',hero.age);
-addDetail(details,'Пол / гендер',hero.gender);
-addDetail(details,'Внешность',hero.appearance);
-addDetail(details,'Характер',hero.personality);
-addDetail(details,'Предыстория',hero.backstory);
-addDetail(details,'Предпочтения',hero.preferences);
-
-const actions=document.createElement('div');
-actions.className='actions';
-
-const edit=makeButton('✎ Редактировать','secondary',()=>showEditor(hero));
-
-const remove=makeButton('Удалить героя','danger',()=>{
-const confirmed=confirm(
-'Удалить персонажа «'+hero.name+'»?\n\n'+
-'Анкета и фотография будут удалены без возможности восстановления.'
-);
-if(!confirmed)return;
-const updated=readHeroes().filter(item=>item.id!==hero.id);
-if(saveHeroes(updated)){
-if(editingId===hero.id)hideEditor();
-render();
-}
-});
-
-actions.append(edit,remove);
-expanded.append(details,actions);
-card.appendChild(expanded);
-
-summary.addEventListener('click',()=>{
-const opening=expanded.classList.contains('hidden');
-expanded.classList.toggle('hidden',!opening);
-summary.setAttribute('aria-expanded',String(opening));
-hint.textContent=opening?'Нажми, чтобы свернуть анкету':'Нажми, чтобы открыть анкету';
-chevron.textContent=opening?'⌃':'⌄';
-});
-
-list.appendChild(card);
-});
-}
-
-document.getElementById('newHero').addEventListener('click',()=>showEditor());
-document.getElementById('cancelEdit').addEventListener('click',hideEditor);
-
-form.addEventListener('submit',event=>{
-event.preventDefault();
-if(photoBusy)return;
-
-const name=fields.name.value.trim();
-if(!name){
-alert('Укажи имя персонажа.');
-return;
-}
-
-const heroes=readHeroes();
-const hero={
-id:editingId||(Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)),
-photo:currentPhoto
+$('removePhoto').onclick=()=>{
+  currentPhoto='';
+  photoInput.value='';
+  preview();
 };
 
-Object.keys(fields).forEach(key=>{
-hero[key]=fields[key].value.trim();
-});
+function addDetail(box,label,value){
+  if(!value)return;
 
-const index=heroes.findIndex(item=>item.id===hero.id);
-if(index>=0){
-heroes[index]={...heroes[index],...hero};
-}else{
-heroes.unshift(hero);
+  const p=document.createElement('p');
+  const strong=document.createElement('strong');
+
+  strong.textContent=label+': ';
+  p.append(
+    strong,
+    document.createTextNode(String(value))
+  );
+
+  box.appendChild(p);
 }
 
-if(saveHeroes(heroes)){
-hideEditor();
-render();
-alert('Персонаж сохранён!');
+function makeButton(label,cls,fn){
+  const b=document.createElement('button');
+  b.type='button';
+  b.className=cls;
+  b.textContent=label;
+  b.onclick=fn;
+  return b;
 }
+
+function render(){
+  list.replaceChildren();
+
+  const heroes=readHeroes();
+
+  if(!heroes.length){
+    const empty=document.createElement('div');
+    empty.className='card empty';
+    empty.textContent=
+      'Пока нет созданных героев. Создай первого!';
+    list.appendChild(empty);
+    return;
+  }
+
+  heroes.forEach(hero=>{
+    if(!hero)return;
+
+    const card=document.createElement('article');
+    card.className='card';
+
+    const head=document.createElement('div');
+    head.className='hero-head';
+    head.setAttribute('role','button');
+    head.tabIndex=0;
+
+    const av=hero.photo
+      ?document.createElement('img')
+      :document.createElement('div');
+
+    av.className='avatar'+(hero.photo?'':' placeholder');
+
+    if(hero.photo){
+      av.src=hero.photo;
+      av.alt='Фото '+(hero.name||'персонажа');
+    }else{
+      av.textContent='☾';
+    }
+
+    head.appendChild(av);
+
+    const titleBox=document.createElement('div');
+    titleBox.style.minWidth='0';
+
+    const title=document.createElement('h2');
+    title.textContent=hero.name||'Без имени';
+    titleBox.appendChild(title);
+
+    const intro=document.createElement('p');
+    intro.textContent=
+      hero.description||
+      hero.personality||
+      'Нажми, чтобы открыть анкету';
+
+    titleBox.appendChild(intro);
+    head.appendChild(titleBox);
+
+    const arrow=document.createElement('span');
+    arrow.className='arrow';
+    arrow.textContent='⌄';
+    head.appendChild(arrow);
+
+    card.appendChild(head);
+
+    const details=document.createElement('div');
+    details.className='hero-details hidden';
+
+    if(hero.photo){
+      const img=document.createElement('img');
+      img.src=hero.photo;
+      img.alt='Фотография персонажа';
+      details.appendChild(img);
+    }
+
+    addDetail(details,'Возраст',hero.age);
+    addDetail(details,'Пол / гендер',hero.gender);
+    addDetail(details,'Краткое описание',hero.description);
+    addDetail(details,'Полное описание',hero.fullDescription);
+    addDetail(details,'Категория',hero.category);
+    addDetail(details,'Хештеги',hero.tags);
+
+    if(hero.promptMode==='expert'){
+      addDetail(
+        details,'Авторский промпт',hero.expertPrompt
+      );
+    }else{
+      addDetail(details,'Внешность',hero.appearance);
+      addDetail(details,'Характер',hero.personality);
+      addDetail(details,'Предыстория',hero.backstory);
+    }
+
+    addDetail(
+      details,'Предпочтения',hero.preferences
+    );
+
+    const actions=document.createElement('div');
+    actions.className='actions';
+
+    actions.appendChild(
+      makeButton('Редактировать','secondary',()=>{
+        showEditor(hero);
+      })
+    );
+
+    actions.appendChild(
+      makeButton('Удалить героя','danger',()=>{
+        if(!confirm(
+          'Удалить персонажа «'+
+          (hero.name||'Без имени')+
+          '»?\n\nАнкета и фотография будут удалены '+
+          'без возможности восстановления. '+
+          'Существующие истории останутся.'
+        ))return;
+
+        const updated=readHeroes().filter(
+          h=>h&&h.id!==hero.id
+        );
+
+        if(saveHeroes(updated)){
+          if(editingId===hero.id)hideEditor();
+          render();
+        }
+      })
+    );
+
+    details.appendChild(actions);
+    card.appendChild(details);
+
+    const toggle=()=>{
+      const hidden=details.classList.toggle('hidden');
+      arrow.textContent=hidden?'⌄':'⌃';
+    };
+
+    head.onclick=toggle;
+
+    head.onkeydown=e=>{
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        toggle();
+      }
+    };
+
+    list.appendChild(card);
+  });
+}
+
+$('newHero').onclick=()=>showEditor();
+$('cancelEdit').onclick=hideEditor;
+
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  if(photoBusy)return;
+
+  const name=fields.name.value.trim();
+
+  if(!name){
+    alert('Укажи имя персонажа.');
+    return;
+  }
+
+  const required=mode==='expert'
+    ?[['heroExpertPrompt',3500]]
+    :[
+      ['heroAppearance',200],
+      ['heroPersonality',650],
+      ['heroBackstory',650]
+    ];
+
+  for(const [id,max] of required){
+    if($(id).value.length>max){
+      alert('Превышен лимит в поле «'+id+'».');
+      return;
+    }
+  }
+
+  const heroes=readHeroes();
+
+  const hero={
+    ...(originalHero||{}),
+    id:editingId||(
+      Date.now().toString(36)+'-'+
+      Math.random().toString(36).slice(2)
+    ),
+    photo:currentPhoto
+  };
+
+  Object.entries(fields).forEach(([k,field])=>{
+    if(
+      ['appearance','personality','backstory'].includes(k)&&
+      mode==='expert'&&originalHero
+    )return;
+
+    if(
+      k==='expertPrompt'&&
+      mode==='beginner'&&originalHero
+    )return;
+
+    hero[k]=field.value.trim();
+  });
+
+  hero.promptMode=mode;
+
+  const idx=heroes.findIndex(
+    h=>h&&h.id===hero.id
+  );
+
+  if(idx>=0){
+    heroes[idx]=hero;
+  }else{
+    heroes.unshift(hero);
+  }
+
+  if(saveHeroes(heroes)){
+    hideEditor();
+    render();
+    alert('Персонаж сохранён!');
+  }
 });
 
 render();
+})();
 </script>
 </body>
 </html>
