@@ -421,7 +421,8 @@ editingMessageIndex=null;
 $('message').value='';
 $('editHint').hidden=true;
 $('editActions').hidden=true;
-$('form').hidden=false;
+$('send').hidden=false;
+$('message').placeholder='Напиши сообщение...';
 updateCounter('message');
 }
 
@@ -445,7 +446,12 @@ editingMessageIndex=index;
 $('message').value=item.text;
 $('editHint').hidden=false;
 $('editActions').hidden=false;
-$('form').hidden=true;
+
+/* Поле остаётся видимым.
+   Скрываем только кнопку обычной отправки. */
+$('send').hidden=true;
+$('message').placeholder='Измени текст сообщения...';
+
 updateCounter('message');
 $('message').focus();
 }
@@ -486,8 +492,6 @@ resetMessageEditor();
 return;
 }
 
-/* Если ИИ ответил, его ответ нельзя оставлять
-   после изменения пользовательского сообщения. */
 const hasReply=
 index===messages.length-2&&
 messages[messages.length-1].role==='grey';
