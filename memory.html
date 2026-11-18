@@ -5,25 +5,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Дневник памяти — GREY WORLD</title>
+
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   background:#111116;
   color:#e5e2e8;
   font:16px Arial,sans-serif
 }
+
 main{
   max-width:680px;
   margin:auto;
   padding:25px 18px 60px
 }
-a{color:#d4bfd1;text-decoration:none}
+
+a{
+  color:#d4bfd1;
+  text-decoration:none
+}
+
 h1{
   font:32px Georgia,serif;
   margin:35px 0 10px
 }
-.muted{color:#bdb4c0;line-height:1.5}
+
+.muted{
+  color:#bdb4c0;
+  line-height:1.5
+}
+
 .card{
   background:#25222c;
   border:1px solid #483c4c;
@@ -31,11 +44,13 @@ h1{
   padding:18px;
   margin-top:18px
 }
+
 label{
   display:block;
   margin:14px 0 7px;
   color:#d8c9db
 }
+
 input,textarea,select{
   width:100%;
   padding:12px;
@@ -45,7 +60,12 @@ input,textarea,select{
   color:white;
   font:inherit
 }
-textarea{min-height:100px;resize:vertical}
+
+textarea{
+  min-height:100px;
+  resize:vertical
+}
+
 button{
   background:#76243f;
   color:white;
@@ -55,29 +75,102 @@ button{
   font:inherit;
   cursor:pointer
 }
-.secondary{background:#39313f}
+
+.secondary{
+  background:#39313f
+}
+
 .danger{
   background:#50232e;
   border:1px solid #a44b63
 }
+
 .actions{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
   margin-top:14px
 }
+
 .entry h3{
   margin:8px 0;
   overflow-wrap:anywhere
 }
+
 .entry p{
   white-space:pre-wrap;
   overflow-wrap:anywhere;
   line-height:1.5
 }
-.tag{color:#e4b5c8;font-size:13px}
-.hidden{display:none}
-.small{font-size:13px;color:#aea4b2}
+
+.tag{
+  color:#e4b5c8;
+  font-size:13px
+}
+
+.hidden{
+  display:none
+}
+
+.small{
+  font-size:13px;
+  color:#aea4b2;
+  line-height:1.5
+}
+
+/* СЧЁТЧИКИ СИМВОЛОВ */
+
+.counter{
+  text-align:right;
+  color:#aaa3b0;
+  font-size:13px;
+  margin:6px 2px 12px;
+  font-variant-numeric:tabular-nums
+}
+
+.counter.warning{
+  color:#ffb454
+}
+
+.counter.danger{
+  color:#ff7373;
+  background:none;
+  border:0
+}
+
+.counter.over{
+  color:#ff7373;
+  font-weight:bold
+}
+
+.limit-note{
+  color:#bdb4c0;
+  font-size:13px;
+  line-height:1.5;
+  margin:10px 0 16px
+}
+
+.limit-error{
+  display:none;
+  color:#ff9292;
+  font-size:14px;
+  line-height:1.5;
+  margin-top:10px
+}
+
+.limit-error.visible{
+  display:block
+}
+
+input.over-limit,
+textarea.over-limit{
+  border-color:#ff7373
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed
+}
 </style>
 </head>
 
@@ -95,23 +188,34 @@ button{
 </p>
 
 <div class="card">
-  <label for="storySelect">Выбери историю</label>
+
+  <label for="storySelect">
+    Выбери историю
+  </label>
+
   <select id="storySelect"></select>
 
   <p class="small">
     Записи сохраняются в браузере этого устройства.
     Пока они не передаются нейросети.
   </p>
+
 </div>
 
 <section id="workspace" class="hidden">
 
   <div class="card">
-    <h2 id="editorHeading">Новое воспоминание</h2>
+
+    <h2 id="editorHeading">
+      Новое воспоминание
+    </h2>
 
     <form id="memoryForm">
 
-      <label for="category">Тип воспоминания</label>
+      <label for="category">
+        Тип воспоминания
+      </label>
+
       <select id="category">
         <option value="Событие">Событие</option>
         <option value="Отношения">Отношения</option>
@@ -120,7 +224,10 @@ button{
         <option value="Другое">Другое</option>
       </select>
 
-      <label for="title">Краткое название</label>
+      <label for="title">
+        Краткое название
+      </label>
+
       <input
         id="title"
         maxlength="100"
@@ -128,15 +235,51 @@ button{
         required
       >
 
-      <label for="detail">Что важно запомнить?</label>
+      <div
+        class="counter"
+        id="titleCounter"
+        aria-live="polite"
+      >
+        0 / 100 символов
+      </div>
+
+      <label for="detail">
+        Что важно запомнить?
+      </label>
+
       <textarea
         id="detail"
         placeholder="Опиши факт или событие..."
         required
       ></textarea>
 
+      <div
+        class="counter"
+        id="detailCounter"
+        aria-live="polite"
+      >
+        0 / 3 000 символов
+      </div>
+
+      <p class="limit-note">
+        Одно воспоминание может содержать
+        до 3 000 символов. Этого достаточно,
+        чтобы подробно описать важное событие,
+        отношения или секрет.
+      </p>
+
+      <p
+        class="limit-error"
+        id="limitError"
+        role="alert"
+      ></p>
+
       <div class="actions">
-        <button type="submit" id="saveButton">
+
+        <button
+          type="submit"
+          id="saveButton"
+        >
           Сохранить воспоминание
         </button>
 
@@ -147,12 +290,15 @@ button{
         >
           Отмена
         </button>
+
       </div>
 
     </form>
+
   </div>
 
   <h2>Сохранённые воспоминания</h2>
+
   <div id="entries"></div>
 
 </section>
@@ -164,6 +310,9 @@ button{
 <script>
 const KEY='grey-world-stories-v1';
 
+const TITLE_LIMIT=100;
+const DETAIL_LIMIT=3000;
+
 const $=id=>document.getElementById(id);
 
 let selectedId='';
@@ -171,7 +320,10 @@ let editingId=null;
 
 function readStories(){
   try{
-    const data=JSON.parse(localStorage.getItem(KEY));
+    const data=JSON.parse(
+      localStorage.getItem(KEY)
+    );
+
     return Array.isArray(data)?data:[];
   }catch{
     return [];
@@ -180,40 +332,174 @@ function readStories(){
 
 function saveStories(data){
   try{
-    localStorage.setItem(KEY,JSON.stringify(data));
+    localStorage.setItem(
+      KEY,
+      JSON.stringify(data)
+    );
+
     return true;
   }catch{
-    alert('Не удалось сохранить. Возможно, память браузера заполнена.');
+    alert(
+      'Не удалось сохранить. Возможно, память браузера заполнена.'
+    );
+
     return false;
   }
 }
 
 function makeId(){
   return Date.now().toString(36)
-    +'-'+Math.random().toString(36).slice(2);
+    +'-'
+    +Math.random().toString(36).slice(2);
 }
 
 function currentStory(){
-  return readStories().find(s=>s&&s.id===selectedId);
+  return readStories().find(
+    s=>s&&s.id===selectedId
+  );
 }
 
 function entriesOf(story){
-  return Array.isArray(story&&story.memoryEntries)
-    ?story.memoryEntries.filter(e=>e&&typeof e.id==='string')
+  return Array.isArray(
+    story&&story.memoryEntries
+  )
+    ?story.memoryEntries.filter(
+      e=>e&&typeof e.id==='string'
+    )
     :[];
 }
 
+/* СЧЁТЧИКИ СИМВОЛОВ */
+
+function formatNumber(number){
+  return Number(number).toLocaleString('ru-RU');
+}
+
+function updateCounter(fieldId,counterId,limit){
+  const field=$(fieldId);
+  const counter=$(counterId);
+
+  const length=field.value.length;
+  const remaining=limit-length;
+
+  counter.classList.remove(
+    'warning',
+    'danger',
+    'over'
+  );
+
+  field.classList.remove('over-limit');
+
+  if(length>limit){
+    counter.classList.add('over');
+    field.classList.add('over-limit');
+
+    counter.textContent=
+      formatNumber(length)+
+      ' / '+
+      formatNumber(limit)+
+      ' — превышено на '+
+      formatNumber(length-limit);
+
+  }else if(length===limit){
+    counter.classList.add('danger');
+
+    counter.textContent=
+      formatNumber(length)+
+      ' / '+
+      formatNumber(limit)+
+      ' — лимит достигнут';
+
+  }else{
+    if(remaining<=limit*0.1){
+      counter.classList.add('warning');
+    }
+
+    counter.textContent=
+      formatNumber(length)+
+      ' / '+
+      formatNumber(limit)+
+      ' символов';
+  }
+}
+
+function updateAllCounters(){
+  updateCounter(
+    'title',
+    'titleCounter',
+    TITLE_LIMIT
+  );
+
+  updateCounter(
+    'detail',
+    'detailCounter',
+    DETAIL_LIMIT
+  );
+
+  validateLimits(false);
+}
+
+function validateLimits(showError){
+  const titleLength=$('title').value.length;
+  const detailLength=$('detail').value.length;
+
+  const error=$('limitError');
+
+  const valid=
+    titleLength<=TITLE_LIMIT&&
+    detailLength<=DETAIL_LIMIT;
+
+  if(valid){
+    error.textContent='';
+    error.classList.remove('visible');
+  }else if(showError){
+    error.textContent=
+      'Превышен лимит символов. '+
+      'Сократи текст перед сохранением.';
+
+    error.classList.add('visible');
+  }else{
+    error.textContent='';
+    error.classList.remove('visible');
+  }
+
+  return valid;
+}
+
+$('title').addEventListener(
+  'input',
+  updateAllCounters
+);
+
+$('detail').addEventListener(
+  'input',
+  updateAllCounters
+);
+
+/* РЕДАКТОР ВОСПОМИНАНИЙ */
+
 function resetEditor(){
   editingId=null;
+
   $('memoryForm').reset();
-  $('editorHeading').textContent='Новое воспоминание';
-  $('saveButton').textContent='Сохранить воспоминание';
+
+  $('editorHeading').textContent=
+    'Новое воспоминание';
+
+  $('saveButton').textContent=
+    'Сохранить воспоминание';
+
   $('cancelEdit').classList.add('hidden');
+
+  updateAllCounters();
 }
 
 function modifyEntries(next){
   const stories=readStories();
-  const i=stories.findIndex(s=>s&&s.id===selectedId);
+
+  const i=stories.findIndex(
+    s=>s&&s.id===selectedId
+  );
 
   if(i<0){
     alert('История не найдена.');
@@ -225,40 +511,56 @@ function modifyEntries(next){
     memoryEntries:next
   };
 
-  if(!saveStories(stories))return false;
+  if(!saveStories(stories)){
+    return false;
+  }
 
   resetEditor();
   renderEntries();
+
   return true;
 }
 
 function createButton(text,cls,callback){
-  const b=document.createElement('button');
-  b.type='button';
-  b.textContent=text;
-  b.className=cls;
-  b.addEventListener('click',callback);
-  return b;
+  const button=document.createElement('button');
+
+  button.type='button';
+  button.textContent=text;
+  button.className=cls;
+
+  button.addEventListener(
+    'click',
+    callback
+  );
+
+  return button;
 }
 
 function renderEntries(){
   const list=$('entries');
+
   list.replaceChildren();
 
   const story=currentStory();
+
   if(!story)return;
 
   const items=entriesOf(story);
 
   if(!items.length){
     const p=document.createElement('p');
+
     p.className='muted';
-    p.textContent='Пока нет воспоминаний. Добавь первое!';
+    p.textContent=
+      'Пока нет воспоминаний. Добавь первое!';
+
     list.appendChild(p);
+
     return;
   }
 
   items.slice().reverse().forEach(entry=>{
+
     const card=document.createElement('article');
     card.className='card entry';
 
@@ -267,7 +569,8 @@ function renderEntries(){
     tag.textContent=entry.category||'Событие';
 
     const heading=document.createElement('h3');
-    heading.textContent=entry.title||'Без названия';
+    heading.textContent=
+      entry.title||'Без названия';
 
     const detail=document.createElement('p');
     detail.textContent=entry.detail||'';
@@ -276,49 +579,99 @@ function renderEntries(){
     actions.className='actions';
 
     actions.appendChild(
-      createButton('Изменить','secondary',()=>{
-        editingId=entry.id;
+      createButton(
+        'Изменить',
+        'secondary',
+        ()=>{
+          editingId=entry.id;
 
-        $('category').value=entry.category||'Событие';
-        $('title').value=entry.title||'';
-        $('detail').value=entry.detail||'';
+          $('category').value=
+            entry.category||'Событие';
 
-        $('editorHeading').textContent='Изменить воспоминание';
-        $('saveButton').textContent='Сохранить изменения';
-        $('cancelEdit').classList.remove('hidden');
+          $('title').value=
+            entry.title||'';
 
-        $('memoryForm').scrollIntoView({behavior:'smooth'});
-      })
+          $('detail').value=
+            entry.detail||'';
+
+          $('editorHeading').textContent=
+            'Изменить воспоминание';
+
+          $('saveButton').textContent=
+            'Сохранить изменения';
+
+          $('cancelEdit').classList.remove(
+            'hidden'
+          );
+
+          updateAllCounters();
+
+          $('memoryForm').scrollIntoView({
+            behavior:'smooth'
+          });
+        }
+      )
     );
 
     actions.appendChild(
-      createButton('Удалить','danger',()=>{
-        if(!confirm('Удалить воспоминание «'+entry.title+'»?')){
-          return;
-        }
+      createButton(
+        'Удалить',
+        'danger',
+        ()=>{
+          if(!confirm(
+            'Удалить воспоминание «'+
+            entry.title+
+            '»?'
+          )){
+            return;
+          }
 
-        modifyEntries(
-          entriesOf(currentStory()).filter(e=>e.id!==entry.id)
-        );
-      })
+          const current=currentStory();
+
+          if(!current){
+            alert('История не найдена.');
+            return;
+          }
+
+          modifyEntries(
+            entriesOf(current).filter(
+              e=>e.id!==entry.id
+            )
+          );
+        }
+      )
     );
 
-    card.append(tag,heading,detail,actions);
+    card.append(
+      tag,
+      heading,
+      detail,
+      actions
+    );
+
     list.appendChild(card);
   });
 }
 
+/* ВЫБОР ИСТОРИИ */
+
 function chooseStory(){
   selectedId=$('storySelect').value;
+
   resetEditor();
 
-  $('workspace').classList.toggle('hidden',!selectedId);
+  $('workspace').classList.toggle(
+    'hidden',
+    !selectedId
+  );
 
   $('empty').textContent=selectedId
     ?''
     :'Создай историю в разделе «Мои истории», чтобы вести дневник.';
 
-  if(selectedId)renderEntries();
+  if(selectedId){
+    renderEntries();
+  }
 }
 
 function initialize(){
@@ -329,67 +682,111 @@ function initialize(){
   );
 
   const select=$('storySelect');
+
   select.replaceChildren();
 
   if(!stories.length){
-    select.add(new Option('Нет историй',''));
+    select.add(
+      new Option('Нет историй','')
+    );
+
     chooseStory();
+
     return;
   }
 
   stories.forEach(s=>{
-    select.add(new Option(
-      s.title+(s.archived?' · архив':''),
-      s.id
-    ));
+    select.add(
+      new Option(
+        s.title+
+        (s.archived?' · архив':''),
+        s.id
+      )
+    );
   });
 
-  const requested=new URLSearchParams(location.search).get('story');
+  const requested=new URLSearchParams(
+    location.search
+  ).get('story');
 
-  if(requested&&stories.some(s=>s.id===requested)){
+  if(requested&&stories.some(
+    s=>s.id===requested
+  )){
     select.value=requested;
   }
 
   chooseStory();
 }
 
-$('storySelect').addEventListener('change',chooseStory);
+$('storySelect').addEventListener(
+  'change',
+  chooseStory
+);
 
-$('cancelEdit').addEventListener('click',resetEditor);
+$('cancelEdit').addEventListener(
+  'click',
+  resetEditor
+);
 
-$('memoryForm').addEventListener('submit',event=>{
-  event.preventDefault();
+/* СОХРАНЕНИЕ ВОСПОМИНАНИЯ */
 
-  const story=currentStory();
-  if(!story)return;
+$('memoryForm').addEventListener(
+  'submit',
+  event=>{
+    event.preventDefault();
 
-  const title=$('title').value.trim();
-  const detail=$('detail').value.trim();
+    const story=currentStory();
 
-  if(!title||!detail){
-    alert('Заполни название и описание.');
-    return;
+    if(!story)return;
+
+    const title=$('title').value.trim();
+    const detail=$('detail').value.trim();
+
+    if(!title||!detail){
+      alert(
+        'Заполни название и описание.'
+      );
+
+      return;
+    }
+
+    if(!validateLimits(true)){
+      updateAllCounters();
+
+      $('limitError').textContent=
+        'Текст превышает установленный лимит. '+
+        'Название — до 100 символов, '+
+        'описание — до 3 000 символов.';
+
+      $('limitError').classList.add(
+        'visible'
+      );
+
+      return;
+    }
+
+    const next=entriesOf(story).slice();
+
+    const entry={
+      id:editingId||makeId(),
+      category:$('category').value,
+      title,
+      detail
+    };
+
+    const i=next.findIndex(
+      e=>e.id===entry.id
+    );
+
+    if(i>=0){
+      next[i]=entry;
+    }else{
+      next.push(entry);
+    }
+
+    modifyEntries(next);
   }
-
-  const next=entriesOf(story).slice();
-
-  const entry={
-    id:editingId||makeId(),
-    category:$('category').value,
-    title,
-    detail
-  };
-
-  const i=next.findIndex(e=>e.id===entry.id);
-
-  if(i>=0){
-    next[i]=entry;
-  }else{
-    next.push(entry);
-  }
-
-  modifyEntries(next);
-});
+);
 
 initialize();
 </script>
