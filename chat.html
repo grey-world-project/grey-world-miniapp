@@ -7,17 +7,75 @@
 <title>Чат — GREY WORLD</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#111116;color:#e5e2e8;font:16px Arial,sans-serif}
-header{padding:16px;background:#22202a;border-bottom:1px solid #403746}
-.back{color:#c8b9c5;text-decoration:none;font-size:14px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.hero-info{display:flex;align-items:center;gap:12px;margin:12px 0}
-.avatar,.placeholder{width:52px;height:52px;border-radius:14px;flex-shrink:0;border:1px solid #655568}
+
+body{
+  margin:0;
+  background:#111116;
+  color:#e5e2e8;
+  font:16px Arial,sans-serif
+}
+
+header{
+  padding:16px;
+  background:#22202a;
+  border-bottom:1px solid #403746
+}
+
+.back{
+  color:#c8b9c5;
+  text-decoration:none;
+  font-size:14px
+}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px
+}
+
+.hero-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:12px 0
+}
+
+.avatar,.placeholder{
+  width:52px;
+  height:52px;
+  border-radius:14px;
+  flex-shrink:0;
+  border:1px solid #655568
+}
+
 .avatar{object-fit:cover}
-.placeholder{display:grid;place-items:center;background:#39313f;font-size:24px}
-h1{font-size:24px;margin:0;overflow-wrap:anywhere}
-.status{color:#bcb3bf;font-size:13px;margin:8px 0 12px}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.placeholder{
+  display:grid;
+  place-items:center;
+  background:#39313f;
+  font-size:24px
+}
+
+h1{
+  font-size:24px;
+  margin:0;
+  overflow-wrap:anywhere
+}
+
+.status{
+  color:#bcb3bf;
+  font-size:13px;
+  margin:8px 0 12px
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
 button,.actions a{
   border:0;
   border-radius:12px;
@@ -29,12 +87,35 @@ button,.actions a{
   cursor:pointer;
   text-decoration:none
 }
+
 .actions a{background:#39313f}
-button:disabled,textarea:disabled{opacity:.5}
-.menu{font-size:22px;min-width:42px;background:#39313f}
-.notice{display:none;padding:12px 16px;background:#302733;color:#e5c9d4}
+
+button:disabled,textarea:disabled{
+  opacity:.5
+}
+
+.menu{
+  font-size:22px;
+  min-width:42px;
+  background:#39313f
+}
+
+.notice{
+  display:none;
+  padding:12px 16px;
+  background:#302733;
+  color:#e5c9d4
+}
+
 .notice.visible{display:block}
-.chat{height:calc(100dvh - 260px);min-height:160px;overflow-y:auto;padding:20px 15px}
+
+.chat{
+  height:calc(100dvh - 290px);
+  min-height:160px;
+  overflow-y:auto;
+  padding:20px 15px
+}
+
 .message{
   max-width:85%;
   padding:13px 16px;
@@ -44,9 +125,28 @@ button:disabled,textarea:disabled{opacity:.5}
   overflow-wrap:anywhere;
   white-space:pre-wrap
 }
-.grey{background:#29252f;border-bottom-left-radius:4px}
-.user{background:#76243f;margin-left:auto;border-bottom-right-radius:4px}
-#form{display:flex;gap:9px;padding:12px;background:#22202a}
+
+.grey{
+  background:#29252f;
+  border-bottom-left-radius:4px
+}
+
+.user{
+  background:#76243f;
+  margin-left:auto;
+  border-bottom-right-radius:4px
+}
+
+.composer{
+  background:#22202a;
+  padding:10px 12px
+}
+
+#form{
+  display:flex;
+  gap:9px
+}
+
 #message{
   flex:1;
   min-width:0;
@@ -58,6 +158,7 @@ button:disabled,textarea:disabled{opacity:.5}
   font:inherit;
   resize:none
 }
+
 .overlay{
   display:none;
   position:fixed;
@@ -67,7 +168,9 @@ button:disabled,textarea:disabled{opacity:.5}
   align-items:flex-end;
   justify-content:center
 }
+
 .overlay.visible{display:flex}
+
 .sheet{
   width:100%;
   max-width:650px;
@@ -78,10 +181,27 @@ button:disabled,textarea:disabled{opacity:.5}
   border-radius:22px 22px 0 0;
   padding:20px
 }
-.sheet-header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+.sheet-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px
+}
+
 .sheet h2{margin:4px 0 16px}
-.sheet h3{font-size:17px;margin:20px 0 10px}
-.sheet label{display:block;margin:14px 0 6px;color:#d8c9db}
+
+.sheet h3{
+  font-size:17px;
+  margin:20px 0 10px
+}
+
+.sheet label{
+  display:block;
+  margin:14px 0 6px;
+  color:#d8c9db
+}
+
 .sheet input,.sheet textarea,.sheet select{
   width:100%;
   padding:12px;
@@ -91,8 +211,18 @@ button:disabled,textarea:disabled{opacity:.5}
   border-radius:12px;
   font:inherit
 }
-.sheet textarea{min-height:95px;resize:vertical}
-.sheet .hint{color:#aa9daf;font-size:13px;line-height:1.45}
+
+.sheet textarea{
+  min-height:95px;
+  resize:vertical
+}
+
+.sheet .hint{
+  color:#aa9daf;
+  font-size:13px;
+  line-height:1.45
+}
+
 .sheet .sheet-actions{
   display:flex;
   gap:10px;
@@ -101,10 +231,14 @@ button:disabled,textarea:disabled{opacity:.5}
   background:#1b1621;
   padding:15px 0 20px
 }
+
 .sheet-actions button{flex:1}
+
 .secondary{background:#39313f}
+
 .panel{display:none}
 .panel.active{display:block}
+
 .menu-item{
   display:block;
   width:100%;
@@ -115,13 +249,18 @@ button:disabled,textarea:disabled{opacity:.5}
   padding:16px;
   font-size:16px
 }
+
 .menu-item small{
   display:block;
   color:#bcb3bf;
   margin-top:5px;
   font-size:13px
 }
-.sheet-header .go-back{background:#39313f}
+
+.sheet-header .go-back{
+  background:#39313f
+}
+
 .memory-link{
   display:block;
   padding:16px;
@@ -132,11 +271,13 @@ button:disabled,textarea:disabled{opacity:.5}
   color:white;
   text-decoration:none
 }
+
 .memory-link small{
   display:block;
   color:#bcb3bf;
   margin-top:5px
 }
+
 .context-box{
   width:100%;
   min-height:260px;
@@ -153,20 +294,74 @@ button:disabled,textarea:disabled{opacity:.5}
   user-select:text;
   -webkit-user-select:text
 }
+
 .context-meta{
   color:#d7a0b5;
   font-size:13px;
   line-height:1.5;
   margin:15px 0
 }
+
+/* СЧЁТЧИКИ */
+
+.counter{
+  text-align:right;
+  color:#aaa3b0;
+  font-size:12px;
+  margin:5px 2px 10px;
+  font-variant-numeric:tabular-nums
+}
+
+.counter.warning{
+  color:#ffb454
+}
+
+.counter.danger,
+.counter.over{
+  color:#ff7373
+}
+
+.counter.over{
+  font-weight:bold
+}
+
+.over-limit{
+  border-color:#ff7373!important
+}
+
+.limit-hint{
+  color:#bcb3bf;
+  font-size:13px;
+  line-height:1.5;
+  margin:8px 0 12px
+}
+
+.limit-error{
+  display:none;
+  color:#ff9292;
+  font-size:13px;
+  line-height:1.5;
+  margin:12px 0
+}
+
+.limit-error.visible{display:block}
 </style>
 </head>
+
 <body>
 
 <header>
   <div class="top">
-    <a class="back" href="gallery.html">← К персонажам</a>
-    <button class="menu" id="openMenu" type="button" aria-label="Меню чата">⋮</button>
+    <a class="back" href="gallery.html">
+      ← К персонажам
+    </a>
+
+    <button
+      class="menu"
+      id="openMenu"
+      type="button"
+      aria-label="Меню чата"
+    >⋮</button>
   </div>
 
   <div class="hero-info" id="heroInfo">
@@ -179,8 +374,13 @@ button:disabled,textarea:disabled{opacity:.5}
   </div>
 
   <div class="actions">
-    <button type="button" id="newStory">+ Новая история</button>
-    <a href="stories.html">Мои истории</a>
+    <button type="button" id="newStory">
+      + Новая история
+    </button>
+
+    <a href="stories.html">
+      Мои истории
+    </a>
   </div>
 </header>
 
@@ -191,15 +391,29 @@ button:disabled,textarea:disabled{opacity:.5}
 
 <div class="chat" id="chat"></div>
 
-<form id="form">
-  <textarea
-    id="message"
-    rows="2"
-    placeholder="Напиши сообщение..."
-    required
-  ></textarea>
-  <button id="send" type="submit">➤</button>
-</form>
+<div class="composer">
+  <form id="form">
+    <textarea
+      id="message"
+      rows="2"
+      placeholder="Напиши сообщение..."
+      maxlength="5000"
+      required
+    ></textarea>
+
+    <button id="send" type="submit">
+      ➤
+    </button>
+  </form>
+
+  <div
+    class="counter"
+    id="messageCounter"
+    aria-live="polite"
+  >
+    0 / 5 000 символов
+  </div>
+</div>
 
 <div
   class="overlay"
@@ -218,7 +432,9 @@ button:disabled,textarea:disabled{opacity:.5}
         hidden
       >←</button>
 
-      <h2 id="settingsHeading">Меню истории</h2>
+      <h2 id="settingsHeading">
+        Меню истории
+      </h2>
 
       <button
         class="secondary"
@@ -236,7 +452,9 @@ button:disabled,textarea:disabled{opacity:.5}
         data-panel="settingsPanel"
       >
         ⚙️ Настройки чата
-        <small>Мой герой и параметры ролевой игры</small>
+        <small>
+          Мой герой и параметры ролевой игры
+        </small>
       </button>
 
       <button
@@ -245,7 +463,9 @@ button:disabled,textarea:disabled{opacity:.5}
         data-panel="detailsPanel"
       >
         📌 Важные детали
-        <small>Факты, отношения, события и тайны</small>
+        <small>
+          Факты, отношения, события и тайны
+        </small>
       </button>
 
       <button
@@ -254,12 +474,20 @@ button:disabled,textarea:disabled{opacity:.5}
         data-panel="notePanel"
       >
         ✒️ Авторская заметка
-        <small>Подсказка для следующего ответа ИИ</small>
+        <small>
+          Подсказка для следующего ответа ИИ
+        </small>
       </button>
 
-      <a class="memory-link" id="memoryLink" href="memory.html">
+      <a
+        class="memory-link"
+        id="memoryLink"
+        href="memory.html"
+      >
         📖 Дневник памяти
-        <small>Воспоминания именно этой истории</small>
+        <small>
+          Воспоминания именно этой истории
+        </small>
       </a>
 
       <button
@@ -273,7 +501,6 @@ button:disabled,textarea:disabled{opacity:.5}
           для будущего подключения ИИ
         </small>
       </button>
-
     </div>
 
     <div class="panel" id="settingsPanel">
@@ -293,52 +520,121 @@ button:disabled,textarea:disabled{opacity:.5}
         <option value="">Без анкеты</option>
       </select>
 
-      <label for="playerName">Имя в этой истории</label>
+      <label for="playerName">
+        Имя в этой истории
+      </label>
+
       <input
         id="playerName"
         maxlength="100"
         placeholder="Имя героя или автора"
       >
 
-      <label for="playerAbout">О моём герое</label>
+      <div class="counter" id="playerNameCounter">
+        0 / 100 символов
+      </div>
+
+      <label for="playerAbout">
+        О моём герое
+      </label>
+
       <textarea
         id="playerAbout"
         placeholder="Возраст, внешность, характер, особенности..."
       ></textarea>
 
-      <label for="playerRole">Роль в этой истории</label>
+      <div class="counter" id="playerAboutCounter">
+        0 / 5 000 символов
+      </div>
+
+      <label for="playerRole">
+        Роль в этой истории
+      </label>
+
       <textarea
         id="playerRole"
         placeholder="Кем он является в этом сюжете?"
       ></textarea>
 
+      <div class="counter" id="playerRoleCounter">
+        0 / 3 000 символов
+      </div>
+
       <h3>Ролевая игра</h3>
 
-      <label for="storyMode">Управление сюжетом</label>
+      <label for="storyMode">
+        Управление сюжетом
+      </label>
+
       <select id="storyMode">
-        <option value="joint">Совместное творчество</option>
-        <option value="author">Автор ведёт сюжет</option>
-        <option value="ai">ИИ ведёт сцену</option>
+        <option value="joint">
+          Совместное творчество
+        </option>
+        <option value="author">
+          Автор ведёт сюжет
+        </option>
+        <option value="ai">
+          ИИ ведёт сцену
+        </option>
       </select>
 
-      <label for="replyLength">Длина ответа</label>
+      <label for="replyLength">
+        Длина ответа ИИ
+      </label>
+
       <select id="replyLength">
-        <option value="medium">Средний</option>
-        <option value="short">Короткий</option>
-        <option value="long">Развёрнутый</option>
+        <option value="medium">
+          Средний
+        </option>
+        <option value="short">
+          Короткий
+        </option>
+        <option value="long">
+          Развёрнутый
+        </option>
       </select>
 
-      <label for="narration">Повествование</label>
+      <p class="limit-hint" id="replyLengthHint">
+        Средний — до 2 500 символов.
+      </p>
+
+      <p class="hint">
+        Эти лимиты будут применяться к ответам
+        персонажа после подключения нейросети.
+        Режим можно менять во время истории.
+      </p>
+
+      <label for="narration">
+        Повествование
+      </label>
+
       <select id="narration">
-        <option value="first">От первого лица</option>
-        <option value="third">От третьего лица</option>
+        <option value="first">
+          От первого лица
+        </option>
+        <option value="third">
+          От третьего лица
+        </option>
       </select>
+
+      <p
+        class="limit-error"
+        id="settingsLimitError"
+        role="alert"
+      ></p>
 
       <div class="sheet-actions">
-        <button type="button" class="secondary cancelPanel">
+        <button
+          type="button"
+          class="secondary cancelPanel"
+        >
           Отмена
         </button>
-        <button type="button" class="savePanel">
+
+        <button
+          type="button"
+          class="savePanel"
+        >
           Сохранить
         </button>
       </div>
@@ -359,11 +655,28 @@ button:disabled,textarea:disabled{opacity:.5}
         placeholder="События, отношения, тайны, важные предметы..."
       ></textarea>
 
+      <div class="counter" id="importantDetailsCounter">
+        0 / 5 000 символов
+      </div>
+
+      <p
+        class="limit-error"
+        id="detailsLimitError"
+        role="alert"
+      ></p>
+
       <div class="sheet-actions">
-        <button type="button" class="secondary cancelPanel">
+        <button
+          type="button"
+          class="secondary cancelPanel"
+        >
           Отмена
         </button>
-        <button type="button" class="savePanel">
+
+        <button
+          type="button"
+          class="savePanel"
+        >
           Сохранить
         </button>
       </div>
@@ -384,11 +697,28 @@ button:disabled,textarea:disabled{opacity:.5}
         placeholder="Например: не раскрывать секрет в следующей сцене..."
       ></textarea>
 
+      <div class="counter" id="authorNoteCounter">
+        0 / 2 000 символов
+      </div>
+
+      <p
+        class="limit-error"
+        id="noteLimitError"
+        role="alert"
+      ></p>
+
       <div class="sheet-actions">
-        <button type="button" class="secondary cancelPanel">
+        <button
+          type="button"
+          class="secondary cancelPanel"
+        >
           Отмена
         </button>
-        <button type="button" class="savePanel">
+
+        <button
+          type="button"
+          class="savePanel"
+        >
           Сохранить
         </button>
       </div>
@@ -405,7 +735,10 @@ button:disabled,textarea:disabled{opacity:.5}
         и никуда автоматически не отправляются.
       </p>
 
-      <p class="context-meta" id="contextStats"></p>
+      <p
+        class="context-meta"
+        id="contextStats"
+      ></p>
 
       <div
         id="contextPreview"
@@ -422,7 +755,10 @@ button:disabled,textarea:disabled{opacity:.5}
           Обновить
         </button>
 
-        <button type="button" id="copyContext">
+        <button
+          type="button"
+          id="copyContext"
+        >
           Скопировать
         </button>
       </div>
@@ -432,7 +768,6 @@ button:disabled,textarea:disabled{opacity:.5}
         и секреты персонажей. Передавай его
         только тем сервисам, которым доверяешь.
       </p>
-
     </div>
 
   </div>
@@ -447,6 +782,15 @@ const greeting=
   'Ну здравствуй. Я Грэй. Надеюсь, ты пришла не ради скучных разговоров?';
 
 const $=id=>document.getElementById(id);
+
+const limits={
+  message:5000,
+  playerName:100,
+  playerAbout:5000,
+  playerRole:3000,
+  importantDetails:5000,
+  authorNote:2000
+};
 
 const fields=[
   'playerHero',
@@ -472,9 +816,12 @@ const defaults={
   authorNote:''
 };
 
-const read=(key)=>{
+const read=key=>{
   try{
-    const data=JSON.parse(localStorage.getItem(key));
+    const data=JSON.parse(
+      localStorage.getItem(key)
+    );
+
     return Array.isArray(data)?data:[];
   }catch{
     return [];
@@ -490,11 +837,13 @@ function saveStories(data){
       storiesKey,
       JSON.stringify(data)
     );
+
     return true;
   }catch{
     alert(
       'Не удалось сохранить. Возможно, память Safari заполнена.'
     );
+
     return false;
   }
 }
@@ -519,7 +868,11 @@ function cleanMessages(items){
 }
 
 function migrate(){
-  if(localStorage.getItem(storiesKey)!==null)return;
+  if(
+    localStorage.getItem(storiesKey)!==null
+  ){
+    return;
+  }
 
   const first={
     id:id(),
@@ -549,9 +902,7 @@ function getHero(heroId){
     h=>h&&h.id===heroId
   );
 
-  return hero
-    ?hero
-    :null;
+  return hero||null;
 }
 
 function setHeader(hero){
@@ -598,13 +949,153 @@ function addMessage(text,role){
 
 let activeStory=null;
 
+/* СЧЁТЧИКИ */
+
+function numberText(value){
+  return Number(value).toLocaleString('ru-RU');
+}
+
+function updateCounter(fieldId){
+  const field=$(fieldId);
+  const counter=$(fieldId+'Counter');
+  const limit=limits[fieldId];
+
+  if(!field||!counter||!limit)return;
+
+  const length=field.value.length;
+  const remaining=limit-length;
+
+  counter.classList.remove(
+    'warning',
+    'danger',
+    'over'
+  );
+
+  field.classList.remove('over-limit');
+
+  if(length>limit){
+    counter.classList.add('over');
+    field.classList.add('over-limit');
+
+    counter.textContent=
+      numberText(length)+
+      ' / '+
+      numberText(limit)+
+      ' — превышено на '+
+      numberText(length-limit);
+
+  }else if(length===limit){
+    counter.classList.add('danger');
+
+    counter.textContent=
+      numberText(length)+
+      ' / '+
+      numberText(limit)+
+      ' — лимит достигнут';
+
+  }else{
+    if(remaining<=limit*0.1){
+      counter.classList.add('warning');
+    }
+
+    counter.textContent=
+      numberText(length)+
+      ' / '+
+      numberText(limit)+
+      ' символов';
+  }
+}
+
+function updateAllCounters(){
+  Object.keys(limits).forEach(
+    updateCounter
+  );
+}
+
+Object.keys(limits).forEach(fieldId=>{
+  const field=$(fieldId);
+
+  if(field){
+    field.addEventListener(
+      'input',
+      ()=>updateCounter(fieldId)
+    );
+  }
+});
+
+function checkPanelLimits(panel){
+  const controls=panel.querySelectorAll(
+    'input,textarea'
+  );
+
+  let valid=true;
+  let firstInvalid=null;
+
+  controls.forEach(control=>{
+    const limit=limits[control.id];
+
+    if(
+      limit&&
+      control.value.length>limit
+    ){
+      valid=false;
+
+      if(!firstInvalid){
+        firstInvalid=control;
+      }
+    }
+  });
+
+  const error=panel.querySelector(
+    '.limit-error'
+  );
+
+  if(error){
+    error.classList.toggle(
+      'visible',
+      !valid
+    );
+
+    error.textContent=valid
+      ?''
+      :'Превышен лимит символов. Сократи текст перед сохранением.';
+  }
+
+  if(!valid&&firstInvalid){
+    firstInvalid.focus();
+  }
+
+  return valid;
+}
+
+function updateReplyLengthHint(){
+  const labels={
+    short:'Короткий — до 1 000 символов.',
+    medium:'Средний — до 2 500 символов.',
+    long:'Развёрнутый — до 5 000 символов.'
+  };
+
+  $('replyLengthHint').textContent=
+    labels[$('replyLength').value]||
+    labels.medium;
+}
+
+$('replyLength').addEventListener(
+  'change',
+  updateReplyLengthHint
+);
+
+/* ИСТОРИИ */
+
 function showStory(story){
   activeStory=story;
 
   $('chat').replaceChildren();
   $('storyTitle').textContent=story.title;
 
-  const hero=getHero(story.heroId||'grey');
+  const hero=getHero(
+    story.heroId||'grey'
+  );
 
   setHeader(
     hero||{
@@ -664,6 +1155,7 @@ function startNewStory(heroId){
     alert(
       'В демонстрационной версии не более пяти активных историй.'
     );
+
     return false;
   }
 
@@ -678,7 +1170,10 @@ function startNewStory(heroId){
   const title=answer.trim();
 
   if(!title||title.length>100){
-    alert('Укажи название до 100 символов.');
+    alert(
+      'Укажи название до 100 символов.'
+    );
+
     return false;
   }
 
@@ -700,6 +1195,7 @@ function startNewStory(heroId){
       'chat.html?story='+
       encodeURIComponent(story.id)
     );
+
     return true;
   }
 
@@ -713,7 +1209,9 @@ const params=new URLSearchParams(
 );
 
 const wantsNew=params.get('new')==='1';
-const heroRequested=params.get('hero')||'grey';
+
+const heroRequested=
+  params.get('hero')||'grey';
 
 if(wantsNew){
   if(!startNewStory(heroRequested)){
@@ -737,12 +1235,15 @@ if(wantsNew){
 
   const story=(
     requested
-      ?stories.find(s=>s&&s.id===requested)
+      ?stories.find(
+        s=>s&&s.id===requested
+      )
       :null
   )||(
     !requested
-      ?stories.find(s=>s&&s.archived!==true)||
-        stories[0]
+      ?stories.find(
+        s=>s&&s.archived!==true
+      )||stories[0]
       :null
   );
 
@@ -757,59 +1258,83 @@ if(wantsNew){
   }
 }
 
-$('newStory').addEventListener('click',()=>{
-  startNewStory(
-    activeStory
-      ?(activeStory.heroId||'grey')
-      :heroRequested
-  );
-});
-
-$('form').addEventListener('submit',e=>{
-  e.preventDefault();
-
-  if(!activeStory)return;
-
-  const text=$('message').value.trim();
-
-  if(!text)return;
-
-  const stories=readStories();
-
-  const index=stories.findIndex(
-    s=>s&&s.id===activeStory.id
-  );
-
-  if(index<0){
-    alert('История не найдена.');
-    return;
+$('newStory').addEventListener(
+  'click',
+  ()=>{
+    startNewStory(
+      activeStory
+        ?(activeStory.heroId||'grey')
+        :heroRequested
+    );
   }
+);
 
-  if(stories[index].archived===true){
-    showStory(stories[index]);
-    alert('Сначала верни историю из архива.');
-    return;
+$('form').addEventListener(
+  'submit',
+  e=>{
+    e.preventDefault();
+
+    if(!activeStory)return;
+
+    const text=$('message').value.trim();
+
+    if(!text)return;
+
+    if(text.length>limits.message){
+      alert(
+        'Сообщение не должно превышать 5 000 символов.'
+      );
+
+      return;
+    }
+
+    const stories=readStories();
+
+    const index=stories.findIndex(
+      s=>s&&s.id===activeStory.id
+    );
+
+    if(index<0){
+      alert('История не найдена.');
+      return;
+    }
+
+    if(stories[index].archived===true){
+      showStory(stories[index]);
+
+      alert(
+        'Сначала верни историю из архива.'
+      );
+
+      return;
+    }
+
+    stories[index]={
+      ...stories[index],
+      messages:[
+        ...cleanMessages(
+          stories[index].messages
+        ),
+        {
+          text,
+          role:'user'
+        }
+      ],
+      updatedAt:Date.now()
+    };
+
+    if(!saveStories(stories))return;
+
+    activeStory=stories[index];
+
+    addMessage(text,'user');
+
+    $('message').value='';
+    updateCounter('message');
   }
+);
 
-  stories[index]={
-    ...stories[index],
-    messages:[
-      ...cleanMessages(stories[index].messages),
-      {
-        text,
-        role:'user'
-      }
-    ],
-    updatedAt:Date.now()
-  };
-
-  if(!saveStories(stories))return;
-
-  activeStory=stories[index];
-
-  addMessage(text,'user');
-  $('message').value='';
-});
+/* НАСТРОЙКИ */
 
 function populatePlayers(){
   const select=$('playerHero');
@@ -850,6 +1375,16 @@ function fillSettings(){
   )){
     $('playerHero').value='';
   }
+
+  document.querySelectorAll(
+    '.limit-error'
+  ).forEach(error=>{
+    error.textContent='';
+    error.classList.remove('visible');
+  });
+
+  updateAllCounters();
+  updateReplyLengthHint();
 }
 
 function selectPlayer(){
@@ -858,11 +1393,14 @@ function selectPlayer(){
   );
 
   if(hero){
-    $('playerName').value=hero.name||'';
+    $('playerName').value=
+      hero.name||'';
 
     $('playerAbout').value=[
-      hero.age&&'Возраст: '+hero.age,
-      hero.gender&&'Пол: '+hero.gender,
+      hero.age&&
+        'Возраст: '+hero.age,
+      hero.gender&&
+        'Пол: '+hero.gender,
       hero.appearance&&
         'Внешность: '+hero.appearance,
       hero.personality&&
@@ -875,6 +1413,8 @@ function selectPlayer(){
 
     $('playerRole').value='';
   }
+
+  updateAllCounters();
 }
 
 $('playerHero').addEventListener(
@@ -883,18 +1423,20 @@ $('playerHero').addEventListener(
 );
 
 function closeSettings(){
-  $('overlay').classList.remove('visible');
+  $('overlay').classList.remove(
+    'visible'
+  );
 }
 
 function showPanel(name){
-  document.querySelectorAll('.panel').forEach(
-    panel=>{
-      panel.classList.toggle(
-        'active',
-        panel.id===name
-      );
-    }
-  );
+  document.querySelectorAll(
+    '.panel'
+  ).forEach(panel=>{
+    panel.classList.toggle(
+      'active',
+      panel.id===name
+    );
+  });
 
   $('settingsHeading').textContent={
     menuPanel:'Меню истории',
@@ -907,21 +1449,16 @@ function showPanel(name){
   $('backToMenu').hidden=
     name==='menuPanel';
 
-  document.querySelector('.sheet').scrollTop=0;
+  document.querySelector(
+    '.sheet'
+  ).scrollTop=0;
 
   if(name==='contextPanel'){
     renderContext();
   }
 }
 
-/*
-  КОНТЕКСТ И ПАМЯТЬ ИСТОРИИ
-
-  Данные читаются только из текущей истории.
-
-  Ничего не отправляется в интернет
-  и не передаётся нейросети.
-*/
+/* ПАМЯТЬ И КОНТЕКСТ */
 
 function currentSavedStory(){
   if(!activeStory)return null;
@@ -932,7 +1469,10 @@ function currentSavedStory(){
 }
 
 function memoryOf(story){
-  if(!story||!Array.isArray(story.memoryEntries)){
+  if(
+    !story||
+    !Array.isArray(story.memoryEntries)
+  ){
     return [];
   }
 
@@ -944,7 +1484,10 @@ function memoryOf(story){
 }
 
 function lineIf(label,value){
-  if(value===null||value===undefined){
+  if(
+    value===null||
+    value===undefined
+  ){
     return '';
   }
 
@@ -963,15 +1506,21 @@ function makeContext(story){
     ...(story.settings||{})
   };
 
-  const hero=getHero(story.heroId||'grey');
+  const hero=getHero(
+    story.heroId||'grey'
+  );
 
   const player=readHeroes().find(
     h=>h&&h.id===settings.playerHero
   );
 
   const memories=memoryOf(story);
-  const messages=cleanMessages(story.messages);
-  const recentMessages=messages.slice(-20);
+  const messages=cleanMessages(
+    story.messages
+  );
+
+  const recentMessages=
+    messages.slice(-20);
 
   const modeNames={
     joint:'Совместное творчество',
@@ -980,9 +1529,9 @@ function makeContext(story){
   };
 
   const lengthNames={
-    short:'Короткий',
-    medium:'Средний',
-    long:'Развёрнутый'
+    short:'Короткий — до 1 000 символов',
+    medium:'Средний — до 2 500 символов',
+    long:'Развёрнутый — до 5 000 символов'
   };
 
   const narrationNames={
@@ -994,7 +1543,10 @@ function makeContext(story){
     'GREY WORLD',
     'КОНТЕКСТ ИСТОРИИ',
     '',
-    lineIf('Название истории',story.title),
+    lineIf(
+      'Название истории',
+      story.title
+    ),
     lineIf(
       'Статус',
       story.archived===true
@@ -1013,7 +1565,10 @@ function makeContext(story){
       lineIf('Внешность',hero.appearance),
       lineIf('Характер',hero.personality),
       lineIf('Предыстория',hero.backstory),
-      lineIf('Предпочтения',hero.preferences)
+      lineIf(
+        'Предпочтения',
+        hero.preferences
+      )
     );
   }else{
     lines.push(
@@ -1067,23 +1622,27 @@ function makeContext(story){
   );
 
   if(memories.length===0){
-    lines.push('Воспоминаний пока нет.');
+    lines.push(
+      'Воспоминаний пока нет.'
+    );
   }else{
-    memories.forEach((entry,index)=>{
-      lines.push(
-        '',
-        String(index+1)+'. '+
-        (entry.title||'Без названия'),
-        lineIf(
-          'Тип',
-          entry.category||'Событие'
-        ),
-        lineIf(
-          'Содержание',
-          entry.detail
-        )
-      );
-    });
+    memories.forEach(
+      (entry,index)=>{
+        lines.push(
+          '',
+          String(index+1)+'. '+
+            (entry.title||'Без названия'),
+          lineIf(
+            'Тип',
+            entry.category||'Событие'
+          ),
+          lineIf(
+            'Содержание',
+            entry.detail
+          )
+        );
+      }
+    );
   }
 
   lines.push(
@@ -1096,12 +1655,22 @@ function makeContext(story){
   );
 
   if(recentMessages.length===0){
-    lines.push('Переписки пока нет.');
+    lines.push(
+      'Переписки пока нет.'
+    );
   }else{
     recentMessages.forEach(message=>{
-      const author=message.role==='user'
-        ?(settings.playerName||'Пользователь')
-        :(hero?hero.name:'Персонаж');
+      const author=
+        message.role==='user'
+          ?(
+            settings.playerName||
+            'Пользователь'
+          )
+          :(
+            hero
+              ?hero.name
+              :'Персонаж'
+          );
 
       lines.push(
         author+': '+message.text,
@@ -1110,11 +1679,7 @@ function makeContext(story){
     });
   }
 
-  return lines.filter(
-    item=>item!==null&&item!==undefined&&
-      item!==''
-      ||item===''
-  ).join('\n');
+  return lines.join('\n');
 }
 
 function renderContext(){
@@ -1131,35 +1696,57 @@ function renderContext(){
   activeStory=story;
 
   const memories=memoryOf(story);
-  const messages=cleanMessages(story.messages);
+  const messages=cleanMessages(
+    story.messages
+  );
 
   $('contextStats').textContent=
-    'Воспоминаний: '+memories.length+
-    ' · Сообщений: '+messages.length+
+    'Воспоминаний: '+
+    memories.length+
+    ' · Сообщений: '+
+    messages.length+
     ' · В контексте: последние '+
-    Math.min(messages.length,20)+' сообщений';
+    Math.min(
+      messages.length,
+      20
+    )+
+    ' сообщений';
 
   $('contextPreview').textContent=
     makeContext(story);
 }
 
 async function copyContext(){
-  const text=$('contextPreview').textContent;
+  const text=
+    $('contextPreview').textContent;
 
-  if(!text||text==='История не найдена.'){
-    alert('Нет контекста для копирования.');
+  if(
+    !text||
+    text==='История не найдена.'
+  ){
+    alert(
+      'Нет контекста для копирования.'
+    );
     return;
   }
 
   try{
-    if(!navigator.clipboard||
-       !navigator.clipboard.writeText){
-      throw new Error('Clipboard unavailable');
+    if(
+      !navigator.clipboard||
+      !navigator.clipboard.writeText
+    ){
+      throw new Error(
+        'Clipboard unavailable'
+      );
     }
 
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(
+      text
+    );
 
-    alert('Контекст скопирован!');
+    alert(
+      'Контекст скопирован!'
+    );
   }catch{
     alert(
       'Автоматическое копирование недоступно. '+
@@ -1179,32 +1766,44 @@ $('copyContext').addEventListener(
   copyContext
 );
 
-$('openMenu').addEventListener('click',()=>{
-  if(!activeStory){
-    alert(
-      'Сначала создай или открой историю.'
+/* МЕНЮ */
+
+$('openMenu').addEventListener(
+  'click',
+  ()=>{
+    if(!activeStory){
+      alert(
+        'Сначала создай или открой историю.'
+      );
+      return;
+    }
+
+    const current=
+      currentSavedStory();
+
+    if(!current){
+      alert(
+        'История не найдена.'
+      );
+      return;
+    }
+
+    activeStory=current;
+
+    $('memoryLink').href=
+      'memory.html?story='+
+      encodeURIComponent(
+        current.id
+      );
+
+    fillSettings();
+    showPanel('menuPanel');
+
+    $('overlay').classList.add(
+      'visible'
     );
-    return;
   }
-
-  const current=currentSavedStory();
-
-  if(!current){
-    alert('История не найдена.');
-    return;
-  }
-
-  activeStory=current;
-
-  $('memoryLink').href=
-    'memory.html?story='+
-    encodeURIComponent(current.id);
-
-  fillSettings();
-  showPanel('menuPanel');
-
-  $('overlay').classList.add('visible');
-});
+);
 
 $('closeMenu').addEventListener(
   'click',
@@ -1221,80 +1820,118 @@ $('backToMenu').addEventListener(
 document.querySelectorAll(
   '[data-panel]'
 ).forEach(button=>{
-  button.addEventListener('click',()=>{
-    showPanel(button.dataset.panel);
-  });
+  button.addEventListener(
+    'click',
+    ()=>{
+      showPanel(
+        button.dataset.panel
+      );
+    }
+  );
 });
 
 document.querySelectorAll(
   '.cancelPanel'
 ).forEach(button=>{
-  button.addEventListener('click',()=>{
-    showPanel('menuPanel');
-  });
+  button.addEventListener(
+    'click',
+    ()=>{
+      showPanel('menuPanel');
+    }
+  );
 });
 
-$('overlay').addEventListener('click',e=>{
-  if(e.target===$('overlay')){
-    closeSettings();
+$('overlay').addEventListener(
+  'click',
+  e=>{
+    if(e.target===$('overlay')){
+      closeSettings();
+    }
   }
-});
+);
+
+/* СОХРАНЕНИЕ НАСТРОЕК */
 
 document.querySelectorAll(
   '.savePanel'
 ).forEach(button=>{
-  button.addEventListener('click',()=>{
+  button.addEventListener(
+    'click',
+    ()=>{
+      if(!activeStory)return;
+
+      const stories=readStories();
+
+      const index=stories.findIndex(
+        s=>s&&s.id===activeStory.id
+      );
+
+      if(index<0){
+        alert(
+          'История не найдена.'
+        );
+        return;
+      }
+
+      const panel=button.closest(
+        '.panel'
+      );
+
+      if(!checkPanelLimits(panel)){
+        return;
+      }
+
+      const settings={
+        ...defaults,
+        ...(stories[index].settings||{})
+      };
+
+      panel.querySelectorAll(
+        'input,select,textarea'
+      ).forEach(field=>{
+        settings[field.id]=
+          field.value.trim();
+      });
+
+      stories[index]={
+        ...stories[index],
+        settings
+      };
+
+      if(saveStories(stories)){
+        activeStory=stories[index];
+
+        showPanel('menuPanel');
+
+        alert('Сохранено!');
+      }
+    }
+  );
+});
+
+window.addEventListener(
+  'pageshow',
+  ()=>{
     if(!activeStory)return;
 
-    const stories=readStories();
+    const current=
+      currentSavedStory();
 
-    const index=stories.findIndex(
-      s=>s&&s.id===activeStory.id
-    );
+    if(current){
+      activeStory=current;
 
-    if(index<0){
-      alert('История не найдена.');
-      return;
-    }
-
-    const settings={
-      ...defaults,
-      ...(stories[index].settings||{})
-    };
-
-    const panel=button.closest('.panel');
-
-    panel.querySelectorAll(
-      'input,select,textarea'
-    ).forEach(field=>{
-      settings[field.id]=field.value.trim();
-    });
-
-    stories[index]={
-      ...stories[index],
-      settings
-    };
-
-    if(saveStories(stories)){
-      activeStory=stories[index];
-      showPanel('menuPanel');
-      alert('Сохранено!');
-    }
-  });
-});
-
-window.addEventListener('pageshow',()=>{
-  if(!activeStory)return;
-
-  const current=currentSavedStory();
-
-  if(current){
-    activeStory=current;
-    if($('contextPanel').classList.contains('active')){
-      renderContext();
+      if(
+        $('contextPanel')
+          .classList.contains('active')
+      ){
+        renderContext();
+      }
     }
   }
-});
+);
+
+updateAllCounters();
+updateReplyLengthHint();
 </script>
 </body>
 </html>
