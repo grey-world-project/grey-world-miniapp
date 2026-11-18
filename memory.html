@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Дневник памяти — GREY WORLD</title>
-
 <style>
 *{box-sizing:border-box}
 
@@ -25,6 +24,29 @@ main{
 a{
   color:#d4bfd1;
   text-decoration:none
+}
+
+.navigation{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px;
+  margin-bottom:22px
+}
+
+.navigation a{
+  display:inline-block;
+  background:#29252f;
+  border:1px solid #483c4c;
+  border-radius:12px;
+  padding:11px 14px;
+  font-size:14px
+}
+
+.navigation a.primary{
+  background:#76243f;
+  color:white;
+  border-color:#76243f
 }
 
 h1{
@@ -109,7 +131,7 @@ button{
 }
 
 .hidden{
-  display:none
+  display:none!important
 }
 
 .small{
@@ -117,8 +139,6 @@ button{
   color:#aea4b2;
   line-height:1.5
 }
-
-/* СЧЁТЧИКИ СИМВОЛОВ */
 
 .counter{
   text-align:right;
@@ -177,7 +197,19 @@ button:disabled{
 <body>
 <main>
 
-<a href="stories.html">← Мои истории</a>
+<nav class="navigation" aria-label="Навигация">
+  <a
+    id="backToChat"
+    class="primary hidden"
+    href="stories.html"
+  >
+    ← Вернуться в чат
+  </a>
+
+  <a href="stories.html">
+    Мои истории
+  </a>
+</nav>
 
 <h1>☾ Дневник памяти</h1>
 
@@ -263,9 +295,9 @@ button:disabled{
 
       <p class="limit-note">
         Одно воспоминание может содержать
-        до 3 000 символов. Этого достаточно,
-        чтобы подробно описать важное событие,
-        отношения или секрет.
+        до 3 000 символов.
+        Уже сохранённые записи автоматически
+        не сокращаются.
       </p>
 
       <p
@@ -294,7 +326,6 @@ button:disabled{
       </div>
 
     </form>
-
   </div>
 
   <h2>Сохранённые воспоминания</h2>
@@ -367,6 +398,27 @@ function entriesOf(story){
       e=>e&&typeof e.id==='string'
     )
     :[];
+}
+
+/* НАВИГАЦИЯ */
+
+function updateNavigation(){
+  const back=$('backToChat');
+
+  const story=currentStory();
+
+  if(!story){
+    back.classList.add('hidden');
+    return;
+  }
+
+  back.href=
+    'chat.html?story='+
+    encodeURIComponent(story.id);
+
+  back.textContent='← Вернуться в чат';
+
+  back.classList.remove('hidden');
 }
 
 /* СЧЁТЧИКИ СИМВОЛОВ */
@@ -452,12 +504,13 @@ function validateLimits(showError){
   if(valid){
     error.textContent='';
     error.classList.remove('visible');
+
   }else if(showError){
     error.textContent=
-      'Превышен лимит символов. '+
-      'Сократи текст перед сохранением.';
+      'Превышен лимит символов. Сократи текст перед сохранением.';
 
     error.classList.add('visible');
+
   }else{
     error.textContent='';
     error.classList.remove('visible');
@@ -555,12 +608,10 @@ function renderEntries(){
       'Пока нет воспоминаний. Добавь первое!';
 
     list.appendChild(p);
-
     return;
   }
 
   items.slice().reverse().forEach(entry=>{
-
     const card=document.createElement('article');
     card.className='card entry';
 
@@ -669,6 +720,8 @@ function chooseStory(){
     ?''
     :'Создай историю в разделе «Мои истории», чтобы вести дневник.';
 
+  updateNavigation();
+
   if(selectedId){
     renderEntries();
   }
@@ -691,7 +744,6 @@ function initialize(){
     );
 
     chooseStory();
-
     return;
   }
 
@@ -746,7 +798,6 @@ $('memoryForm').addEventListener(
       alert(
         'Заполни название и описание.'
       );
-
       return;
     }
 
@@ -761,7 +812,6 @@ $('memoryForm').addEventListener(
       $('limitError').classList.add(
         'visible'
       );
-
       return;
     }
 
