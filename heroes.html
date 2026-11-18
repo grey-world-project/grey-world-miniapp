@@ -2,491 +2,417 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Мои герои — GREY WORLD</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: #111015;
-      color: #eee9f0;
-      font-family: Arial, sans-serif;
-      line-height: 1.5;
-    }
-    main {
-      max-width: 760px;
-      margin: auto;
-      padding: 35px 20px 70px;
-    }
-    h1 { font-size: 34px; margin: 28px 0 8px; }
-    h2 { margin-top: 0; }
-    .muted { color: #b6adb9; }
-    a { color: #cdbfcf; text-decoration: none; }
-    .card {
-      background: #27232e;
-      border: 1px solid #403847;
-      border-radius: 22px;
-      padding: 24px;
-      margin-top: 22px;
-    }
-    button {
-      border: 0;
-      border-radius: 13px;
-      background: #752841;
-      color: white;
-      padding: 13px 17px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 6px 6px 6px 0;
-    }
-    button.secondary { background: #3c3544; }
-    button.danger {
-      background: #4c2532;
-      border: 1px solid #a65771;
-    }
-    input, textarea, select {
-      width: 100%;
-      background: #151319;
-      border: 1px solid #504657;
-      color: white;
-      border-radius: 12px;
-      padding: 13px;
-      font: inherit;
-      margin: 6px 0 15px;
-    }
-    textarea { min-height: 95px; resize: vertical; }
-    label { display: block; color: #d6cbd9; }
-    .hidden { display: none !important; }
-    .details { white-space: pre-wrap; overflow-wrap: anywhere; }
-    .details p { margin: 9px 0; }
-    .actions { display: flex; flex-wrap: wrap; gap: 4px; }
-    .empty {
-      padding: 25px;
-      text-align: center;
-      color: #b6adb9;
-    }
-
-    /* Аватар персонажа */
-    .hero-header {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 14px;
-    }
-    .hero-header h2 { margin: 0; overflow-wrap: anywhere; }
-    .avatar {
-      width: 88px;
-      height: 88px;
-      border-radius: 18px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border: 1px solid #655568;
-      background: #19151e;
-    }
-    .avatar-placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 34px;
-      color: #d6b7cb;
-    }
-    .avatar-preview {
-      width: 120px;
-      height: 120px;
-      margin: 10px 0;
-      border-radius: 18px;
-      object-fit: cover;
-      border: 1px solid #655568;
-    }
-    .photo-controls { margin-bottom: 18px; }
-    .photo-controls button { font-size: 14px; }
-    .photo-note { font-size: 13px; }
-    .profile-photo {
-      display: block;
-      width: 100%;
-      max-width: 240px;
-      height: auto;
-      border-radius: 18px;
-      margin: 14px 0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Мои герои — GREY WORLD</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#100e14;--card:#252129;--line:#49404d;--text:#eee9f0;--muted:#aaa1af;--pink:#d5a0b5;--wine:#752841}
+body{margin:0;background:radial-gradient(ellipse at 50% 0%,#2a1d28 0%,#151119 36%,var(--bg) 75%);background-attachment:fixed;color:var(--text);font:16px/1.5 Arial,sans-serif}
+main{max-width:760px;margin:auto;padding:25px 16px 110px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font:22px Georgia,serif;letter-spacing:3px;color:#dcd4de}
+a{color:var(--pink);text-decoration:none}
+.back{font-size:13px;color:#aaa1af;text-align:right}
+h1{font-size:32px;margin:34px 0 5px}
+.subtitle,.muted{color:var(--muted)}
+.subtitle{margin:0 0 25px}
+.card{background:linear-gradient(145deg,#29242e,#211e27);border:1px solid var(--line);border-radius:22px;padding:18px;margin:14px 0}
+button{font:inherit;cursor:pointer;border:1px solid #98516c;border-radius:14px;background:var(--wine);color:white;padding:12px 16px}
+button.secondary{background:#35303a;border-color:#514653}
+button.danger{background:#432630;border-color:#95506a;color:#ffc0cf}
+button:disabled{opacity:.5}
+.new-button{width:100%;margin:5px 0 18px;font-weight:bold}
+.hidden,[hidden]{display:none!important}
+.hero-summary{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:0;background:transparent;padding:0;color:inherit}
+.avatar{width:76px;height:76px;border-radius:17px;object-fit:cover;flex-shrink:0;border:1px solid #675566;background:#332a37}
+.placeholder{display:grid;place-items:center;font-size:28px;color:var(--pink)}
+.hero-info{min-width:0;flex:1}
+.hero-info strong{display:block;font-size:19px;overflow-wrap:anywhere}
+.hero-info small{display:block;font-size:13px;color:var(--muted);margin-top:5px}
+.chevron{font-size:22px;color:var(--pink)}
+.hero-details{border-top:1px solid var(--line);margin-top:17px;padding-top:16px}
+.details{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;color:#d9d2dc}
+.details p{margin:10px 0}
+.details strong{color:var(--pink)}
+.profile-photo{display:block;width:100%;max-width:240px;border-radius:17px;margin:10px 0 17px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.actions button{flex:1;min-width:120px;font-size:14px}
+.editor{padding:20px}
+.editor h2{margin:0 0 17px;font-size:22px}
+label{display:block;margin:13px 0 5px;color:#e0c9d7;font-size:14px}
+input,textarea,select{display:block;width:100%;background:#17141c;border:1px solid #554658;border-radius:13px;color:white;padding:13px;font:inherit;margin-top:7px}
+input[type=file]{font-size:13px}
+textarea{min-height:95px;resize:vertical}
+.avatar-preview{width:120px;height:120px;object-fit:cover;border-radius:17px;margin:12px 0}
+.photo-note{font-size:12px;line-height:1.5}
+.empty{text-align:center;padding:35px 15px;color:var(--muted)}
+.notice{text-align:center;color:#8f8794;font-size:12px;margin:35px 0}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:8;display:grid;grid-template-columns:repeat(5,1fr);background:#120f17f5;border-top:1px solid #453b48;padding:11px 3px calc(11px + env(safe-area-inset-bottom));backdrop-filter:blur(15px)}
+.nav a{text-align:center;color:#a49ba9;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.nav .symbol{font-size:24px;line-height:27px}
+.nav a.active{color:#e1a5bc;font-weight:bold}
+@media(max-width:360px){.logo{font-size:18px;letter-spacing:2px}.nav a{font-size:10px}.avatar{width:65px;height:65px}}
+</style>
 </head>
 <body>
 <main>
-  <a href="index.html">← На главную</a>
-  <h1>Мои герои</h1>
-  <p class="muted">Твои персонажи. Их характеры. Их истории.</p>
+<div class="top">
+<div class="logo">☾ GREY WORLD</div>
+<a class="back" href="gallery.html">К персонажам ↗</a>
+</div>
 
-  <button id="newHero" type="button">+ Создать героя</button>
+<h1>Мои герои</h1>
+<p class="subtitle">Твои персонажи. Их характеры. Их истории.</p>
 
-  <section id="editor" class="card hidden">
-    <h2 id="editorTitle">Новый персонаж</h2>
-    <form id="heroForm">
+<button class="new-button" id="newHero" type="button">+ Создать своего персонажа</button>
 
-      <label>Фотография персонажа
-        <input id="heroPhoto" type="file" accept="image/*">
-      </label>
+<section id="editor" class="card editor hidden">
+<h2 id="editorTitle">Новый персонаж</h2>
+<form id="heroForm">
+<label>Фотография персонажа
+<input id="heroPhoto" type="file" accept="image/*">
+</label>
+<div id="photoControls" class="hidden">
+<img id="photoPreview" class="avatar-preview" alt="Аватар персонажа">
+<div><button id="removePhoto" type="button" class="danger">Удалить фотографию</button></div>
+</div>
+<p class="muted photo-note">Можно загрузить одну фотографию. Она будет уменьшена для экономии памяти телефона.</p>
 
-      <div id="photoControls" class="photo-controls hidden">
-        <img id="photoPreview" class="avatar-preview" alt="Аватар персонажа">
-        <div>
-          <button id="removePhoto" type="button" class="danger">
-            Удалить фотографию
-          </button>
-        </div>
-      </div>
-      <p class="muted photo-note">
-        Можно загрузить одну фотографию. Она будет уменьшена
-        для экономии памяти телефона.
-      </p>
+<label>Имя персонажа *
+<input id="heroName" maxlength="100" required>
+</label>
+<label>Возраст
+<input id="heroAge" maxlength="50" placeholder="Например, 28 лет">
+</label>
+<label>Пол / гендер
+<input id="heroGender" maxlength="100">
+</label>
+<label>Внешность
+<textarea id="heroAppearance" placeholder="Рост, глаза, волосы, особые приметы..."></textarea>
+</label>
+<label>Характер
+<textarea id="heroPersonality" placeholder="Темперамент, привычки, сильные и слабые стороны..."></textarea>
+</label>
+<label>Предыстория
+<textarea id="heroBackstory" placeholder="Прошлое персонажа, важные события..."></textarea>
+</label>
+<label>Предпочтения и особенности
+<textarea id="heroPreferences" placeholder="Интересы, границы, предпочтения..."></textarea>
+</label>
+<div class="actions">
+<button id="saveHeroButton" type="submit">Сохранить героя</button>
+<button type="button" class="secondary" id="cancelEdit">Отмена</button>
+</div>
+</form>
+</section>
 
-      <label>Имя персонажа *
-        <input id="heroName" maxlength="100" required>
-      </label>
-      <label>Возраст
-        <input id="heroAge" maxlength="50" placeholder="Например, 28 лет">
-      </label>
-      <label>Пол / гендер
-        <input id="heroGender" maxlength="100">
-      </label>
-      <label>Внешность
-        <textarea id="heroAppearance" placeholder="Рост, глаза, волосы, особые приметы..."></textarea>
-      </label>
-      <label>Характер
-        <textarea id="heroPersonality" placeholder="Темперамент, привычки, сильные и слабые стороны..."></textarea>
-      </label>
-      <label>Предыстория
-        <textarea id="heroBackstory" placeholder="Прошлое персонажа, важные события..."></textarea>
-      </label>
-      <label>Предпочтения и особенности
-        <textarea id="heroPreferences" placeholder="Интересы, границы, предпочтения..."></textarea>
-      </label>
-      <div class="actions">
-        <button id="saveHeroButton" type="submit">Сохранить героя</button>
-        <button type="button" class="secondary" id="cancelEdit">Отмена</button>
-      </div>
-    </form>
-  </section>
-
-  <section id="heroesList" aria-label="Сохранённые герои"></section>
-  <p class="muted">GREY WORLD · Демонстрационная версия · 18+</p>
+<section id="heroesList" aria-label="Сохранённые герои"></section>
+<p class="notice">18+ · Демонстрационная версия · GREY WORLD</p>
 </main>
 
+<nav class="nav" aria-label="Навигация">
+<a href="stories.html"><span class="symbol">▤</span>Чаты</a>
+<a href="gallery.html"><span class="symbol">♧</span>Каталог</a>
+<a href="index.html"><span class="symbol">☾</span>Главная</a>
+<a class="active" href="heroes.html" aria-current="page"><span class="symbol">✦</span>Герои</a>
+<a href="profile.html"><span class="symbol">◉</span>Профиль</a>
+</nav>
+
 <script>
-  const KEY = 'grey-world-heroes-v1';
-  const list = document.getElementById('heroesList');
-  const editor = document.getElementById('editor');
-  const form = document.getElementById('heroForm');
-  const photoInput = document.getElementById('heroPhoto');
-  const photoPreview = document.getElementById('photoPreview');
-  const photoControls = document.getElementById('photoControls');
-  const saveButton = document.getElementById('saveHeroButton');
+'use strict';
 
-  const fields = {
-    name: document.getElementById('heroName'),
-    age: document.getElementById('heroAge'),
-    gender: document.getElementById('heroGender'),
-    appearance: document.getElementById('heroAppearance'),
-    personality: document.getElementById('heroPersonality'),
-    backstory: document.getElementById('heroBackstory'),
-    preferences: document.getElementById('heroPreferences')
-  };
+const KEY='grey-world-heroes-v1';
+const list=document.getElementById('heroesList');
+const editor=document.getElementById('editor');
+const form=document.getElementById('heroForm');
+const photoInput=document.getElementById('heroPhoto');
+const photoPreview=document.getElementById('photoPreview');
+const photoControls=document.getElementById('photoControls');
+const saveButton=document.getElementById('saveHeroButton');
 
-  let editingId = null;
-  let currentPhoto = '';
-  let photoBusy = false;
+const fields={
+name:document.getElementById('heroName'),
+age:document.getElementById('heroAge'),
+gender:document.getElementById('heroGender'),
+appearance:document.getElementById('heroAppearance'),
+personality:document.getElementById('heroPersonality'),
+backstory:document.getElementById('heroBackstory'),
+preferences:document.getElementById('heroPreferences')
+};
 
-  function readHeroes() {
-    try {
-      const data = JSON.parse(localStorage.getItem(KEY));
-      return Array.isArray(data) ? data : [];
-    } catch (error) {
-      return [];
-    }
-  }
+let editingId=null;
+let currentPhoto='';
+let photoBusy=false;
 
-  function saveHeroes(heroes) {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(heroes));
-      return true;
-    } catch (error) {
-      alert(
-        'Не удалось сохранить данные. Возможно, память браузера заполнена. ' +
-        'Попробуй уменьшить количество фотографий.'
-      );
-      return false;
-    }
-  }
+function readHeroes(){
+try{
+const data=JSON.parse(localStorage.getItem(KEY));
+return Array.isArray(data)?data:[];
+}catch{return [];}
+}
 
-  function updatePhotoPreview() {
-    if (currentPhoto) {
-      photoPreview.src = currentPhoto;
-      photoControls.classList.remove('hidden');
-    } else {
-      photoPreview.removeAttribute('src');
-      photoControls.classList.add('hidden');
-    }
-  }
+function saveHeroes(heroes){
+try{
+localStorage.setItem(KEY,JSON.stringify(heroes));
+return true;
+}catch{
+alert('Не удалось сохранить данные. Возможно, память браузера заполнена. Попробуй уменьшить количество фотографий.');
+return false;
+}
+}
 
-  function showEditor(hero = null) {
-    editingId = hero ? hero.id : null;
-    form.reset();
+function updatePhotoPreview(){
+if(currentPhoto){
+photoPreview.src=currentPhoto;
+photoControls.classList.remove('hidden');
+}else{
+photoPreview.removeAttribute('src');
+photoControls.classList.add('hidden');
+}
+}
 
-    Object.keys(fields).forEach(key => {
-      fields[key].value = hero ? (hero[key] || '') : '';
-    });
+function showEditor(hero=null){
+editingId=hero?hero.id:null;
+form.reset();
+Object.keys(fields).forEach(key=>{
+fields[key].value=hero?(hero[key]||''):'';
+});
+currentPhoto=hero?(hero.photo||''):'';
+updatePhotoPreview();
+document.getElementById('editorTitle').textContent=hero?'Редактировать героя':'Новый персонаж';
+editor.classList.remove('hidden');
+editor.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-    currentPhoto = hero ? (hero.photo || '') : '';
-    updatePhotoPreview();
+function hideEditor(){
+editor.classList.add('hidden');
+editingId=null;
+currentPhoto='';
+form.reset();
+updatePhotoPreview();
+}
 
-    document.getElementById('editorTitle').textContent =
-      hero ? 'Редактировать героя' : 'Новый персонаж';
+function makeButton(text,className,action){
+const button=document.createElement('button');
+button.type='button';
+button.textContent=text;
+if(className)button.className=className;
+button.addEventListener('click',action);
+return button;
+}
 
-    editor.classList.remove('hidden');
-    editor.scrollIntoView({ behavior: 'smooth' });
-  }
+function addDetail(parent,label,value){
+if(!value)return;
+const p=document.createElement('p');
+const strong=document.createElement('strong');
+strong.textContent=label+': ';
+p.appendChild(strong);
+p.appendChild(document.createTextNode(value));
+parent.appendChild(p);
+}
 
-  function hideEditor() {
-    editor.classList.add('hidden');
-    editingId = null;
-    currentPhoto = '';
-    form.reset();
-    updatePhotoPreview();
-  }
+function resizePhoto(file){
+return new Promise((resolve,reject)=>{
+if(!file.type.startsWith('image/')){
+reject(new Error('Выбери файл изображения.'));
+return;
+}
+const reader=new FileReader();
+reader.onerror=()=>reject(new Error('Не удалось прочитать фотографию.'));
+reader.onload=()=>{
+const image=new Image();
+image.onerror=()=>reject(new Error('Не удалось открыть изображение.'));
+image.onload=()=>{
+try{
+const maxSize=400;
+const scale=Math.min(1,maxSize/Math.max(image.width,image.height));
+const canvas=document.createElement('canvas');
+canvas.width=Math.max(1,Math.round(image.width*scale));
+canvas.height=Math.max(1,Math.round(image.height*scale));
+const ctx=canvas.getContext('2d');
+if(!ctx){
+reject(new Error('Не удалось обработать фотографию.'));
+return;
+}
+ctx.drawImage(image,0,0,canvas.width,canvas.height);
+resolve(canvas.toDataURL('image/jpeg',0.72));
+}catch{
+reject(new Error('Не удалось уменьшить фотографию.'));
+}
+};
+image.src=reader.result;
+};
+reader.readAsDataURL(file);
+});
+}
 
-  function makeButton(text, className, action) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.textContent = text;
-    if (className) button.className = className;
-    button.addEventListener('click', action);
-    return button;
-  }
+photoInput.addEventListener('change',async()=>{
+const file=photoInput.files&&photoInput.files[0];
+if(!file)return;
+photoBusy=true;
+saveButton.disabled=true;
+saveButton.textContent='Обработка фотографии...';
+try{
+currentPhoto=await resizePhoto(file);
+updatePhotoPreview();
+}catch(error){
+alert(error.message);
+}finally{
+photoInput.value='';
+photoBusy=false;
+saveButton.disabled=false;
+saveButton.textContent='Сохранить героя';
+}
+});
 
-  function addDetail(parent, label, value) {
-    if (!value) return;
-    const p = document.createElement('p');
-    const strong = document.createElement('strong');
-    strong.textContent = label + ': ';
-    p.appendChild(strong);
-    p.appendChild(document.createTextNode(value));
-    parent.appendChild(p);
-  }
+document.getElementById('removePhoto').addEventListener('click',()=>{
+currentPhoto='';
+photoInput.value='';
+updatePhotoPreview();
+});
 
-  function resizePhoto(file) {
-    return new Promise((resolve, reject) => {
-      if (!file.type.startsWith('image/')) {
-        reject(new Error('Выбери файл изображения.'));
-        return;
-      }
+function render(){
+list.replaceChildren();
+const heroes=readHeroes();
 
-      const reader = new FileReader();
+if(!heroes.length){
+const empty=document.createElement('div');
+empty.className='card empty';
+empty.textContent='Пока нет созданных героев. Создай первого!';
+list.appendChild(empty);
+return;
+}
 
-      reader.onerror = () => {
-        reject(new Error('Не удалось прочитать фотографию.'));
-      };
+heroes.forEach(hero=>{
+const card=document.createElement('article');
+card.className='card';
 
-      reader.onload = () => {
-        const image = new Image();
+const summary=document.createElement('button');
+summary.type='button';
+summary.className='hero-summary';
+summary.setAttribute('aria-expanded','false');
 
-        image.onerror = () => {
-          reject(new Error('Не удалось открыть изображение.'));
-        };
+if(hero.photo){
+const avatar=document.createElement('img');
+avatar.className='avatar';
+avatar.src=hero.photo;
+avatar.alt='Аватар '+(hero.name||'персонажа');
+summary.appendChild(avatar);
+}else{
+const placeholder=document.createElement('div');
+placeholder.className='avatar placeholder';
+placeholder.textContent='✦';
+summary.appendChild(placeholder);
+}
 
-        image.onload = () => {
-          try {
-            const maxSize = 400;
-            const scale = Math.min(
-              1,
-              maxSize / Math.max(image.width, image.height)
-            );
+const info=document.createElement('div');
+info.className='hero-info';
+const name=document.createElement('strong');
+name.textContent=hero.name||'Без имени';
+const hint=document.createElement('small');
+hint.textContent='Нажми, чтобы открыть анкету';
+info.append(name,hint);
 
-            const canvas = document.createElement('canvas');
-            canvas.width = Math.max(1, Math.round(image.width * scale));
-            canvas.height = Math.max(1, Math.round(image.height * scale));
+const chevron=document.createElement('span');
+chevron.className='chevron';
+chevron.textContent='⌄';
+summary.append(info,chevron);
+card.appendChild(summary);
 
-            const ctx = canvas.getContext('2d');
-            if (!ctx) {
-              reject(new Error('Не удалось обработать фотографию.'));
-              return;
-            }
+const expanded=document.createElement('div');
+expanded.className='hero-details hidden';
 
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+const details=document.createElement('div');
+details.className='details';
 
-            const data = canvas.toDataURL('image/jpeg', 0.72);
-            resolve(data);
-          } catch (error) {
-            reject(new Error('Не удалось уменьшить фотографию.'));
-          }
-        };
+if(hero.photo){
+const fullPhoto=document.createElement('img');
+fullPhoto.className='profile-photo';
+fullPhoto.src=hero.photo;
+fullPhoto.alt='Фотография персонажа';
+details.appendChild(fullPhoto);
+}
 
-        image.src = reader.result;
-      };
+addDetail(details,'Возраст',hero.age);
+addDetail(details,'Пол / гендер',hero.gender);
+addDetail(details,'Внешность',hero.appearance);
+addDetail(details,'Характер',hero.personality);
+addDetail(details,'Предыстория',hero.backstory);
+addDetail(details,'Предпочтения',hero.preferences);
 
-      reader.readAsDataURL(file);
-    });
-  }
+const actions=document.createElement('div');
+actions.className='actions';
 
-  photoInput.addEventListener('change', async () => {
-    const file = photoInput.files && photoInput.files[0];
-    if (!file) return;
+const edit=makeButton('✎ Редактировать','secondary',()=>showEditor(hero));
 
-    photoBusy = true;
-    saveButton.disabled = true;
-    saveButton.textContent = 'Обработка фотографии...';
+const remove=makeButton('Удалить героя','danger',()=>{
+const confirmed=confirm(
+'Удалить персонажа «'+hero.name+'»?\n\n'+
+'Анкета и фотография будут удалены без возможности восстановления.'
+);
+if(!confirmed)return;
+const updated=readHeroes().filter(item=>item.id!==hero.id);
+if(saveHeroes(updated)){
+if(editingId===hero.id)hideEditor();
+render();
+}
+});
 
-    try {
-      const resized = await resizePhoto(file);
-      currentPhoto = resized;
-      updatePhotoPreview();
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      photoInput.value = '';
-      photoBusy = false;
-      saveButton.disabled = false;
-      saveButton.textContent = 'Сохранить героя';
-    }
-  });
+actions.append(edit,remove);
+expanded.append(details,actions);
+card.appendChild(expanded);
 
-  document.getElementById('removePhoto').addEventListener('click', () => {
-    currentPhoto = '';
-    photoInput.value = '';
-    updatePhotoPreview();
-  });
+summary.addEventListener('click',()=>{
+const opening=expanded.classList.contains('hidden');
+expanded.classList.toggle('hidden',!opening);
+summary.setAttribute('aria-expanded',String(opening));
+hint.textContent=opening?'Нажми, чтобы свернуть анкету':'Нажми, чтобы открыть анкету';
+chevron.textContent=opening?'⌃':'⌄';
+});
 
-  function render() {
-    list.replaceChildren();
-    const heroes = readHeroes();
+list.appendChild(card);
+});
+}
 
-    if (!heroes.length) {
-      const empty = document.createElement('div');
-      empty.className = 'card empty';
-      empty.textContent = 'Пока нет созданных героев. Создай первого!';
-      list.appendChild(empty);
-      return;
-    }
+document.getElementById('newHero').addEventListener('click',()=>showEditor());
+document.getElementById('cancelEdit').addEventListener('click',hideEditor);
 
-    heroes.forEach(hero => {
-      const card = document.createElement('article');
-      card.className = 'card';
+form.addEventListener('submit',event=>{
+event.preventDefault();
+if(photoBusy)return;
 
-      const header = document.createElement('div');
-      header.className = 'hero-header';
+const name=fields.name.value.trim();
+if(!name){
+alert('Укажи имя персонажа.');
+return;
+}
 
-      if (hero.photo) {
-        const avatar = document.createElement('img');
-        avatar.className = 'avatar';
-        avatar.src = hero.photo;
-        avatar.alt = 'Аватар ' + (hero.name || 'персонажа');
-        header.appendChild(avatar);
-      } else {
-        const placeholder = document.createElement('div');
-        placeholder.className = 'avatar avatar-placeholder';
-        placeholder.textContent = '✦';
-        header.appendChild(placeholder);
-      }
+const heroes=readHeroes();
+const hero={
+id:editingId||(Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)),
+photo:currentPhoto
+};
 
-      const title = document.createElement('h2');
-      title.textContent = hero.name || 'Без имени';
-      header.appendChild(title);
-      card.appendChild(header);
+Object.keys(fields).forEach(key=>{
+hero[key]=fields[key].value.trim();
+});
 
-      const details = document.createElement('div');
-      details.className = 'details hidden';
+const index=heroes.findIndex(item=>item.id===hero.id);
+if(index>=0){
+heroes[index]={...heroes[index],...hero};
+}else{
+heroes.unshift(hero);
+}
 
-      if (hero.photo) {
-        const fullPhoto = document.createElement('img');
-        fullPhoto.className = 'profile-photo';
-        fullPhoto.src = hero.photo;
-        fullPhoto.alt = 'Фотография персонажа';
-        details.appendChild(fullPhoto);
-      }
+if(saveHeroes(heroes)){
+hideEditor();
+render();
+alert('Персонаж сохранён!');
+}
+});
 
-      addDetail(details, 'Возраст', hero.age);
-      addDetail(details, 'Пол / гендер', hero.gender);
-      addDetail(details, 'Внешность', hero.appearance);
-      addDetail(details, 'Характер', hero.personality);
-      addDetail(details, 'Предыстория', hero.backstory);
-      addDetail(details, 'Предпочтения', hero.preferences);
-
-      const actions = document.createElement('div');
-      actions.className = 'actions';
-
-      const view = makeButton('Открыть анкету', '', () => {
-        const isHidden = details.classList.toggle('hidden');
-        view.textContent = isHidden ? 'Открыть анкету' : 'Свернуть анкету';
-      });
-
-      const edit = makeButton('Редактировать', 'secondary', () => {
-        showEditor(hero);
-      });
-
-      const remove = makeButton('Удалить', 'danger', () => {
-        const confirmed = confirm(
-          'Удалить персонажа «' + hero.name + '»?\n\n' +
-          'Анкета и фотография будут удалены без возможности восстановления.'
-        );
-        if (!confirmed) return;
-
-        const updated = readHeroes().filter(item => item.id !== hero.id);
-        if (saveHeroes(updated)) {
-          if (editingId === hero.id) hideEditor();
-          render();
-        }
-      });
-
-      actions.append(view, edit, remove);
-      card.append(details, actions);
-      list.appendChild(card);
-    });
-  }
-
-  document.getElementById('newHero').addEventListener('click', () => {
-    showEditor();
-  });
-
-  document.getElementById('cancelEdit').addEventListener('click', hideEditor);
-
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (photoBusy) return;
-
-    const name = fields.name.value.trim();
-    if (!name) {
-      alert('Укажи имя персонажа.');
-      return;
-    }
-
-    const heroes = readHeroes();
-    const hero = {
-      id: editingId || (
-        Date.now().toString(36) +
-        '-' + Math.random().toString(36).slice(2)
-      ),
-      photo: currentPhoto
-    };
-
-    Object.keys(fields).forEach(key => {
-      hero[key] = fields[key].value.trim();
-    });
-
-    const index = heroes.findIndex(item => item.id === hero.id);
-    if (index >= 0) {
-      heroes[index] = hero;
-    } else {
-      heroes.unshift(hero);
-    }
-
-    if (saveHeroes(heroes)) {
-      hideEditor();
-      render();
-      alert('Персонаж сохранён!');
-    }
-  });
-
-  render();
+render();
 </script>
 </body>
 </html>
