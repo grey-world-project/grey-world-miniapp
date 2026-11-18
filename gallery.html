@@ -2,302 +2,350 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Галерея персонажей — GREY WORLD</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: #111116;
-      color: #e5e2e8;
-      font-family: Arial, sans-serif;
-      padding: 35px 20px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 45px;
-    }
-
-    .logo {
-      font-family: Georgia, serif;
-      font-size: clamp(32px, 8vw, 46px);
-      letter-spacing: 5px;
-      margin: 0;
-    }
-
-    .subtitle {
-      color: #aaa3b0;
-      margin-top: 20px;
-    }
-
-    .back {
-      display: inline-block;
-      background: #76243f;
-      color: white;
-      text-decoration: none;
-      padding: 14px 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .section-title {
-      margin: 30px 0 16px;
-      font-size: 24px;
-    }
-
-    .card {
-      background: #25222c;
-      border: 1px solid #403746;
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 18px;
-    }
-
-    .tag {
-      display: inline-block;
-      color: #e1bfce;
-      background: #3b2734;
-      padding: 7px 12px;
-      border-radius: 20px;
-      font-size: 13px;
-    }
-
-    h2 {
-      margin-top: 12px;
-      font-size: 28px;
-      overflow-wrap: anywhere;
-    }
-
-    .description {
-      color: #bdb5c1;
-      line-height: 1.65;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 15px 20px;
-      border-radius: 12px;
-      color: white;
-      background: #76243f;
-      text-decoration: none;
-      border: none;
-      font: inherit;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .secondary { background: #39313f; }
-
-    .hero-header {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .hero-avatar {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 18px;
-      border: 1px solid #655568;
-      flex-shrink: 0;
-    }
-
-    .hero-placeholder {
-      width: 90px;
-      height: 90px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #342b3a;
-      color: #e1bfce;
-      font-size: 36px;
-      border-radius: 18px;
-      flex-shrink: 0;
-    }
-
-    .hero-header h2 { margin: 0; }
-
-    .empty {
-      color: #bdb5c1;
-      line-height: 1.6;
-    }
-
-    footer {
-      text-align: center;
-      color: #aaa3b0;
-      font-size: 13px;
-      margin-top: 45px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Галерея персонажей — GREY WORLD</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#111116;color:#e5e2e8;
+ font-family:Arial,sans-serif;padding:35px 20px
+}
+main{max-width:650px;margin:auto}
+header{text-align:center;margin-bottom:35px}
+.logo{
+ font-family:Georgia,serif;font-size:clamp(32px,8vw,46px);
+ letter-spacing:5px;margin:0
+}
+.subtitle{color:#aaa3b0;margin-top:20px}
+.back{
+ display:inline-block;background:#76243f;color:white;
+ text-decoration:none;padding:14px 20px;
+ border-radius:12px;margin-bottom:20px
+}
+.section-title{margin:30px 0 16px;font-size:24px}
+.card{
+ background:#25222c;border:1px solid #403746;
+ border-radius:20px;padding:24px;margin-bottom:18px
+}
+.tag{
+ display:inline-block;color:#e1bfce;background:#3b2734;
+ padding:7px 12px;border-radius:20px;font-size:13px
+}
+h2{margin-top:12px;font-size:28px;overflow-wrap:anywhere}
+.description{
+ color:#bdb5c1;line-height:1.65;
+ white-space:pre-wrap;overflow-wrap:anywhere
+}
+.actions{
+ display:flex;flex-wrap:wrap;gap:12px;margin-top:24px
+}
+.button{
+ display:inline-block;padding:15px 20px;border-radius:12px;
+ color:white;background:#76243f;text-decoration:none;
+ border:0;font:inherit;font-size:16px;cursor:pointer;
+ text-align:center
+}
+.secondary{background:#39313f}
+.button:disabled{opacity:.5;cursor:not-allowed}
+.hero-header{
+ display:flex;align-items:center;gap:18px;margin-top:18px
+}
+.hero-avatar{
+ width:90px;height:90px;object-fit:cover;
+ border-radius:18px;border:1px solid #655568;flex-shrink:0
+}
+.hero-placeholder{
+ width:90px;height:90px;display:flex;align-items:center;
+ justify-content:center;background:#342b3a;
+ color:#e1bfce;font-size:36px;border-radius:18px;
+ flex-shrink:0
+}
+.hero-header h2{margin:0}
+.empty{color:#bdb5c1;line-height:1.6}
+.counter{
+ background:#302339;border:1px solid #6e4a7e;
+ border-radius:16px;padding:18px;margin:18px 0
+}
+.counter strong{font-size:20px}
+.bar{
+ background:#493950;height:9px;border-radius:20px;
+ margin-top:14px;overflow:hidden
+}
+.fill{background:#b477d9;height:100%;width:0}
+.hint{font-size:13px;color:#bdb5c1;line-height:1.5}
+footer{
+ text-align:center;color:#aaa3b0;
+ font-size:13px;margin-top:45px
+}
+</style>
 </head>
-
 <body>
+<main>
+<header>
+<h1 class="logo">GREY WORLD</h1>
+<p class="subtitle">Галерея персонажей</p>
+</header>
 
-  <header>
-    <h1 class="logo">GREY WORLD</h1>
-    <p class="subtitle">Галерея персонажей</p>
-  </header>
+<a class="back" href="index.html">← На главную</a>
 
-  <a class="back" href="index.html">← На главную</a>
+<div class="counter">
+<strong>Моя картотека: <span id="count">0 / 10</span></strong>
+<div class="bar"><div class="fill" id="fill"></div></div>
+<p class="hint">
+В профиле можно держать не более 10 активных героев.
+Создание и добавление персонажей бесплатны.
+</p>
+<a class="button secondary" href="profile.html">Мой профиль</a>
+</div>
 
-  <h2 class="section-title">Персонажи GREY WORLD</h2>
+<h2 class="section-title">Персонажи GREY WORLD</h2>
+<div id="officialHeroes"></div>
 
-  <div class="card">
-    <span class="tag">Первый персонаж</span>
+<h2 class="section-title">Мои персонажи</h2>
+<div id="myHeroes"></div>
 
-    <h2>Грэй</h2>
+<div class="actions">
+<a class="button secondary" href="heroes.html">
++ Создать персонажа
+</a>
+</div>
 
-    <p class="description">Самоуверенный, независимый и остроумный.
-Его сарказм способен вывести из себя,
-но за колкими словами иногда скрывается
-неожиданная теплота.</p>
+<footer>18+ · Демонстрационная версия · GREY WORLD</footer>
+</main>
 
-    <p class="description">Не любит подчиняться чужим правилам.
-Обожает словесные дуэли и всегда
-оставляет последнее слово за собой.</p>
+<script>
+(function(){
+"use strict";
 
-    <div class="actions">
-      <a class="button" href="chat.html?new=1&amp;hero=grey">
-        + Новая история
-      </a>
+const HEROES_KEY="grey-world-heroes-v1";
+const ACTIVE_KEY="grey-world-active-heroes-v1";
+const STORIES_KEY="grey-world-stories-v1";
+const MAX_HEROES=10;
 
-      <a class="button secondary" href="stories.html">
-        Мои истории
-      </a>
-    </div>
-  </div>
+const official=[
+ {
+  id:"grey",
+  name:"Грэй",
+  personality:
+   "Самоуверенный, независимый и остроумный.\n"+
+   "Его сарказм способен вывести из себя,\n"+
+   "но за колкими словами иногда скрывается\n"+
+   "неожиданная теплота.\n\n"+
+   "Не любит подчиняться чужим правилам.\n"+
+   "Обожает словесные дуэли и всегда\n"+
+   "оставляет последнее слово за собой."
+ }
+];
 
-  <h2 class="section-title">Мои персонажи</h2>
+function read(key,fallback){
+ try{
+  const value=JSON.parse(localStorage.getItem(key));
+  return value??fallback;
+ }catch(e){return fallback;}
+}
 
-  <div id="myHeroes"></div>
+function getHeroes(){
+ const value=read(HEROES_KEY,[]);
+ return Array.isArray(value)?value:[];
+}
 
-  <div class="actions">
-    <a class="button secondary" href="heroes.html">
-      + Создать персонажа
-    </a>
-  </div>
+function getStories(){
+ const value=read(STORIES_KEY,[]);
+ return Array.isArray(value)?value:[];
+}
 
-  <footer>
-    18+ · Демонстрационная версия · GREY WORLD
-  </footer>
+function validIds(){
+ return new Set([
+  ...official.map(h=>String(h.id)),
+  ...getHeroes().filter(h=>h&&h.id).map(h=>String(h.id))
+ ]);
+}
 
-  <script>
-    const HEROES_KEY = 'grey-world-heroes-v1';
-    const container = document.getElementById('myHeroes');
+function getActive(){
+ const stored=read(ACTIVE_KEY,null);
+ const allowed=validIds();
 
-    function readHeroes() {
-      try {
-        const data = JSON.parse(localStorage.getItem(HEROES_KEY));
-        return Array.isArray(data) ? data : [];
-      } catch (error) {
-        return [];
-      }
-    }
+ if(Array.isArray(stored)){
+  return [...new Set(stored.map(String))]
+   .filter(id=>allowed.has(id))
+   .slice(0,MAX_HEROES);
+ }
 
-    function createLink(text, href, secondary = false) {
-      const link = document.createElement('a');
-      link.className = secondary ? 'button secondary' : 'button';
-      link.textContent = text;
-      link.href = href;
-      return link;
-    }
+ // Первый запуск: сохраняем уже созданных героев.
+ // Герои существующих историй также сохраняют доступ.
+ const ids=[
+  ...getHeroes().filter(h=>h&&h.id).map(h=>String(h.id))
+ ];
 
-    function renderHeroes() {
-      container.replaceChildren();
+ getStories().forEach(story=>{
+  if(!story)return;
+  const id=story.heroId??story.hero;
+  if(id!=null&&allowed.has(String(id))){
+   ids.push(String(id));
+  }
+ });
 
-      const heroes = readHeroes();
+ const initial=[...new Set(ids)].slice(0,MAX_HEROES);
+ localStorage.setItem(ACTIVE_KEY,JSON.stringify(initial));
+ return initial;
+}
 
-      if (!heroes.length) {
-        const empty = document.createElement('div');
-        empty.className = 'card empty';
-        empty.textContent =
-          'Пока нет созданных персонажей. ' +
-          'Ты можешь создать своего первого героя.';
-        container.appendChild(empty);
-        return;
-      }
+function setActive(ids){
+ localStorage.setItem(ACTIVE_KEY,JSON.stringify(ids));
+ render();
+}
 
-      heroes.forEach(hero => {
-        if (!hero || !hero.id) return;
+function updateCount(active){
+ document.getElementById("count").textContent=
+  active.length+" / "+MAX_HEROES;
+ document.getElementById("fill").style.width=
+  (active.length/MAX_HEROES*100)+"%";
+}
 
-        const card = document.createElement('article');
-        card.className = 'card';
+function button(text,action,secondary){
+ const b=document.createElement("button");
+ b.type="button";
+ b.className="button"+(secondary?" secondary":"");
+ b.textContent=text;
+ b.onclick=action;
+ return b;
+}
 
-        const tag = document.createElement('span');
-        tag.className = 'tag';
-        tag.textContent = 'Мой персонаж';
-        card.appendChild(tag);
+function link(text,url,secondary){
+ const a=document.createElement("a");
+ a.className="button"+(secondary?" secondary":"");
+ a.href=url;
+ a.textContent=text;
+ return a;
+}
 
-        const header = document.createElement('div');
-        header.className = 'hero-header';
+function card(hero,isOfficial,active){
+ const id=String(hero.id);
+ const selected=active.includes(id);
 
-        if (hero.photo) {
-          const image = document.createElement('img');
-          image.className = 'hero-avatar';
-          image.src = hero.photo;
-          image.alt = 'Аватар персонажа';
-          header.appendChild(image);
-        } else {
-          const placeholder = document.createElement('div');
-          placeholder.className = 'hero-placeholder';
-          placeholder.textContent = '✦';
-          header.appendChild(placeholder);
-        }
+ const article=document.createElement("article");
+ article.className="card";
 
-        const name = document.createElement('h2');
-        name.textContent = hero.name || 'Без имени';
-        header.appendChild(name);
-        card.appendChild(header);
+ const tag=document.createElement("span");
+ tag.className="tag";
+ tag.textContent=isOfficial
+  ?"Персонаж GREY WORLD"
+  :"Мой персонаж";
+ article.appendChild(tag);
 
-        if (hero.personality) {
-          const description = document.createElement('p');
-          description.className = 'description';
-          description.textContent = hero.personality;
-          card.appendChild(description);
-        }
+ const header=document.createElement("div");
+ header.className="hero-header";
 
-        const actions = document.createElement('div');
-        actions.className = 'actions';
+ if(hero.photo){
+  const img=document.createElement("img");
+  img.className="hero-avatar";
+  img.src=hero.photo;
+  img.alt="Аватар персонажа";
+  header.appendChild(img);
+ }else{
+  const avatar=document.createElement("div");
+  avatar.className="hero-placeholder";
+  avatar.textContent="✦";
+  header.appendChild(avatar);
+ }
 
-        actions.appendChild(
-          createLink(
-            '+ Новая история',
-            'chat.html?new=1&hero=' + encodeURIComponent(hero.id)
-          )
-        );
+ const title=document.createElement("h2");
+ title.textContent=hero.name||"Без имени";
+ header.appendChild(title);
+ article.appendChild(header);
 
-        // Сохранённые истории доступны и для своих героев.
-        actions.appendChild(
-          createLink('Мои истории', 'stories.html', true)
-        );
+ if(hero.personality){
+  const p=document.createElement("p");
+  p.className="description";
+  p.textContent=hero.personality;
+  article.appendChild(p);
+ }
 
-        actions.appendChild(
-          createLink('Редактировать анкету', 'heroes.html', true)
-        );
+ const actions=document.createElement("div");
+ actions.className="actions";
 
-        card.appendChild(actions);
-        container.appendChild(card);
-      });
-    }
+ if(selected){
+  actions.appendChild(
+   link("+ Новая история",
+    "chat.html?new=1&hero="+encodeURIComponent(id),false)
+  );
 
-    renderHeroes();
-  </script>
+  actions.appendChild(
+   button("Убрать из картотеки",()=>{
+    const message=
+     "Убрать героя «"+(hero.name||"Без имени")+"» "+
+     "из активной картотеки?\n\n"+
+     "Сохранённые истории не удалятся, "+
+     "но для продолжения общения героя "+
+     "потребуется вернуть в картотеку.";
 
+    if(!confirm(message))return;
+    setActive(getActive().filter(x=>x!==id));
+   },true)
+  );
+ }else{
+  const add=button("Добавить в мою картотеку",()=>{
+   const current=getActive();
+   if(current.includes(id))return;
+   if(current.length>=MAX_HEROES){
+    alert("Все 10 мест заняты. Сначала убери другого героя.");
+    return;
+   }
+   setActive([...current,id]);
+  },false);
+
+  if(active.length>=MAX_HEROES)add.disabled=true;
+  actions.appendChild(add);
+ }
+
+ actions.appendChild(
+  link("Мои истории","stories.html",true)
+ );
+
+ if(!isOfficial){
+  actions.appendChild(
+   link("Редактировать анкету","heroes.html",true)
+  );
+ }
+
+ article.appendChild(actions);
+ return article;
+}
+
+function render(){
+ const active=getActive();
+ updateCount(active);
+
+ const officialBox=document.getElementById("officialHeroes");
+ const customBox=document.getElementById("myHeroes");
+
+ officialBox.replaceChildren();
+ customBox.replaceChildren();
+
+ official.forEach(hero=>{
+  officialBox.appendChild(card(hero,true,active));
+ });
+
+ const heroes=getHeroes();
+ if(!heroes.length){
+  const empty=document.createElement("div");
+  empty.className="card empty";
+  empty.textContent=
+   "Пока нет созданных персонажей. "+
+   "Ты можешь создать своего первого героя.";
+  customBox.appendChild(empty);
+ }else{
+  heroes.forEach(hero=>{
+   if(hero&&hero.id){
+    customBox.appendChild(card(hero,false,active));
+   }
+  });
+ }
+}
+
+render();
+})();
+</script>
 </body>
 </html>
