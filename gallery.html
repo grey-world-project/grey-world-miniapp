@@ -10,9 +10,11 @@
 *{box-sizing:border-box}
 :root{
  color-scheme:dark;
- --bg:#0d0d10;--card:#202025;
- --red:#85283c;--silver:#c5c7ce;
- --text:#f2f1f3;--muted:#a9a9b3;
+ --bg:#0d0d10;
+ --red:#85283c;
+ --silver:#c5c7ce;
+ --text:#f2f1f3;
+ --muted:#a9a9b3;
  --border:#414149
 }
 body{
@@ -41,10 +43,9 @@ h1{font-size:28px;margin:0 0 18px}
 .search input::placeholder{color:#9998a2}
 .toolbar{display:flex;gap:9px;margin-bottom:18px}
 .filter-btn,.chip{
- border:1px solid #494850;
- background:#29282e;color:var(--silver);
- border-radius:25px;padding:11px 14px;
- white-space:nowrap;font-size:13px
+ border:1px solid #494850;background:#29282e;
+ color:var(--silver);border-radius:25px;
+ padding:11px 14px;white-space:nowrap;font-size:13px
 }
 .filter-btn{border-radius:13px;font-size:18px}
 .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
@@ -63,50 +64,52 @@ h1{font-size:28px;margin:0 0 18px}
 .hint{font-size:12px;color:var(--muted);line-height:1.5;margin:11px 0 0}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .hero-card{
- position:relative;min-width:0;
+ position:relative;min-width:0;aspect-ratio:3/4;
  border-radius:18px;overflow:hidden;
  background:#242329;border:1px solid #49454d;
- display:flex;flex-direction:column
+ cursor:pointer;isolation:isolate
 }
-.photo{
- width:100%;aspect-ratio:3/4;
- object-fit:cover;display:block;
- background:#29282e
+.hero-card:focus-visible{outline:2px solid #e2a0b1;outline-offset:3px}
+.photo,.placeholder{
+ width:100%;height:100%;display:block
 }
+.photo{object-fit:cover;object-position:center;background:#29282e}
 .placeholder{
- width:100%;aspect-ratio:3/4;
  display:grid;place-items:center;
  background:linear-gradient(145deg,#3b2a31,#1c1c22);
  font-family:Georgia,serif;font-size:64px;color:#b5b5bf
 }
+.hero-card::after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(
+  to bottom,rgba(0,0,0,.18) 0%,
+  transparent 35%,rgba(0,0,0,.3) 55%,
+  rgba(0,0,0,.91) 100%
+ );
+ pointer-events:none;z-index:1
+}
 .heart{
- position:absolute;right:9px;top:9px;
+ position:absolute;right:9px;top:9px;z-index:3;
  width:37px;height:37px;border-radius:50%;
  border:1px solid #77717a;
- background:#16141bcb;color:#fff;
+ background:#16141bcb;color:white;
  font-size:22px;display:grid;place-items:center
 }
 .heart.saved{color:#e6a0b0;background:#512432}
-.hero-info{padding:12px;flex:1;display:flex;flex-direction:column;gap:7px}
-.hero-info h2{font-size:16px;margin:0;overflow-wrap:anywhere}
-.kind{font-size:11px;color:#d1a5b0}
+.hero-info{
+ position:absolute;left:0;right:0;bottom:0;z-index:2;
+ padding:12px;display:flex;flex-direction:column;gap:6px
+}
+.hero-info h2{
+ font-size:clamp(15px,4vw,20px);line-height:1.15;
+ margin:0;overflow-wrap:anywhere
+}
 .desc{
- color:var(--muted);font-size:12px;
- line-height:1.4;display:-webkit-box;
- -webkit-line-clamp:3;-webkit-box-orient:vertical;
- overflow:hidden;white-space:pre-line
+ color:#e0dce1;font-size:12px;line-height:1.4;
+ display:-webkit-box;-webkit-line-clamp:2;
+ -webkit-box-orient:vertical;overflow:hidden;
+ white-space:pre-line
 }
-.state{font-size:11px;color:#c8c9d1;margin-top:auto}
-.card-actions{display:grid;gap:7px;padding:0 12px 12px}
-.action{
- display:block;text-align:center;width:100%;
- padding:11px 7px;border-radius:11px;
- border:0;background:var(--red);
- color:white;font-size:12px;font-weight:600;
- text-decoration:none
-}
-.action.secondary{background:#38373e}
-.action:disabled{opacity:.45}
 .empty{
  grid-column:1/-1;background:#242329;
  border:1px solid var(--border);
@@ -142,7 +145,10 @@ dialog{
 dialog::backdrop{background:#000c}
 .modal-top{display:flex;justify-content:space-between;align-items:center}
 .modal-top h2{margin:0;font-size:21px}
-.close{background:#38373e;border:0;border-radius:50%;color:white;width:37px;height:37px;font-size:23px}
+.close{
+ background:#38373e;border:0;border-radius:50%;
+ color:white;width:37px;height:37px;font-size:23px
+}
 .filter-title{color:var(--silver);font-size:12px;letter-spacing:1px;margin:24px 0 12px}
 .sort-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
 .sort-option{
@@ -158,8 +164,91 @@ dialog::backdrop{background:#000c}
 }
 .check-row input{accent-color:#a83f57;width:21px;height:21px}
 .modal-actions{display:flex;gap:10px;margin-top:24px}
-.modal-actions button{flex:1;padding:14px;border:0;border-radius:13px;color:white;background:#85283c;font-weight:600}
+.modal-actions button{
+ flex:1;padding:14px;border:0;border-radius:13px;
+ color:white;background:#85283c;font-weight:600
+}
 .modal-actions .reset{background:#38373e}
+
+/* Полноэкранная анкета */
+.detail{
+ position:fixed;inset:0;z-index:30;
+ background:#100d13;overflow-y:auto;
+ overscroll-behavior:contain
+}
+.detail[hidden]{display:none}
+.detail-inner{
+ max-width:650px;min-height:100%;
+ margin:auto;position:relative;padding-bottom:120px
+}
+.detail-cover{
+ position:relative;height:min(75vh,680px);
+ min-height:400px;overflow:hidden;
+ background:#25202a
+}
+.detail-cover img{
+ width:100%;height:100%;object-fit:cover;
+ object-position:center top
+}
+.detail-cover .placeholder{height:100%}
+.detail-cover::after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(
+  to bottom,rgba(0,0,0,.3),
+  transparent 35%,#100d13 100%
+ );
+ pointer-events:none
+}
+.detail-back{
+ position:absolute;top:calc(18px + env(safe-area-inset-top));
+ left:18px;z-index:2;
+ width:43px;height:43px;border-radius:50%;
+ border:1px solid #ffffff55;
+ background:#111a;color:white;font-size:26px
+}
+.detail-content{
+ position:relative;margin-top:-115px;
+ z-index:1;padding:0 22px 30px
+}
+.detail-content h2{
+ font-size:34px;line-height:1.15;margin:0 0 16px
+}
+.detail-tags{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:20px}
+.detail-tag{
+ display:inline-block;padding:9px 13px;
+ border-radius:20px;background:#302832;
+ border:1px solid #51414c;
+ font-size:12px;color:#e7c0cc
+}
+.detail-description{
+ white-space:pre-wrap;overflow-wrap:anywhere;
+ line-height:1.7;font-size:15px;color:#e5dfe6
+}
+.detail-section-title{
+ font-size:16px;color:#d4a1b0;margin:25px 0 10px
+}
+.detail-actions{
+ display:grid;gap:10px;margin-top:25px
+}
+.detail-action{
+ display:block;width:100%;text-align:center;
+ border:0;border-radius:13px;padding:15px;
+ background:var(--red);color:white;
+ font-size:15px;font-weight:600
+}
+.detail-action.secondary{background:#38343d}
+.detail-action:disabled{opacity:.45}
+.detail-footer{
+ position:fixed;bottom:0;left:0;right:0;
+ z-index:32;background:#100d13ed;
+ border-top:1px solid #493844;
+ padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+ display:flex;gap:10px
+}
+.detail-footer[hidden]{display:none}
+.detail-footer .detail-action{flex:1}
+.detail-footer .detail-action.secondary{flex:0 0 34%}
+body.detail-open{overflow:hidden}
 </style>
 </head>
 <body>
@@ -197,9 +286,7 @@ dialog::backdrop{background:#000c}
  </section>
 
  <div class="grid" id="catalog"></div>
-
  <a class="create" href="heroes.html">＋ Создать своего персонажа</a>
-
  <footer>18+ · Демонстрационная версия · GREY WORLD</footer>
 </main>
 
@@ -216,7 +303,6 @@ dialog::backdrop{background:#000c}
   <h2>Сортировка и фильтры</h2>
   <button class="close" id="closeFilters" aria-label="Закрыть">×</button>
  </div>
-
  <div class="filter-title">СОРТИРОВКА</div>
  <div class="sort-grid">
   <button class="sort-option selected" data-sort="new">По дате</button>
@@ -224,18 +310,35 @@ dialog::backdrop{background:#000c}
   <button class="sort-option" data-sort="nameDesc">Я–А</button>
   <button class="sort-option" data-sort="favorites">Избранные сначала</button>
  </div>
-
  <div class="filter-title">ФИЛЬТРЫ</div>
  <label class="check-row">Только с фото <input id="onlyPhoto" type="checkbox"></label>
  <label class="check-row">Только официальные <input id="onlyOfficial" type="checkbox"></label>
  <label class="check-row">Только в картотеке <input id="onlyActive" type="checkbox"></label>
  <label class="check-row">Только избранные <input id="onlyFavorites" type="checkbox"></label>
-
  <div class="modal-actions">
   <button class="reset" id="resetFilters">Сбросить</button>
   <button id="applyFilters">Применить</button>
  </div>
 </dialog>
+
+<section class="detail" id="detail" hidden aria-label="Анкета персонажа">
+ <div class="detail-inner">
+  <div class="detail-cover" id="detailCover">
+   <button class="detail-back" id="detailBack" aria-label="Назад в каталог">‹</button>
+  </div>
+  <div class="detail-content">
+   <h2 id="detailName"></h2>
+   <div class="detail-tags" id="detailTags"></div>
+   <div class="detail-description" id="detailDescription"></div>
+   <div class="detail-actions" id="detailActions"></div>
+  </div>
+ </div>
+</section>
+
+<div class="detail-footer" id="detailFooter" hidden>
+ <button class="detail-action secondary" id="detailClose">Назад</button>
+ <button class="detail-action" id="detailPrimary">Начать историю</button>
+</div>
 
 <script>
 (function(){
@@ -315,6 +418,7 @@ function toggleFavorite(id){
 let category="all";
 let sort="new";
 let filters={photo:false,official:false,active:false,favorites:false};
+let currentHeroId=null;
 
 function allHeroes(){
  return [
@@ -323,7 +427,9 @@ function allHeroes(){
    .map((h,i)=>({...h,isOfficial:false,order:official.length+i}))
  ];
 }
-
+function findHero(id){
+ return allHeroes().find(h=>String(h.id)===String(id));
+}
 function matches(hero,active,favorites,query){
  const id=String(hero.id);
  const selected=active.includes(id);
@@ -344,29 +450,33 @@ function matches(hero,active,favorites,query){
  if(filters.favorites&&!liked)return false;
  return true;
 }
-
 function makeButton(text,fn,secondary){
  const b=document.createElement("button");
- b.type="button";b.className="action"+(secondary?" secondary":"");
- b.textContent=text;b.onclick=fn;return b;
+ b.type="button";
+ b.className="detail-action"+(secondary?" secondary":"");
+ b.textContent=text;b.onclick=fn;
+ return b;
 }
 function makeLink(text,url,secondary){
  const a=document.createElement("a");
- a.className="action"+(secondary?" secondary":"");
- a.href=url;a.textContent=text;return a;
+ a.className="detail-action"+(secondary?" secondary":"");
+ a.href=url;a.textContent=text;
+ return a;
 }
-
-function createCard(hero,active,favorites){
+function createCard(hero,favorites){
  const id=String(hero.id);
- const selected=active.includes(id);
  const liked=favorites.includes(id);
  const card=document.createElement("article");
  card.className="hero-card";
+ card.tabIndex=0;
+ card.setAttribute("role","button");
+ card.setAttribute("aria-label","Открыть анкету: "+(hero.name||"Без имени"));
 
  if(hero.photo){
   const img=document.createElement("img");
   img.className="photo";img.src=hero.photo;
   img.alt="Фото персонажа "+(hero.name||"");
+  img.loading="lazy";
   card.appendChild(img);
  }else{
   const placeholder=document.createElement("div");
@@ -380,40 +490,103 @@ function createCard(hero,active,favorites){
  heart.className="heart"+(liked?" saved":"");
  heart.textContent=liked?"♥":"♡";
  heart.setAttribute("aria-label",liked?"Убрать из избранного":"В избранное");
- heart.onclick=()=>toggleFavorite(id);
+ heart.onclick=e=>{
+  e.stopPropagation();
+  toggleFavorite(id);
+ };
  card.appendChild(heart);
 
  const info=document.createElement("div");
  info.className="hero-info";
+
  const title=document.createElement("h2");
  title.textContent=hero.name||"Без имени";
  info.appendChild(title);
 
- const kind=document.createElement("div");
- kind.className="kind";
- kind.textContent=hero.isOfficial?"Официальный":"Мой персонаж";
- info.appendChild(kind);
-
- if(hero.personality){
-  const p=document.createElement("div");
-  p.className="desc";p.textContent=hero.personality;
-  info.appendChild(p);
- }
-
- const state=document.createElement("div");
- state.className="state";
- state.textContent=selected?"✓ В картотеке":"Не добавлен";
- info.appendChild(state);
+ const desc=document.createElement("div");
+ desc.className="desc";
+ desc.textContent=
+  hero.description||hero.personality||
+  hero.backstory||"Открой анкету, чтобы узнать героя ближе.";
+ info.appendChild(desc);
  card.appendChild(info);
 
- const actions=document.createElement("div");
- actions.className="card-actions";
+ card.onclick=()=>openDetail(id);
+ card.onkeydown=e=>{
+  if(e.target!==card)return;
+  if(e.key==="Enter"||e.key===" "){
+   e.preventDefault();openDetail(id);
+  }
+ };
+ return card;
+}
+function addTag(text){
+ const span=document.createElement("span");
+ span.className="detail-tag";
+ span.textContent=text;
+ el("detailTags").appendChild(span);
+}
+function openDetail(id){
+ const hero=findHero(id);
+ if(!hero)return;
+ currentHeroId=id;
+ const active=getActive();
+ const selected=active.includes(id);
+
+ const cover=el("detailCover");
+ cover.querySelectorAll("img,.placeholder").forEach(n=>n.remove());
+
+ if(hero.photo){
+  const img=document.createElement("img");
+  img.src=hero.photo;img.alt="Фото "+(hero.name||"персонажа");
+  cover.prepend(img);
+ }else{
+  const placeholder=document.createElement("div");
+  placeholder.className="placeholder";
+  placeholder.textContent="☾";
+  cover.prepend(placeholder);
+ }
+
+ el("detailName").textContent=hero.name||"Без имени";
+ el("detailTags").replaceChildren();
+ addTag(hero.isOfficial?"Официальный персонаж":"Мой персонаж");
+ if(selected)addTag("✓ В картотеке");
+
+ if(hero.tags){
+  const tags=Array.isArray(hero.tags)
+   ?hero.tags
+   :String(hero.tags).split(",");
+  tags.filter(Boolean).slice(0,4).forEach(t=>addTag(String(t).trim()));
+ }
+
+ const description=el("detailDescription");
+ description.replaceChildren();
+
+ const fields=[
+  ["Описание",hero.description],
+  ["Характер",hero.personality],
+  ["Предыстория",hero.backstory],
+  ["Внешность",hero.appearance],
+  ["Предпочтения",hero.preferences]
+ ];
+ let any=false;
+ fields.forEach(([title,value])=>{
+  if(!value)return;
+  any=true;
+  const heading=document.createElement("h3");
+  heading.className="detail-section-title";
+  heading.textContent=title;
+  const p=document.createElement("div");
+  p.className="detail-description";
+  p.textContent=String(value);
+  description.append(heading,p);
+ });
+ if(!any)description.textContent="Описание персонажа пока не заполнено.";
+
+ const actions=el("detailActions");
+ actions.replaceChildren();
 
  if(selected){
-  actions.appendChild(makeLink(
-   "+ Новая история",
-   "chat.html?new=1&hero="+encodeURIComponent(id),false
-  ));
   actions.appendChild(makeButton("Убрать из картотеки",()=>{
    if(!confirm(
     "Убрать героя «"+(hero.name||"Без имени")+"» из картотеки?\n\n"+
@@ -421,6 +594,7 @@ function createCard(hero,active,favorites){
     "нужно будет добавить героя обратно."
    ))return;
    setActive(getActive().filter(x=>x!==id));
+   openDetail(id);
   },true));
  }else{
   const add=makeButton("Добавить в картотеку",()=>{
@@ -430,20 +604,45 @@ function createCard(hero,active,favorites){
     return;
    }
    setActive([...current,id]);
+   openDetail(id);
   },false);
   if(active.length>=MAX_HEROES)add.disabled=true;
   actions.appendChild(add);
  }
 
  actions.appendChild(makeLink("Мои истории","stories.html",true));
-
  if(!hero.isOfficial){
-  actions.appendChild(makeLink("Редактировать","heroes.html",true));
+  actions.appendChild(makeLink("Редактировать персонажа","heroes.html",true));
  }
- card.appendChild(actions);
- return card;
-}
 
+ const primary=el("detailPrimary");
+ primary.textContent=selected?"Начать историю":"Добавить в картотеку";
+ primary.onclick=()=>{
+  if(selected){
+   location.href="chat.html?new=1&hero="+encodeURIComponent(id);
+  }else{
+   const current=getActive();
+   if(current.length>=MAX_HEROES){
+    alert("Все 10 мест заняты. Сначала убери другого героя.");
+    return;
+   }
+   setActive([...current,id]);
+   openDetail(id);
+  }
+ };
+ primary.disabled=!selected&&active.length>=MAX_HEROES;
+
+ el("detail").hidden=false;
+ el("detailFooter").hidden=false;
+ document.body.classList.add("detail-open");
+ el("detail").scrollTop=0;
+}
+function closeDetail(){
+ currentHeroId=null;
+ el("detail").hidden=true;
+ el("detailFooter").hidden=true;
+ document.body.classList.remove("detail-open");
+}
 function render(){
  const active=getActive();
  const favorites=getFavorites();
@@ -453,7 +652,6 @@ function render(){
  el("fill").style.width=(active.length/MAX_HEROES*100)+"%";
 
  let heroes=allHeroes().filter(h=>matches(h,active,favorites,query));
-
  if(sort==="nameAsc"){
   heroes.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ru"));
  }else if(sort==="nameDesc"){
@@ -470,7 +668,6 @@ function render(){
 
  const box=el("catalog");
  box.replaceChildren();
-
  if(!heroes.length){
   const empty=document.createElement("div");
   empty.className="empty";
@@ -478,7 +675,7 @@ function render(){
   box.appendChild(empty);
   return;
  }
- heroes.forEach(hero=>box.appendChild(createCard(hero,active,favorites)));
+ heroes.forEach(hero=>box.appendChild(createCard(hero,favorites)));
 }
 
 document.querySelectorAll("[data-category]").forEach(b=>{
@@ -490,7 +687,6 @@ document.querySelectorAll("[data-category]").forEach(b=>{
   render();
  };
 });
-
 el("search").addEventListener("input",render);
 
 function showSort(){
@@ -504,10 +700,8 @@ document.querySelectorAll("[data-sort]").forEach(b=>{
   showSort();
  };
 });
-
 el("openFilters").onclick=()=>el("filters").showModal();
 el("closeFilters").onclick=()=>el("filters").close();
-
 el("applyFilters").onclick=()=>{
  filters={
   photo:el("onlyPhoto").checked,
@@ -515,20 +709,22 @@ el("applyFilters").onclick=()=>{
   active:el("onlyActive").checked,
   favorites:el("onlyFavorites").checked
  };
- el("filters").close();
- render();
+ el("filters").close();render();
 };
-
 el("resetFilters").onclick=()=>{
  sort="new";
  filters={photo:false,official:false,active:false,favorites:false};
  ["onlyPhoto","onlyOfficial","onlyActive","onlyFavorites"].forEach(id=>
   el(id).checked=false
  );
- showSort();
- el("filters").close();
- render();
+ showSort();el("filters").close();render();
 };
+
+el("detailBack").onclick=closeDetail;
+el("detailClose").onclick=closeDetail;
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&!el("detail").hidden)closeDetail();
+});
 
 render();
 })();
