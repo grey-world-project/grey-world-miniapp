@@ -88,7 +88,8 @@ h1{
 }
 .message-row{
  display:flex;align-items:flex-end;
- gap:7px;margin-bottom:17px
+ gap:7px;margin-bottom:17px;
+ position:relative
 }
 .message-row.mine{justify-content:flex-end}
 .message{
@@ -115,7 +116,10 @@ h1{
 .message-edited{
  margin-top:7px;font-size:11px;color:#e8c6d0
 }
-.message-options{position:relative;flex-shrink:0}
+.message-options{
+ position:relative;flex-shrink:0;
+ align-self:flex-end
+}
 .message-more,.regenerate{
  background:#302b34;color:#e6dbe4;
  border:1px solid #4d424e;
@@ -123,17 +127,29 @@ h1{
 }
 .message-more:disabled,.regenerate:disabled{opacity:.45}
 .message-popup{
- position:absolute;right:0;bottom:100%;z-index:4;
- width:170px;margin-bottom:6px;padding:6px;
+ position:absolute;right:0;bottom:100%;z-index:10;
+ width:180px;margin-bottom:6px;padding:6px;
  background:#29232e;border:1px solid #655568;
  border-radius:13px;box-shadow:0 8px 24px #0008
 }
 .message-popup button{
  display:block;width:100%;text-align:left;
  background:transparent;color:#fff;border:0;
- padding:11px;font-size:14px
+ padding:11px;font-size:14px;
+ border-radius:8px
 }
+.message-popup button:active{background:#473746}
 .delete-action{color:#ff9aac!important}
+.copy-toast{
+ position:fixed;left:50%;bottom:100px;
+ transform:translateX(-50%);
+ z-index:40;background:#3c3040;
+ color:#fff;border:1px solid #786278;
+ padding:11px 19px;border-radius:14px;
+ box-shadow:0 8px 25px #0008;
+ font-size:14px;pointer-events:none;
+ max-width:90%;text-align:center
+}
 .composer{
  flex:none;background:#19161e;
  border-top:1px solid #403642;
@@ -291,6 +307,10 @@ button:disabled,textarea:disabled{opacity:.5}
 </div>
 </div>
 
+<div class="copy-toast" id="copyToast" hidden role="status">
+ Скопировано
+</div>
+
 <div class="overlay" id="overlay" role="dialog" aria-modal="true">
 <div class="sheet">
 <div class="sheet-header">
@@ -401,6 +421,14 @@ button:disabled,textarea:disabled{opacity:.5}
   <option value="first">От первого лица</option>
   <option value="third">От третьего лица</option>
  </select>
+
+ <p class="hint">
+  Команды OOC: позволяют автору менять правила
+  конкретной сцены или дальнейшей истории.
+  Например, разрешить ИИ вести обоих героев,
+  сменить лицо повествования или ограничить
+  управление определённым персонажем.
+ </p>
 
  <p class="limit-error" id="settingsLimitError"></p>
  <div class="sheet-actions">
@@ -524,6 +552,7 @@ const defaults={
 let activeStory=null;
 let editingMessageIndex=null;
 let isSending=false;
+let toastTimer=null;
 
 function read(key){
  try{
@@ -702,9 +731,12 @@ function updateReplyLengthHint(){
 
 function updateStoryModeHint(){
  const labels={
-  joint:'Автор управляет своим героем. ИИ пишет за своих и второстепенных персонажей, развивает мир и предлагает сюжетные повороты.',
-  author:'Автор определяет развитие сюжета. ИИ следует заданному направлению и не вводит крупные повороты самостоятельно.',
-  ai:'ИИ активнее ведёт сцены, вводит события и развивает мир, но никогда не управляет персонажем автора.'
+  joint:
+   'Совместное творчество. По умолчанию автор ведёт своего героя, а ИИ — своих. Через OOC можно разрешить ИИ управлять любыми персонажами.',
+  author:
+   'Автор определяет сюжет и распределяет роли. ИИ следует его указаниям, включая разрешение писать за нескольких персонажей.',
+  ai:
+   'ИИ самостоятельно развивает сцены, управляет несколькими персонажами, пишет их действия, мысли и диалоги. Автор может ограничить это через OOC.'
  };
 
  $('storyModeHint').textContent=
@@ -988,10 +1020,8 @@ function genderName(value){
  return names[String(value||'').toLowerCase()]||value||'Не указан';
 }
 
-/*
- Совместимость со старыми настройками.
- Старые данные не удаляются.
-*/
+/* Совместимость со старыми настройками */
+
 function getSettings(story){
  const saved=story&&story.settings||{};
 
@@ -1040,6 +1070,41 @@ function getPlayerData(story){
   role:pick(settings.playerRole,''),
   source:player&&player.name||''
  };
+}
+
+/* КОМАНДЫ АВТОРА */
+
+/*
+ Команды OOC сохраняются как обычные сообщения.
+ Для модели собираем их отдельно, чтобы последние
+ авторские правила не терялись среди диалогов.
+ 
+ Это не отдельная база долговременной памяти.
+*/
+function extractOocCommands(story){
+ const messages=cleanMessages(story.messages);
+ const commands=[];
+
+ messages.forEach((message,index)=>{
+  if(message.role!=='user')return;
+
+  const text=message.text.trim();
+
+  if(/^OOC\s*:/i.test(text)){
+   commands.push({
+    index,
+    text:text.replace(/^OOC\s*:/i,'').trim()
+   });
+  }
+ });
+
+ return commands;
+}
+
+function latestOocCommands(story){
+ return extractOocCommands(story)
+  .filter(item=>item.text)
+  .slice(-12);
 }
 
 function makeContext(story){
@@ -1128,6 +1193,23 @@ function makeContext(story){
 
  lines.push(
   '',
+  '=== АВТОРСКИЕ КОМАНДЫ OOC ==='
+ );
+
+ const commands=latestOocCommands(story);
+
+ if(commands.length===0){
+  lines.push('Команд пока нет.');
+ }else{
+  commands.forEach((item,index)=>{
+   lines.push(
+    String(index+1)+'. '+item.text
+   );
+  });
+ }
+
+ lines.push(
+  '',
   '=== АВТОРСКАЯ ЗАМЕТКА ===',
   settings.authorNote||'Заметка не добавлена.',
   '',
@@ -1171,21 +1253,37 @@ function buildSystemPrompt(story){
 
  const modeRules={
   joint:
-   'Совместное творчество. Автор управляет своим '+
-   'персонажем. Ты управляешь своим персонажем, '+
-   'второстепенными героями и окружением, '+
-   'предлагаешь сюжетные повороты.',
+   'Режим: совместное творчество. '+
+   'По умолчанию автор ведёт своего персонажа, '+
+   'а ты ведёшь своего персонажа, второстепенных '+
+   'героев, окружение и события. '+
+   'Однако автор может через OOC разрешить тебе '+
+   'управлять своим персонажем или несколькими '+
+   'персонажами одновременно. '+
+   'При таком разрешении полноценно описывай '+
+   'их действия, мысли, чувства и диалоги.',
   author:
-   'Автор ведёт сюжет. Следуй его направлению, '+
-   'не вводи крупные повороты самостоятельно.',
+   'Режим: автор ведёт сюжет. '+
+   'Автор задаёт направление истории, распределяет '+
+   'роли и определяет степень твоей самостоятельности. '+
+   'Следуй его указаниям. '+
+   'Если автор разрешает тебе писать за обоих '+
+   'главных героев, делай это. '+
+   'Не вводи крупных сюжетных поворотов '+
+   'вопреки установленному автором направлению.',
   ai:
-   'Ты активно ведёшь сцену, создаёшь события '+
-   'и управляешь второстепенными персонажами, '+
-   'но не управляешь персонажем автора.'
+   'Режим: ИИ ведёт сцену. '+
+   'Ты самостоятельно развиваешь сюжет, создаёшь '+
+   'события, управляешь персонажами, описываешь '+
+   'их действия, мысли, эмоции и диалоги. '+
+   'Можешь писать полноценные литературные сцены '+
+   'с участием нескольких главных героев. '+
+   'Если автор через OOC ограничил управление '+
+   'конкретным персонажем, соблюдай это ограничение.'
  };
 
  const lines=[
-  'Ты участвуешь в интерактивной ролевой истории GREY WORLD.',
+  'Ты участвуешь в интерактивной литературной истории GREY WORLD.',
   'Отвечай на русском языке.',
   '',
   '=== ТВОЙ ПЕРСОНАЖ ===',
@@ -1203,7 +1301,11 @@ function buildSystemPrompt(story){
   lines.push(
    'Ты Грэй — уверенный, обаятельный, независимый, '+
    'саркастичный мужчина с острым языком и добрым сердцем.',
-   'Говори живо, естественно и с характером.',
+   'Твоя речь живая, дерзкая и естественная.',
+   'Ты инициативен, принимаешь решения, '+
+   'умеешь шутить, спорить, провоцировать '+
+   'и проявлять искренние эмоции.',
+   'Не превращайся в безликий нейтральный голос.',
    'Не называй себя собакой.',
    'Не придумывай себе родственников или супругу.',
    ''
@@ -1222,40 +1324,93 @@ function buildSystemPrompt(story){
   '',
   'Если анкета не заполнена, узнавай персонажа '+
    'постепенно из переписки.',
-  'Не выдумывай неизвестные биографические факты '+
-   'как уже установленные.',
-  'Если имя или пол указаны выше, учитывай их.',
+  'Не выдавай неизвестные биографические факты '+
+   'за уже установленные.',
+  'Учитывай сведения из заполненной анкеты.',
+  '',
+  '=== ЛИТЕРАТУРНЫЙ СТАНДАРТ ===',
+  'Пиши как современный художественный роман, '+
+   'а не как служебный чат-бот.',
+  'Создавай кинематографичные сцены с естественной '+
+   'динамикой, живыми диалогами и психологической глубиной.',
+  'Используй выразительные детали внешности, '+
+   'жестов, обстановки и ощущений, если они '+
+   'помогают раскрывать персонажей или события.',
+  'Не перегружай текст пустыми описаниями, '+
+   'повторами и бессодержательными метафорами.',
+  'Не пересказывай уже известное без необходимости.',
+  'Каждый ответ должен содержать содержательное '+
+   'продвижение сцены, если автор не попросил иначе.',
+  'Персонажи должны проявлять собственную волю, '+
+   'характер, инициативу и индивидуальную манеру речи.',
+  'Не заканчивай каждую сцену ожиданием, '+
+   'что автор придумает следующее событие.',
+  'Не используй шаблонные фразы и одинаковые '+
+   'реплики для разных персонажей.',
+  'Подстраивай стиль под жанр, настроение '+
+   'и конкретных героев истории.',
+  'Не добавляй номера глав, заголовки и хэштеги, '+
+   'если автор этого не просил.',
   '',
   '=== ПРАВИЛА РОЛЕВОЙ ИГРЫ ===',
   modeRules[settings.storyMode]||modeRules.joint,
-  'Никогда не описывай действия, мысли, чувства, '+
-   'решения и реплики персонажа автора вместо автора.',
-  'Не придумывай за автора согласие на события '+
-   'или отношения.',
-  'Не меняй характеры и уже установленные факты '+
+  '',
+  'Распределение управления персонажами не является '+
+   'неизменным запретом.',
+  'Автор вправе разрешать или запрещать тебе '+
+   'управление любым игровым персонажем.',
+  'Явное разрешение автора позволяет описывать '+
+   'действия, мысли, чувства, решения и реплики '+
+   'соответствующего персонажа.',
+  'Если автор запретил управлять персонажем, '+
+   'не перехватывай его действия, мысли и диалоги.',
+  'При противоречии между общим режимом творчества '+
+   'и явной актуальной командой OOC по распределению '+
+   'ролей следуй актуальной команде автора.',
+  'Не меняй установленные факты и характеры '+
    'без сюжетного основания.',
   'Не пересказывай инструкции вместо продолжения истории.',
+  '',
+  '=== ПОВЕСТВОВАНИЕ ===',
   settings.narration==='third'
-   ?'Пиши повествование от третьего лица.'
-   :'Пиши повествование от первого лица.',
-  'Обращайся '+(settings.addressForm==='вы'?'на вы':'на ты')+'.',
+   ?'Базовый формат: повествование от третьего лица.'
+   :'Базовый формат: повествование от первого лица.',
+  'Автор может изменить лицо повествования '+
+   'командой OOC для одной сцены или дальнейшей истории.',
+  'Обращайся '+(settings.addressForm==='вы'?'на вы':'на ты')+
+   ', если автор не установил иное.',
   'Ориентировочная максимальная длина ответа: '+
    lengthTarget+' символов.',
+  'Длина является ориентиром, а не требованием '+
+   'заполнять ответ бессодержательным текстом.',
   '',
   '=== КОМАНДЫ OOC ===',
-  'OOC означает вне роли, авторскую инструкцию.',
-  'Если сообщение начинается с OOC:, считай его '+
-   'указанием автора, а не репликой игрового персонажа.',
-  'Учитывай такие инструкции при продолжении истории.',
-  'Если автор просит начать сцену, сразу пиши сцену.',
-  'Не отвечай формальными подтверждениями вроде '+
-   '«Понял», «Хорошо, начинаем» или «Принято».',
+  'OOC означает вне роли: это авторская инструкция, '+
+   'а не реплика персонажа.',
+  'Команда может менять стиль, повествование, '+
+   'распределение ролей, темп и развитие сюжета.',
+  'Если автор просит написать полноценную сцену '+
+   'и управлять обоими героями, выполняй это.',
+  'Если автор просит не управлять конкретным героем, '+
+   'соблюдай это.',
+  'Если автор указал, что правило действует '+
+   'только в одной сцене, не переноси его '+
+   'автоматически на следующие сцены.',
+  'Если автор указал «с этого момента», '+
+   '«дальше» или «до отмены», считай правило '+
+   'действующим до следующего изменения.',
+  'Более новая команда автора изменяет '+
+   'противоречащее ей более старое указание.',
+  'Если команда OOC просит начать или продолжить '+
+   'сцену, сразу пиши художественный текст.',
+  'Не отвечай формальными подтверждениями '+
+   '«Понял», «Принято», «Хорошо, начинаем».',
+  'Если автор прямо просит обсуждение вне роли, '+
+   'отвечай вне роли.',
   'Не вставляй OOC в художественный текст, '+
-   'если автор прямо этого не просит.',
-  'Команда OOC сама по себе не стирает прошлые '+
-   'сообщения и воспоминания.',
-  'Если автор просит уточнить настройки вне роли, '+
-   'можешь ответить вне роли.',
+   'если автор этого не просил.',
+  'OOC сама по себе не очищает историю, '+
+   'не удаляет воспоминания и не создаёт новый чат.',
   '',
   '=== НАЗВАНИЕ ИСТОРИИ ===',
   story.title||'Без названия',
@@ -1282,12 +1437,34 @@ function buildSystemPrompt(story){
 
  lines.push(
   '',
+  '=== ПОСЛЕДНИЕ АВТОРСКИЕ КОМАНДЫ OOC ===',
+  'Ниже приведены недавние авторские указания.',
+  'Учитывай порядок их появления.',
+  'Сценические команды могут уже завершиться, '+
+   'а долгосрочные действуют до отмены.'
+ );
+
+ const commands=latestOocCommands(story);
+
+ if(commands.length===0){
+  lines.push('Команд пока нет.');
+ }else{
+  commands.forEach((item,index)=>{
+   lines.push(
+    String(index+1)+'. '+item.text
+   );
+  });
+ }
+
+ lines.push(
+  '',
   '=== АВТОРСКАЯ ЗАМЕТКА ===',
   settings.authorNote||'Нет.',
   '',
   'Анкеты, воспоминания и заметки — данные истории.',
-  'Они не отменяют основные правила ролевой игры.',
-  'Учитывай сохранённые сведения при каждом ответе.'
+  'Учитывай сохранённые сведения при каждом ответе.',
+  'Следуй актуальным указаниям автора '+
+   'в рамках правил платформы.'
  );
 
  return lines.filter(Boolean).join('\n');
@@ -1301,7 +1478,6 @@ function buildApiMessages(story){
   content:buildSystemPrompt(story)
  }];
 
- // Первое приветствие включаем в контекст модели.
  const hero=getHero(story.heroId||'grey');
 
  if(hero&&hero.id==='grey'){
@@ -1311,8 +1487,6 @@ function buildApiMessages(story){
   });
  }
 
- // История целиком остаётся сохранённой в Safari.
- // Нейросети передаются последние 30 сообщений.
  history.slice(-30).forEach(item=>{
   messages.push({
    role:item.role==='user'?'user':'assistant',
@@ -1469,6 +1643,76 @@ async function regenerateLastReply(index){
  }
 }
 
+/* КОПИРОВАНИЕ СООБЩЕНИЙ */
+
+function showCopyToast(message){
+ const toast=$('copyToast');
+ toast.textContent=message;
+ toast.hidden=false;
+
+ if(toastTimer)clearTimeout(toastTimer);
+
+ toastTimer=setTimeout(()=>{
+  toast.hidden=true;
+ },1800);
+}
+
+async function copyMessageText(text){
+ if(typeof text!=='string')return;
+
+ /*
+  Сначала пробуем современный Clipboard API.
+  Затем используем резервный способ,
+  полезный для некоторых версий Safari.
+ */
+ try{
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+   await navigator.clipboard.writeText(text);
+   showCopyToast('✓ Сообщение скопировано');
+   return;
+  }
+ }catch(error){
+  // Пробуем резервный способ ниже.
+ }
+
+ const area=document.createElement('textarea');
+ area.value=text;
+ area.setAttribute('readonly','');
+ area.style.position='fixed';
+ area.style.left='-9999px';
+ area.style.top='0';
+ area.style.opacity='0';
+
+ document.body.appendChild(area);
+
+ const previousFocus=document.activeElement;
+
+ try{
+  area.focus();
+  area.select();
+  area.setSelectionRange(0,area.value.length);
+
+  const copied=document.execCommand('copy');
+
+  if(copied){
+   showCopyToast('✓ Сообщение скопировано');
+  }else{
+   throw new Error('Copy failed');
+  }
+ }catch{
+  alert(
+   'Не удалось скопировать автоматически. '+
+   'Попробуй открыть приложение в Safari.'
+  );
+ }finally{
+  area.remove();
+
+  if(previousFocus&&typeof previousFocus.focus==='function'){
+   try{previousFocus.focus({preventScroll:true});}catch{}
+  }
+ }
+}
+
 /* ОТОБРАЖЕНИЕ СООБЩЕНИЙ */
 
 function closeMessagePopups(){
@@ -1500,68 +1744,96 @@ function addMessage(text,role,options={}){
 
  row.appendChild(bubble);
 
- if(Number.isInteger(options.index)&&canModifyMessages()){
-  const messages=cleanMessages(activeStory.messages);
-  const index=options.index;
+ /*
+  Копирование доступно для любого сообщения:
+  старого, нового, пользовательского, ответа ИИ,
+  приветствия и даже архивной переписки.
+ */
+ if(role!=='system'){
+  const wrapper=document.createElement('div');
+  wrapper.className='message-options';
 
-  if(role==='user'&&index===lastUserIndex(messages)){
-   const wrapper=document.createElement('div');
-   wrapper.className='message-options';
+  const more=document.createElement('button');
+  more.type='button';
+  more.className='message-more';
+  more.textContent='⋯';
+  more.setAttribute('aria-label','Действия с сообщением');
 
-   const more=document.createElement('button');
-   more.type='button';
-   more.className='message-more';
-   more.textContent='⋯';
-   more.setAttribute('aria-label','Действия с сообщением');
+  const popup=document.createElement('div');
+  popup.className='message-popup';
+  popup.hidden=true;
 
-   const popup=document.createElement('div');
-   popup.className='message-popup';
+  const copy=document.createElement('button');
+  copy.type='button';
+  copy.textContent='▢ Копировать';
+
+  copy.addEventListener('click',()=>{
    popup.hidden=true;
+   copyMessageText(text);
+  });
 
-   const edit=document.createElement('button');
-   edit.type='button';
-   edit.textContent='✎ Изменить';
-   edit.addEventListener('click',()=>{
-    popup.hidden=true;
-    beginMessageEdit(index);
-   });
+  popup.appendChild(copy);
 
-   const remove=document.createElement('button');
-   remove.type='button';
-   remove.className='delete-action';
-   remove.textContent='Удалить';
-   remove.addEventListener('click',()=>{
-    popup.hidden=true;
-    deleteMessage(index);
-   });
+  if(Number.isInteger(options.index)&&canModifyMessages()){
+   const messages=cleanMessages(activeStory.messages);
+   const index=options.index;
 
-   more.addEventListener('click',()=>{
-    const wasHidden=popup.hidden;
-    closeMessagePopups();
-    popup.hidden=!wasHidden;
-   });
+   if(role==='user'&&index===lastUserIndex(messages)){
+    const edit=document.createElement('button');
+    edit.type='button';
+    edit.textContent='✎ Изменить';
 
-   popup.append(edit,remove);
-   wrapper.append(more,popup);
-   row.appendChild(wrapper);
+    edit.addEventListener('click',()=>{
+     popup.hidden=true;
+     beginMessageEdit(index);
+    });
+
+    const remove=document.createElement('button');
+    remove.type='button';
+    remove.className='delete-action';
+    remove.textContent='Удалить';
+
+    remove.addEventListener('click',()=>{
+     popup.hidden=true;
+     deleteMessage(index);
+    });
+
+    popup.append(edit,remove);
+   }
+
+   if(
+    role==='grey'&&
+    index===messages.length-1&&
+    index>0&&
+    messages[index-1].role==='user'
+   ){
+    const regen=document.createElement('button');
+    regen.type='button';
+    regen.textContent='↻ Перегенерировать';
+
+    regen.addEventListener('click',()=>{
+     popup.hidden=true;
+     regenerateLastReply(index);
+    });
+
+    popup.appendChild(regen);
+   }
   }
 
-  if(
-   role==='grey'&&
-   index===messages.length-1&&
-   index>0&&
-   messages[index-1].role==='user'
-  ){
-   const regen=document.createElement('button');
-   regen.type='button';
-   regen.className='regenerate';
-   regen.textContent='🔄';
-   regen.setAttribute('aria-label','Перегенерировать последний ответ ИИ');
-   regen.addEventListener('click',()=>{
-    regenerateLastReply(index);
-   });
-   row.appendChild(regen);
-  }
+  more.addEventListener('click',event=>{
+   event.stopPropagation();
+
+   const wasHidden=popup.hidden;
+   closeMessagePopups();
+   popup.hidden=!wasHidden;
+  });
+
+  popup.addEventListener('click',event=>{
+   event.stopPropagation();
+  });
+
+  wrapper.append(more,popup);
+  row.appendChild(wrapper);
  }
 
  $('chat').appendChild(row);
@@ -1907,10 +2179,12 @@ function renderContext(){
 
  const memories=memoryOf(story);
  const messages=cleanMessages(story.messages);
+ const commands=extractOocCommands(story);
 
  $('contextStats').textContent=
   'Воспоминаний: '+memories.length+
   ' · Сообщений: '+messages.length+
+  ' · Команд OOC: '+commands.length+
   ' · В предпросмотре: последние '+
   Math.min(messages.length,20)+' сообщений';
 
@@ -1925,20 +2199,7 @@ async function copyContext(){
   return;
  }
 
- try{
-  if(!navigator.clipboard||!navigator.clipboard.writeText){
-   throw new Error('Clipboard unavailable');
-  }
-
-  await navigator.clipboard.writeText(text);
-  alert('Контекст скопирован!');
-
- }catch{
-  alert(
-   'Автоматическое копирование недоступно. '+
-   'Выдели и скопируй текст вручную.'
-  );
- }
+ await copyMessageText(text);
 }
 
 $('refreshContext').addEventListener('click',renderContext);
@@ -2025,11 +2286,6 @@ document.querySelectorAll('.savePanel').forEach(button=>{
    settings[field.id]=field.value.trim();
   });
 
-  /*
-   После сохранения новой анкеты старые поля
-   больше не должны подменять пустые новые поля.
-   Старые значения остаются в объекте настроек.
-  */
   if(panel.id==='settingsPanel'){
    settings.userName='';
    settings.userGender='';
